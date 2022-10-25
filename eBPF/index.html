@@ -371,9 +371,6 @@ LLVM은 컴파일을 통해 프로그램 코드, Map 정의, relocation 정보, 
 <h2 id="5-why-ebpf" style="position:relative;"><a href="#5-why-ebpf" aria-label="5 why ebpf permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Why eBPF?</h2>
 <p>eBPF의 강력한 기능으로 인해, 인텔의 Brendan Gregg는 BPF 기술을 <a href="http://www.brendangregg.com/blog/2016-03-05/linux-bpf-superpowers.html">Linux superpower</a>라고 언급한바 있다.</p>
 <p>왜 이렇게 많은 사람들은 eBPF 기술을 극찬하고, 또 커널 개발자들은 eBPF 기술에 주목할까</p>
-<blockquote>
-<p>왜 eBPF인가?</p>
-</blockquote>
 <h3 id="programmability의-힘" style="position:relative;"><a href="#programmability%EC%9D%98-%ED%9E%98" aria-label="programmability의 힘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Programmability의 힘</h3>
 <p>20년 전, 웹 페이지는 주로 HTML(Static Markup Language)만을 사용하여 작성되었다.
 웹 페이지는 기본적으로 문서를 표시할 수 있는 application(browser)였다.</p>
