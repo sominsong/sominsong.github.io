@@ -367,7 +367,138 @@ LLVM은 컴파일을 통해 프로그램 코드, Map 정의, relocation 정보, 
 <li>프로세스/cgroup context 가져오기</li>
 <li>네트워크 패킷 및 forwarding logic 조작</li>
 </ul>
-<h2 id="4-ebpf-prgram-example" style="position:relative;"><a href="#4-ebpf-prgram-example" aria-label="4 ebpf prgram example permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. eBPF Prgram Example</h2>
+<h2 id="4-ebpf-an-example" style="position:relative;"><a href="#4-ebpf-an-example" aria-label="4 ebpf an example permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. eBPF: An Example</h2>
+<p>리눅스 커널 소스에는 여러 eBPF 예제가 포함되어 있다.
+예제를 컴파일하기 위해서는 다음 명령어를 입력해야 한다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">make</span> sample/bpf/</code></pre></div>
+<p><code class="language-text">sample/bpf</code>에서 사용 가능한 샘플 코드 중 하나인 <code class="language-text">tracex4</code> 프로그램을 살펴본다.</p>
+<p>일반적으로 <code class="language-text">sample/bpf/</code>의 모든 예제는 2개의 파일로 구성되어 있으며, 이 파일의 경우 다음과 같이 구성된다.</p>
+<ul>
+<li><a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/tracex4_kern.c"><code class="language-text">tracex4_kern.c</code></a>: eBPF 바이트 코드로 커널에서 실행될 소스 코드이다.</li>
+<li><a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/tracex4_user.c"><code class="language-text">tracex4_user.c</code></a>: user-space 프로그램을 포함한다.</li>
+</ul>
+<p><code class="language-text">sample/bpf/</code> 하위의 다른 모든 프로그램도 이와 유사한 구조를 따르며, 항상 두 개의 파일이 쌍으로 존재한다.</p>
+<ul>
+<li><code class="language-text">XXX_kern.c</code>: eBPF 프로그램</li>
+<li><code class="language-text">XXX_user.c</code>: main 프로그램</li>
+</ul>
+<p>eBPF 프로그램은 binary 섹션에 hooking 시킬 Map과 함수를 정의한다. 커널이 특정 event를 발생시키면, hook이 실행된다. Map은 커널 프로그램과 user-space 프로그램 간에 데이터를 교환하는 데 사용된다.</p>
+<p>다음에서 두 파일에 대해 자세히 살펴본다.</p>
+<h3 id="tracex4_kernc" style="position:relative;"><a href="#tracex4_kernc" aria-label="tracex4_kernc permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>tracex4_kern.c</h3>
+<p><code class="language-text">tracex4_kern.c</code>는 c로 작성된 파일이며, eBPF 바이트코드로 컴파일해야 한다.
+<a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/Makefile#L266">Makefile</a>에서는 clang을 사용하여 <code class="language-text">tracex4_kern.c</code>를 object 파일로 컴파일한다.</p>
+<p><code class="language-text">tracex4_kern.c</code> 파일 코드를 자세히 살펴보자.
+먼저, 헤더 파일을 먼저 살펴보면 다음과 같다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;linux/ptrace.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;linux/version.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;uapi/linux/bpf.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"bpf_helpers.h"</span></span></code></pre></div>
+<p>다음으로 BPF 프로그램이 사용한 Map이 정의되어 있다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">pair</span> <span class="token punctuation">{</span>
+    u64 val<span class="token punctuation">;</span>
+    u64 ip<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">struct</span> <span class="token class-name">bpf_map_def</span> <span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"maps"</span><span class="token punctuation">)</span> my_map <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span>type <span class="token operator">=</span> BPF_MAP_TYPE_HASH<span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>key_size <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>value_size <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pair</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>max_entries <span class="token operator">=</span> <span class="token number">1000000</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
+<p><code class="language-text">BPF_MAP_TYPE_HASH</code>는 eBPF에서 제공하는 많은 Map 유형 중 하나이며, 이 경우 hash 타입의 자료구조를 의미한다.</p>
+<p><code class="language-text">SEC("maps")</code> 선언에서 사용되는 <code class="language-text">SEC</code>은 바이너리에서 새로운 섹션을 만드는 데 사용되는 매크로이다.
+<code class="language-text">tracex4_kern</code> 예제에서는 아래와 같이 두 개의 섹션을 더 정의한다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"kprobe/kmem_cache_free"</span><span class="token punctuation">)</span>
+<span class="token keyword">int</span> <span class="token function">bpf_prog1</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pt_regs</span> <span class="token operator">*</span>ctx<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">long</span> ptr <span class="token operator">=</span> <span class="token function">PT_REGS_PARM2</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">bpf_map_deleted_elem</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>my_map<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"kretprobe/kmem_cache_alloc_node"</span><span class="token punctuation">)</span>
+<span class="token keyword">int</span> <span class="token function">bpf_prog2</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pt_regs</span> <span class="token operator">*</span>ctx<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">long</span> ptr <span class="token operator">=</span> <span class="token function">PT_REGS_RC</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">long</span> ip <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// get ip address of kmem_cache_alloc_node() caller</span>
+    <span class="token function">BPF_KRETPROBE_READ_RET_IP</span><span class="token punctuation">(</span>ip<span class="token punctuation">,</span> ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">struct</span> <span class="token class-name">pair</span> v <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span>val <span class="token operator">=</span> <span class="token function">bpf_ktime_get_ns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span>ip <span class="token operator">=</span> ip<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// update bpf mapp</span>
+    <span class="token function">bpf_map_update_elem</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>my_map<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ptr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>v<span class="token punctuation">,</span> BPF_ANY<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>이 두 가지 함수를 사용하면 Map애서 entry를 삭제(<code class="language-text">kprobe/kmem_cach_free</code>)허거나 Map에 새 entry를 추가(<code class="language-text">kretprobe/kmem_cache_alloc_node</code>)할 수 있다.
+대문자로 된 모든 함수 호출은 <a href="https://raw.githubusercontent.com/torvalds/linux/v4.19/tools/testing/selftests/bpf/bpf_helpers.h"><code class="language-text">bpf_helpers.h</code></a>에 정의된 매크로이다.</p>
+<p>object 파일을 dump하면 다음과 같이 정의된 섹션을 확인할 수 있다.</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ objdump -h tracex4_kern.o
+
+tracex4_kern.o:     file format elf64-little
+
+Sections:
+Idx Name          Size      VMA               LMA               File off  Algn
+  0 .text         00000000  0000000000000000  0000000000000000  00000040  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 kprobe/kmem_cache_free 00000048  0000000000000000  0000000000000000  00000040  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 kretprobe/kmem_cache_alloc_node 000000c0  0000000000000000  0000000000000000  00000088  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 maps          0000001c  0000000000000000  0000000000000000  00000148  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 license       00000004  0000000000000000  0000000000000000  00000164  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 version       00000004  0000000000000000  0000000000000000  00000168  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .eh_frame     00000050  0000000000000000  0000000000000000  00000170  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA</code></pre></div>
+<h3 id="tracex4_userc" style="position:relative;"><a href="#tracex4_userc" aria-label="tracex4_userc permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>tracex4_user.c</h3>
+<p>이 프로그램은 메인 프로그램이며, <code class="language-text">kmem_cache_alloc_node</code> 이벤트를 수신하는 역할을 한다.
+해당 이벤트가 발생하면 해당 eBPF 코드가 실행된다.
+이 코드는 object의 IP 속성을 Map에 저장하고 메인 프로그램에서 loop로 프린트한다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> ./tracex4
+obj 0xffff8d6430f60a00 is  2sec old was allocated at <span class="token function">ip</span> ffffffff9891ad90
+obj 0xffff8d6062ca5e00 is 23sec old was allocated at <span class="token function">ip</span> ffffffff98090e8f
+obj 0xffff8d5f80161780 is  6sec old was allocated at <span class="token function">ip</span> ffffffff98090e8f</code></pre></div>
+<p>user-space 프로그램과 eBPF 프로그램은 연결되는 방법은 아래와 같다.
+먼저, 초기화 시에 <code class="language-text">tracex4_user.c</code>는 <code class="language-text">load_bpf_file</code> 함수를 사용하여 <code class="language-text">tracex4_kern.o</code> object 파일을 로드한다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> ac<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> <span class="token class-name">rlimit</span> r <span class="token operator">=</span> <span class="token punctuation">{</span>RLIM_INFINITY<span class="token punctuation">,</span> RLIM_INFINITY<span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">char</span> filename<span class="token punctuation">[</span><span class="token number">256</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+
+    <span class="token function">snprintf</span><span class="token punctuation">(</span>filename<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"%s_kern.o"</span><span class="token punctuation">,</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">setrlimit</span><span class="token punctuation">(</span>RLIMIT_MEMLOCK<span class="token punctuation">,</span> <span class="token operator">&amp;</span>r<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"setlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// load bpf object file</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">load_bpf_file</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s"</span><span class="token punctuation">,</span> bpf_log_buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">print_old_objects</span><span class="token punctuation">(</span>map_fd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>이후 <a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/bpf_load.c#L492"><code class="language-text">load_bpf_file</code></a> 함수가 실행되면, eBPF 파일에 정의된 probe가 <code class="language-text">/sys/kernel/debug/tracing/kprobe_events</code>에 추가된다.
+추가된 이후에는 등록된 event를 listen하며, event가 트리거되면 eBPF 프로그램이 실행된다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">cat</span> /sys/kernel/debug/tracing/kprobe_events
+p:kprobes/kmem_cache_free kmem_cache_free
+r:kprobes/kmem_cache_alloc_node kmem_cache_alloc_node</code></pre></div>
 <h2 id="5-why-ebpf" style="position:relative;"><a href="#5-why-ebpf" aria-label="5 why ebpf permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Why eBPF?</h2>
 <p>eBPF의 강력한 기능으로 인해, 인텔의 Brendan Gregg는 BPF 기술을 <a href="http://www.brendangregg.com/blog/2016-03-05/linux-bpf-superpowers.html">Linux superpower</a>라고 언급한바 있다.</p>
 <p>왜 이렇게 많은 사람들은 eBPF 기술을 극찬하고, 또 커널 개발자들은 eBPF 기술에 주목할까</p>
@@ -471,7 +602,11 @@ eBPF 프로그램은 일반적으로 더 높은 수준의 언어를 작성한 �
 </ul>
 </li>
 <li>
-<p><a href="#4-ebpf-prgram-example">4. eBPF Prgram Example</a></p>
+<p><a href="#4-ebpf-an-example">4. eBPF: An Example</a></p>
+<ul>
+<li><a href="#tracex4_kernc">tracex4_kern.c</a></li>
+<li><a href="#tracex4_userc">tracex4_user.c</a></li>
+</ul>
 </li>
 <li>
 <p><a href="#5-why-ebpf">5. Why eBPF?</a></p>
