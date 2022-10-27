@@ -424,8 +424,6 @@ Map이 성공적으로 생성되면, 해당 Map과 관련된 fd가 반환된다.
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;uapi/linux/bpf.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"bpf_helpers.h"</span></span></code></pre></div>
 <ul>
-<li><code class="language-text">linux/ptrace.h</code>:</li>
-<li><code class="language-text">linux/version.h</code>:</li>
 <li><code class="language-text">uapi/linux/bpf.h</code>: eBPF instruction이 정의된 파일이다.</li>
 <li><code class="language-text">bpf_helpers.h</code>: helper 함수들이 정의되어 있는 헤더 파일이며, 해당 함수들은 모두 대문자이다.</li>
 </ul>
@@ -467,7 +465,7 @@ Map이 성공적으로 생성되면, 해당 Map과 관련된 fd가 반환된다.
         <span class="token punctuation">.</span>ip <span class="token operator">=</span> ip<span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-    <span class="token comment">// update bpf mapp</span>
+    <span class="token comment">// update bpf map</span>
     <span class="token function">bpf_map_update_elem</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>my_map<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ptr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>v<span class="token punctuation">,</span> BPF_ANY<span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></div>
@@ -578,9 +576,20 @@ r:kprobes/kmem_cache_alloc_node kmem_cache_alloc_node</code></pre></div>
 </ul>
 <p>그러나, eBPF에서는 커널 소스 코드를 변경하거나 커널 모듈을 로드하는 위의 두 가지 옵션을 사용하지 않고도, 리눅스 커널의 동작을 다시 프로그래밍할 수 있는 새로운 옵션을 사용할 수 있다.
 여러 면에서 이러한 점들이 JavaScript 및 기타 스크립팅 언어가 변경하기 어렵거나 변경에 비용이 많이 드는 시스템의 진화를 어떻게 풀어내었는지와 매우 유사하다.</p>
-<h2 id="6-development-toolchains" style="position:relative;"><a href="#6-development-toolchains" aria-label="6 development toolchains permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. Development Toolchains</h2>
+<h2 id="6-bpf-code-in-kernel" style="position:relative;"><a href="#6-bpf-code-in-kernel" aria-label="6 bpf code in kernel permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. BPF code in kernel</h2>
+<ul>
+<li><code class="language-text">linux/include/linux/bpf.h</code> 파일과 이에 관련된 <code class="language-text">linux/include/uapi/bpf.h</code> 파일에는 커널에서 사용하거나 userspace 프로그램과 인터페이스하기 위한 eBPF 관련 정의가 포함되어 있다.</li>
+<li><code class="language-text">linux/include/linux/filter.h</code> 및 <code class="language-text">linux/include/uapi/filter.h</code> 파일에는 BPF 프로그램을 실행하는 데 사용되는 정보가 포함되어 있다.</li>
+<li>eBPF와 괄년된 주요 코드는 <code class="language-text">linux/kernel/bpf/</code> 디렉토리에 있다. 프로그램 로딩이나 map 관리와 같은 시스템콜에 의해 실행되는 작업들은 <code class="language-text">syscall.c</code> 파일에서 구현된다. 반면, <code class="language-text">core.c</code>는 인터프리터를 포함한다. <code class="language-text">verifier.c</code> 파일에는 in-kernel verifier가 포함되어 있고, <code class="language-text">arrarymap.c</code>는 array-type의 map과 상호 작용하는 데 사용되는 코드들이 있다.</li>
+<li>네트워킹과 관련된 helper (e.g., tc, XDP) 및 사용자가 사용할 수 있는 여러 함수는 <code class="language-text">linux/net/core/filter.c</code>에 구현되어 있다. 이 코드는 cBPF 바이트코드를 eBPF로 마이그레이션하는 코드도 초함한다. (모든 cBPF 프로그램은 실행되기 전에 커널에서 eBPF로 변환된다.)</li>
+<li>event tracing과 관련된 helper 및 함수들은 <code class="language-text">linux/kernel/trace/bpf_trace.c</code>에 구현되어 있다.</li>
+<li>JIT 컴파일러는 각 아키텍처 디렉토리에 위치하며 x86의 경우, <code class="language-text">linux/arch/x86/net/bpf_jit_comp.c</code> 파일에 있다. HW offload로 사용되는 JIT 컴파일러의 경우 예외적으로 드라이버에 위치한다. 예를 들어, Netronome NFP 카드의 경우, <code class="language-text">linux/drivers/net.ethernet/netronome/nfp/bpf/jit.c</code>에 위치한다.</li>
+<li>eBPF의 tc와 관련된 구성 요스들은 <code class="language-text">linux/net/sched/</code> 디렉터리에서 찾을 수 있으며, 주로 <code class="language-text">act_bpf.c</code>(action)과 <code class="language-text">cls_bpf.c</code>(filter)에 있다.</li>
+<li>seccomp-BPF의 코드는 <code class="language-text">linux/kernel/seccomp.c</code>에서 찾을 수 있으며, 이를 사용한 예제 코드는 <code class="language-text">linux/tools/testing/selftests/seccomp/seccomp_bpf.c</code>에서 찾을 수 있다.</li>
+</ul>
+<h2 id="7-development-toolchains" style="position:relative;"><a href="#7-development-toolchains" aria-label="7 development toolchains permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. Development Toolchains</h2>
 <p>eBPF 프로그램의 개발 및 관리를 지원하기 위하여 여러 개발 도구들이 존재하며, 이러한 다양한 도구들에 대해서는 아래에서 설명한다.</p>
-<h3 id="bcc" style="position:relative;"><a href="#bcc" aria-label="bcc permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BCC</h3>
+<h3 id="bcc-ebpf-compile-collection" style="position:relative;"><a href="#bcc-ebpf-compile-collection" aria-label="bcc ebpf compile collection permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BCC (eBPF Compile Collection)</h3>
 <p>BCC는 사용자가 eBPF 프로그램 작성, 컴파일 및 로드를 위한 프레임워크이다.</p>
 <h3 id="bpftrace" style="position:relative;"><a href="#bpftrace" aria-label="bpftrace permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>bpftrace</h3>
 <p>bpftrace는 리눅스 eBPF용 고급 tracing 언어이며, 리눅스 커널 v4.x에서 사용할 수 있다.
@@ -655,9 +664,12 @@ eBPF 프로그램은 일반적으로 더 높은 수준의 언어를 작성한 �
 </ul>
 </li>
 <li>
-<p><a href="#6-development-toolchains">6. Development Toolchains</a></p>
+<p><a href="#6-bpf-code-in-kernel">6. BPF code in kernel</a></p>
+</li>
+<li>
+<p><a href="#7-development-toolchains">7. Development Toolchains</a></p>
 <ul>
-<li><a href="#bcc">BCC</a></li>
+<li><a href="#bcc-ebpf-compile-collection">BCC (eBPF Compile Collection)</a></li>
 <li><a href="#bpftrace">bpftrace</a></li>
 <li><a href="#ebpf-go-library">eBPF Go Library</a></li>
 <li><a href="#libbpf-cc-library">libbpf C/C++ Library</a></li>
