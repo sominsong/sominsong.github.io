@@ -91,8 +91,7 @@ b<span class="token punctuation">.</span>trace_print<span class="token punctuati
 이 경우, 뒤따르는 커널 심볼은 <code class="language-text">sys_clone()</code>이다.</p>
 <p><code class="language-text">sys_clone()</code>이 호출되고 <code class="language-text">kprobe</code>가 실행되면, eBPF 프로그램이 동작하고 <code class="language-text">bpf_trace_printk()</code> 함수가 <code class="language-text">Hello, World!</code>를 커널의 trace buffer로 출력한다.</p>
 <p>BCC는 front-end를 통해 파이썬을 바인딩하고, BPF back-end가 있는 LLVM/Clang 컴파일러를 호출하여 C를 eBPF 바이트코드로 변환한다.
-그런 다음, BCC는 <code class="language-text">bpf()</code> 시스템콜을 사용하여 eBPF 바이트 코드를 커널에 로드하는 작업을 처리한다.
-모든 저수준의 작업은 BCC의 libbpf 내부에서 수행된다.</p>
+그런 다음, BCC는 <code class="language-text">bpf()</code> 시스템콜을 사용하여 eBPF 바이트 코드를 커널에 로드하는 작업을 처리한다.</p>
 <p>예를 들어, in-kernel verifier의 검사가 실패한 경우와 같이 로드가 실패하면 BCC는 로드가 실패한 이유에 대한 힌트를 다음과 같이 제공한다.</p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">HINT: The `map_value_or_null` error can happen if you dereference a pointer value from a map loopup without first checking if that pointer is NULL</code></pre></div>
 <p>이러한 에러 로그도 BCC를 구성하는 또 다른 주요한 기능히다.
