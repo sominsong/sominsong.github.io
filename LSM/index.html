@@ -160,30 +160,72 @@ drwxr-xr-x     <span class="token number">4</span> mini  staff   128B <span clas
     <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"lsm_hook_defs.h"</span></span>
     <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">undef</span> <span class="token expression">LSM_HOOK</span></span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
-<p>이 <code class="language-text">security_hook_heads</code> 구조체는 커널의 초기화 과정에서 초기화된다.</p>
-<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> __init <span class="token function">security_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<p>이 <code class="language-text">security_hook_heads</code> 구조체는 커널의 초기화 과정에서 초기화되며, 초기화하는 함수인 <code class="language-text">early_security_init()</code>은 <code class="language-text">/security/security.c</code>에 정의되어있다.</p>
+<p><code class="language-text">/init/main.c</code>에 정의된 커널의 초기화 과정에 따르면, <code class="language-text">early_security_init()</code> 함수 실행 후, <code class="language-text">security_init()</code>함수가 호출된다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> __init <span class="token function">early_security_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
     <span class="token keyword">int</span> i<span class="token punctuation">;</span>
     <span class="token keyword">struct</span> <span class="token class-name">hlist_head</span> <span class="token operator">*</span>list <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">hlist_head</span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>security_hook_heads<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">lsm_info</span> <span class="token operator">*</span>lsm<span class="token punctuation">;</span>
 
     <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>security_hook_heads<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">hlist_head</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
         <span class="token function">INIT_HLIST_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>list<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
-    <span class="token function">pr_info</span><span class="token punctuation">(</span><span class="token string">"Security Framework initialized\n"</span><span class="token punctuation">)</span>
-
-    <span class="token comment">// Load minor LSMs, with the capability module always first.</span>
-    <span class="token function">capability_add_hooks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">yama_add_hooks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">loadpin_add_hooks</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Load all the remaining security modules</span>
-    <span class="token function">do_security_initcalls</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>lsm <span class="token operator">=</span> __start_early_lsm_infol lsm <span class="token operator">&lt;</span> __end_early_lsm_info<span class="token punctuation">;</span> lsm<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>lsm<span class="token operator">-></span>enabled<span class="token punctuation">)</span>
+            lsm<span class="token operator">-></span>enabled <span class="token operator">=</span> <span class="token operator">&amp;</span>lsm_enabled_true<span class="token punctuation">;</span>
+        <span class="token function">prepare_lsm</span><span class="token punctuation">(</span>lsm<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">initialize_lsm</span><span class="token punctuation">(</span>lsm<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span></code></pre></div>
-<p>해당 코드를 통해서 capability, yama, loadpin 순으로 LSM에 올라가는 것을 확인할 수 있다.</p>
-<p>그 다음 <code class="language-text">do_security_initcalls()</code>를 통해 나머지 Security Module들이 LSM에 올라간다.</p>
-<p>LSM은 LSM hooks을 관리하기 위한 <code class="language-text">struct security_hooks_list</code> 구조체를 정의하며, 이 구조체는 다음과 같이 정의되어 있다:</p>
-<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token comment">/*
+<p>코드에서는 <code class="language-text">security_hook_heads</code> 구조체를 초기화한 후,
+<code class="language-text">lsm_info</code> 구조체 속에 담겨진 Security Module을 차례로 초기화한다.</p>
+<p>이후, <code class="language-text">/security/security.c</code>에 정의된 <code class="language-text">security_init()</code> 함수에서는 <code class="language-text">lsm_info</code> 구조체 속에 담겨진 Security Module을 초기환된 LSM 위에 차례로 올린다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">enum</span> <span class="token class-name">lsm_order</span> <span class="token punctuation">{</span>
+    LSM_ORDER_FIRST <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>   <span class="token comment">// only for capabilities</span>
+    LSM_ORDER_MUTABLE <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">struct</span> <span class="token class-name">lsm_info</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>name<span class="token punctuation">;</span>
+    <span class="token keyword">enum</span> <span class="token class-name">lsm_order</span> order<span class="token punctuation">;</span>   <span class="token comment">// default is LSM_ORDER_MUTABLE</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> flags<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token operator">*</span>enabled<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">lsm_blob_sizes</span> <span class="token operator">*</span>blobs<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> __init <span class="token function">security_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> <span class="token class-name">lsm_info</span> <span class="token operator">*</span>lsm<span class="token punctuation">;</span>
+
+    <span class="token function">pr_info</span><span class="token punctuation">(</span><span class="token string">"Security Framework initializing\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Append the names of the early LSM modules now that kmalloc() is available</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>lsm <span class="token operator">=</span> __start_early_lsm_info<span class="token punctuation">;</span> lsm <span class="token operator">&lt;</span> __end_early_lsm_info<span class="token punctuation">;</span> lsm <span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>lsm<span class="token operator">-></span>enabled<span class="token punctuation">)</span>
+            <span class="token function">lsm_append</span><span class="token punctuation">(</span>lsm<span class="token operator">-></span>name<span class="token punctuation">,</span> <span class="token operator">&amp;</span>lsm_names<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// Load LSMs in specified order</span>
+    <span class="token function">ordered_lsm_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p><code class="language-text">LSM_ORDER_FIRST</code>인 Capability를 제외한 나머지 Security Module의 경우,
+LSM에 올라가는 Security Module은 다음과 같은 순서로 올라가게 된다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c">config LSM
+	string <span class="token string">"Ordered list of enabled LSMs"</span>
+	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+	<span class="token keyword">default</span> <span class="token string">"landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"</span>
+```<span class="token punctuation">[</span><span class="token operator">/</span>security<span class="token operator">/</span>Kconfig<span class="token punctuation">]</span>
+
+
+LSM은 LSM hooks을 관리하기 위한 `<span class="token keyword">struct</span> <span class="token class-name">security_hooks_list</span>` 구조체를 정의하며<span class="token punctuation">,</span> 이 구조체는 다음과 같이 정의되어 있다<span class="token operator">:</span>
+
+```C
+<span class="token comment">/*
  * Security module hook list structure
  * For use with generic list macros for common operations.
  */</span>
