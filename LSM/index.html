@@ -151,7 +151,28 @@ drwxr-xr-x     <span class="token number">4</span> mini  staff   128B <span clas
 <p>MAC 메커니즘의 단점으로는 구현이 복잡하고 어려우며 모든 주체와 객체에 대해 보안 등급과 허용 등급을 부여해야 하므로 정책 설정이 복잡하기 때문에 시스템 관리자가 access control 모델에 대해 깊이 이해하고 있어야 한다.</p>
 <h2 id="1-lsm-hooks" style="position:relative;"><a href="#1-lsm-hooks" aria-label="1 lsm hooks permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. LSM Hooks</h2>
 <p>LSM hooks는 <a href="https://github.com/torvalds/linux/blob/master/include/linux/lsm_hook_defs.h"><code class="language-text">/include/linux/lsm_hook_defs.h</code></a>에서 그 목록을 확인할 수 있다.</p>
-<p><a href="LSM-1.png">LSM-1.png</a></p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 390px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 112.22222222222223%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC4klEQVQ4y32UWU8qQRCF+/fzTkj0CUxIIPJAJEZCcAmCC8gqbiiCC6IoirggCnXzVVKTuUtuJzXd01196tTWbn19XRiz2UzG47F8f3/Lz8+PvL29yWQyka+vL92bTqfy+voqz8/Puub84+ND3t/fVZ+RzWbF5fN5/ZnP51KtVoX/vb092d7elmazqVIul6XT6Ui73dazRqMhu7u7cnBwIMViUckwCoWCOBg+PDzI7e2tXF9fy8nJiZydncnV1ZXuIff39/L09OT9o4egc3Nzo3uPj4+SyWTEvby8yMXFhXS7XRW/8uXlpQwGA4lEIhIKhfQSe6aLjq1hPxwOxfEBoNfreQxsjXWYJZNJSSQSesEY+QV9MDDooMkmMTJWiLFk5vzu7k6Z/IshdwFdW1sTt7OzI3+O4+NjldPTUwXCHQIOMDHmv16v/3WPRCnD0WikiSFeuHh+fi5HR0c6A0xScBUDCHuc9/t9dZO7lFQ6nRYHbZRIDACtVkvdwg32YJhKpTSGxtbO0TehMth3FC2WYIclBEYIABTu0tKSLCws6Jo9Ozd97oJBE7itrS2PHTOWLdCIJQFP/GfG0pjyT017ncIgHsTKskkCCAGdQVta5wCOcQuJDbDcxsaGt0GfYq1Wq3mx4QLxoQEwRgwtvhjDVRtgOS5TAmTN2o4kocwaACzjDqzZQzg3He4eHh5qbzuQCTCF6e8W61nKIRgMSiAQ0LW/x61LEGPqQOaVwZIxNMvMuI0H6PlLy5jaHXTA+S2GDFJPoTMTt8/PTy0XhDVlQoJ4Eyk5/9As8+4x7BDqlUpF2TDjIoxgsr+/r0xKpZJmG1f9dzXLBsgjCQvihnvWs4DxOtOSvDawp5BZ4ypM7cUGy+VyOY8y7JaXlyUajUosFlPg1dVVWVlZkXg8rh0TDof1HL3FxUVNqA0P0F5lag4XWQNubUX98W9V4M+szcjm5qY46wB/fdnaXhf7/5+AQRJ/AXuyOGIpCidoAAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="LSM-1.png"
+        title="LSM-1.png"
+        src="/static/53715a0f53a9f41fe1f80c14245448bb/727ba/LSM-1.png"
+        srcset="/static/53715a0f53a9f41fe1f80c14245448bb/e9ff0/LSM-1.png 180w,
+/static/53715a0f53a9f41fe1f80c14245448bb/f21e7/LSM-1.png 360w,
+/static/53715a0f53a9f41fe1f80c14245448bb/727ba/LSM-1.png 390w"
+        sizes="(max-width: 390px) 100vw, 390px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
 <p>LSM 프레임워크 위에 위와 같이 다양한 Security Module을 동시에 쌓을 수 있으며, 이러한 기법을 Module Stacking이라고 한다.</p>
 <p>LSM 프레임워크는 <code class="language-text">security_hook_heads</code>라는 구조체를 가지고 있다.</p>
 <p><code class="language-text">security_hook_heads</code> 구조체는 각 Security Module의 Hook 함수로 연결되는 링크드 리스트의 Head(Hook Head)를 가지고 있으며, <code class="language-text">/include/linux/lsm_hooks.h</code>다음과 같이 정의되어 있다:</p>
@@ -182,60 +203,33 @@ drwxr-xr-x     <span class="token number">4</span> mini  staff   128B <span clas
 <span class="token punctuation">}</span></code></pre></div>
 <p>코드에서는 <code class="language-text">security_hook_heads</code> 구조체를 초기화한 후,
 <code class="language-text">lsm_info</code> 구조체 속에 담겨진 Security Module을 차례로 초기화한다.</p>
-<p>이후, <code class="language-text">/security/security.c</code>에 정의된 <code class="language-text">security_init()</code> 함수에서는 <code class="language-text">lsm_info</code> 구조체 속에 담겨진 Security Module을 초기환된 LSM 위에 차례로 올린다.</p>
-<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">enum</span> <span class="token class-name">lsm_order</span> <span class="token punctuation">{</span>
-    LSM_ORDER_FIRST <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>   <span class="token comment">// only for capabilities</span>
-    LSM_ORDER_MUTABLE <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-
-<span class="token keyword">struct</span> <span class="token class-name">lsm_info</span> <span class="token punctuation">{</span>
-    <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>name<span class="token punctuation">;</span>
-    <span class="token keyword">enum</span> <span class="token class-name">lsm_order</span> order<span class="token punctuation">;</span>   <span class="token comment">// default is LSM_ORDER_MUTABLE</span>
-    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> flags<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> <span class="token operator">*</span>enabled<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">lsm_blob_sizes</span> <span class="token operator">*</span>blobs<span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></div>
-<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> __init <span class="token function">security_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">struct</span> <span class="token class-name">lsm_info</span> <span class="token operator">*</span>lsm<span class="token punctuation">;</span>
-
-    <span class="token function">pr_info</span><span class="token punctuation">(</span><span class="token string">"Security Framework initializing\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Append the names of the early LSM modules now that kmalloc() is available</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span>lsm <span class="token operator">=</span> __start_early_lsm_info<span class="token punctuation">;</span> lsm <span class="token operator">&lt;</span> __end_early_lsm_info<span class="token punctuation">;</span> lsm <span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>lsm<span class="token operator">-></span>enabled<span class="token punctuation">)</span>
-            <span class="token function">lsm_append</span><span class="token punctuation">(</span>lsm<span class="token operator">-></span>name<span class="token punctuation">,</span> <span class="token operator">&amp;</span>lsm_names<span class="token punctuation">)</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">// Load LSMs in specified order</span>
-    <span class="token function">ordered_lsm_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></div>
-<p><code class="language-text">LSM_ORDER_FIRST</code>인 Capability를 제외한 나머지 Security Module의 경우,
-LSM에 올라가는 Security Module은 다음과 같은 순서로 올라가게 된다.</p>
+<p>Capability를 제외한 나머지 Security Module의 경우,
+LSM에 올라가는 Security Module은 다음과 같은 순서로 올라가게 되며, <code class="language-text">/security/Kconfig</code>에 정의되어 있다.</p>
 <div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c">config LSM
 	string <span class="token string">"Ordered list of enabled LSMs"</span>
 	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-	<span class="token keyword">default</span> <span class="token string">"landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"</span>
-```<span class="token punctuation">[</span><span class="token operator">/</span>security<span class="token operator">/</span>Kconfig<span class="token punctuation">]</span>
+	<span class="token keyword">default</span> <span class="token string">"landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"</span></code></pre></div>
+<p>예를 들어, AppArmor의 경우 <code class="language-text">/security/apparmor/lsm.c</code>에서 다음과 같이 정의된다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token function">DEFINE_LSM</span><span class="token punctuation">(</span>apparmor<span class="token punctuation">)</span><span class="token operator">=</span><span class="token punctuation">{</span>
+    <span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"apparmor"</span>
+    <span class="token punctuation">.</span>flags <span class="token operator">=</span> LSM_FLAG_LEGACY_MAJOR <span class="token operator">|</span> LSM_FLAG_EXCLUSIVE<span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>enabled <span class="token operator">=</span> <span class="token operator">&amp;</span>apparmor_enabled<span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>blobs <span class="token operator">=</span> <span class="token operator">&amp;</span>apparmor_blob_sizes<span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>init <span class="token operator">=</span> apparmor_init<span class="token punctuation">,</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>초기화 함수인 <code class="language-text">apparmor_init()</code>은 다음과 같이 <code class="language-text">security_add_hooks()</code> 함수를 호출한다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> __init <span class="token function">apparmor_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> error<span class="token punctuation">;</span>
 
+    <span class="token comment">// 생략</span>
 
-LSM은 LSM hooks을 관리하기 위한 `<span class="token keyword">struct</span> <span class="token class-name">security_hooks_list</span>` 구조체를 정의하며<span class="token punctuation">,</span> 이 구조체는 다음과 같이 정의되어 있다<span class="token operator">:</span>
+    <span class="token function">security_add_hooks</span><span class="token punctuation">(</span>apparmor_hooks<span class="token punctuation">,</span> <span class="token function">ARRAY_SIZE</span><span class="token punctuation">(</span>apparmor_hooks<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">"apparmor"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-```C
-<span class="token comment">/*
- * Security module hook list structure
- * For use with generic list macros for common operations.
- */</span>
-<span class="token keyword">struct</span> <span class="token class-name">security_hook_list</span> <span class="token punctuation">{</span>
-    <span class="token keyword">struct</span> <span class="token class-name">hlist_node</span>           list<span class="token punctuation">;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">hlist_head</span>           <span class="token operator">*</span>head<span class="token punctuation">;</span>
-    <span class="token keyword">union</span> security_list_options hook<span class="token punctuation">;</span>
-    <span class="token keyword">char</span>                        <span class="token operator">*</span>lsm<span class="token punctuation">;</span>
-<span class="token punctuation">}</span> __randomize_layout<span class="token punctuation">;</span></code></pre></div>
-<p>이 구조체에 <code class="language-text">security_add_hooks()</code> 함수를 사용하여 LSM hook을 <code class="language-text">security_hook_list</code> 구조체에 추가한다.</p>
+    <span class="token comment">// 생략</span>
+
+    <span class="token keyword">return</span> error<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
 <p><code class="language-text">security_add_hooks()</code> 함수는 <a href="https://github.com/torvalds/linux/blob/v4.19/security/security.c"><code class="language-text">security/security.c</code></a>에 구현되어 있다.</p>
 <div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">void</span> __init <span class="token function">security_add_hooks</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">security_hook_list</span> <span class="token operator">*</span>hooks<span class="token punctuation">,</span> <span class="token keyword">int</span> count<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>lsm<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -250,8 +244,23 @@ LSM은 LSM hooks을 관리하기 위한 `<span class="token keyword">struct</spa
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>   </code></pre></div>
 <p>이 함수에서 <code class="language-text">hooks</code>는 추가하고자 하는 hook, <code class="language-text">count</code>는 추가하고자 하는 hook의 개수, <code class="language-text">lsm</code>은 Security Module의 이름이 인자로 전달된다.</p>
+<p><code class="language-text">struct security_hooks_list</code> 구조체는 <code class="language-text">/include/linux/lsm_hooks.h</code>에 다음과 같이 정의되어 있다:</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token comment">/*
+ * Security module hook list structure
+ * For use with generic list macros for common operations.
+ */</span>
+<span class="token keyword">struct</span> <span class="token class-name">security_hook_list</span> <span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> <span class="token class-name">hlist_node</span>           list<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">hlist_head</span>           <span class="token operator">*</span>head<span class="token punctuation">;</span>
+    <span class="token keyword">union</span> security_list_options hook<span class="token punctuation">;</span>
+    <span class="token keyword">char</span>                        <span class="token operator">*</span>lsm<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> __randomize_layout<span class="token punctuation">;</span></code></pre></div>
+<p>이 구조체에서 <code class="language-text">lsm</code> 은 <code class="language-text">apparmor</code>와 같은 Security Module이 되고,
+<code class="language-text">hook</code>은 Security Module의 hook function이 된다.</p>
 <p>즉, <code class="language-text">security_add_hooks()</code> 함수를 통해 LSM hooks이 트리거될 때, 호출할 Securiy Module을 LSM 프레임워크에 등록하는 것이다.</p>
-<h2 id="11-lsm-with-syste-call" style="position:relative;"><a href="#11-lsm-with-syste-call" aria-label="11 lsm with syste call permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.1 LSM with Syste Call</h2>
+<p>코드를 기반으로 LSM Module의 구조를 정리하면 다음과 같다.</p>
+<p><img src="LSM-2.png" alt="LSM-2.png"></p>
+<h2 id="11-lsm-with-system-call" style="position:relative;"><a href="#11-lsm-with-system-call" aria-label="11 lsm with system call permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1.1 LSM with System Call</h2>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li><a href="https://www.kernel.org/doc/html/v5.8/security/lsm.html">https://www.kernel.org/doc/html/v5.8/security/lsm.html</a></li>
@@ -285,7 +294,7 @@ LSM은 LSM hooks을 관리하기 위한 `<span class="token keyword">struct</spa
 <p><a href="#1-lsm-hooks">1. LSM Hooks</a></p>
 </li>
 <li>
-<p><a href="#11-lsm-with-syste-call">1.1 LSM with Syste Call</a></p>
+<p><a href="#11-lsm-with-system-call">1.1 LSM with System Call</a></p>
 </li>
 <li>
 <p><a href="#reference">Reference</a></p>
