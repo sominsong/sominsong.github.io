@@ -379,7 +379,39 @@ Capaviltiy의 경과가 Deny라면 다음 AppArmor의 Hook Function을 수행하
 <span class="token punctuation">}</span></code></pre></div>
 <p>중간에 <code class="language-text">security_file_open()</code> 함수를 확인할 수 있다.</p>
 <p>즉, 시스템콜 함수 내부에 LSM hook이 위치하는 것이다.</p>
-<p>LSM Hook을 통한 MAC 이전에, 다음과 같이 Error checks, DAC checks가 먼저 수행되고 LSM Hook을 이용한 MAC checks는 가장 나중에 수행된다.</p>
+<p>따라서 User-space에서 <code class="language-text">open()</code> 시스템콜을 호출할 경우 다음과 같이 동작하게 된다.
+아래 다이어그램은 LSM 프레임워크에 <code class="language-text">security_file_open()</code> hook에 3개의 Security Module을 등록한 <code class="language-text">open()</code> 시스템콜에 대한 대략적인 호출 흐름을 보여준다.</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 71.11111111111111%; position: relative; bottom: 0; left: 0; background-image: url('data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAOABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhADEAAAAdak6DjB/8QAGhAAAgIDAAAAAAAAAAAAAAAAASEAEgIQMf/aAAgBAQABBQIo2bmfaa//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//xAAWEAADAAAAAAAAAAAAAAAAAAAQIDH/2gAIAQEABj8CFT//xAAbEAADAAIDAAAAAAAAAAAAAAAAAREQQSFh8f/aAAgBAQABPyG+CsbqITxE310Q3bj/2gAMAwEAAgADAAAAELPP/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAgEBPxA//8QAHRABAQABBAMAAAAAAAAAAAAAAREAECExUUHB0f/aAAgBAQABPxBQihLt8woLO5m++jDSrhfK4gvgdaf/2Q=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="LSM-2.jpeg"
+        title="LSM-2.jpeg"
+        src="/static/d5b19d5c3e662db3a61025d1c1477a87/80e3c/LSM-2.jpg"
+        srcset="/static/d5b19d5c3e662db3a61025d1c1477a87/4ec73/LSM-2.jpg 180w,
+/static/d5b19d5c3e662db3a61025d1c1477a87/158ba/LSM-2.jpg 360w,
+/static/d5b19d5c3e662db3a61025d1c1477a87/80e3c/LSM-2.jpg 720w,
+/static/d5b19d5c3e662db3a61025d1c1477a87/72e01/LSM-2.jpg 1024w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<ol>
+<li>User-spcae의 프로세스는 파일 경로에 대한 <code class="language-text">open()</code> 시스템콜을 호출한다.</li>
+<li>시스템콜이 Kenrel-space로 전달되고 파일 경로 문자열을 사용하여 커널 파일 object를 얻음. 만약 파일 path 인자가 올바르지 않을 경우, 오류로 리턴된다.</li>
+<li>DAC 파일 permission이 확인됨. 현재 사용자에게 요청한 파일을 열 수 있는 권한이 있는지 Check. 만약 permission이 없을 경우 시스템콜은 종료되고 사용자에게 error가 반환됨</li>
+<li>DAC이 충족할 경우, LSM 프레임워크가 활성화된 LSM Moulde에 대한 각 <code class="language-text">file_open</code> hook function을 호출한다. 만약, 한 개의 LSM hook function이라도 error를 반환할 경우 시스템콜이 종료되고 사용자에게 error가 반환된다.</li>
+<li>모든 Security Check가 통과할 경우, 프로세스를 위한 파일이 열리고, 새로운 fd(file descriptor)가 User-space의 프로세스에게 반환된다.</li>
+</ol>
+<p>즉, LSM Hook을 통한 MAC 이전에 위와 같이 Error checks, DAC checks가 먼저 수행되고 LSM Hook을 이용한 MAC checks는 가장 나중에 수행된다.</p>
 <h2 id="3-security-module" style="position:relative;"><a href="#3-security-module" aria-label="3 security module permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. Security Module</h2>
 <p>Linux LSM 프레임워크 위에서 동작하는 MAC(Mandatory Access Control) 기반 Security Module에는 AppArmor, SELinux, Smack, Tomoyo 등이 있다.</p>
 <p>현재 리눅스 커널(v6.2)에서 지원하는 Security Module은 <code class="language-text">/security/Kconfig</code>에 정의되어 있다.</p>
@@ -401,7 +433,324 @@ Major Security Module은 User-space로부터 보안 정책을 전달받아 MAC �
 예를 들어, Capability 모듈 이외에 Yama와 같은 여러 ‘Minor’ Module이 위치하며 AppArmor와 같은 하나의 ‘Major’ Module이 구성될 수 있다.</p>
 <p>그러나, LSM 프레임워크는 “Major”와 “Minor” 사이의 구분을 없애기 위한 수정을 계속하고 있으며, 사용자는 <code class="language-text">LSM_FLAG_EXCLUSIVE</code>가 설정된 Security Module 하나만을 가진다면 원하는 만큼 Security Module을 사용해서 LSM을 구성할 수 있다.
 AppArmor는 곧 <code class="language-text">LSM_FLAG_EXCLUSIVE</code> 구분을 잃게될 것이며, 다른 모듈들도 그 뒤를 따를 것이다.</p>
-<h3 id="31-apparmor" style="position:relative;"><a href="#31-apparmor" aria-label="31 apparmor permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.1. AppArmor</h3>
+<h3 id="31-selinux---security-enhanced-linux" style="position:relative;"><a href="#31-selinux---security-enhanced-linux" aria-label="31 selinux   security enhanced linux permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.1. SELinux - Security Enhanced Linux</h3>
+<p>리눅스 v2.6에서 처음 merge된 SELInux는 RedHat 기반 리눅스 배포반의 default MAC 구현체이다.
+SELinux는 강력하지만, 또한 복잡하기로도 유명하다.</p>
+<p>모든 프로세스 및 시스템 리소스에는 <code class="language-text">SELinux Context</code>라는 특수한 보안 레이블이 존재한다.
+SELinux 레이블이라도고도 하는 <code class="language-text">SELInux Context</code>는 시스템 레벨의 세부 정보를 추상화하고 object의 보안 속성에 중점을 둔 식별자이다.
+이러한 <code class="language-text">SELinux Context</code>는 extended attributes(<code class="language-text">xattrs</code>)를 사용하여 파일 시스템 object에 저장된다.</p>
+<p>SELinux 정책은 프로세스가 다양한 시스템 리소스와 상호 작용할 수 있는 방법을 정의하는 규칙을 정의하기 위해 이러한 Context를 사용한다.
+default로는 deny로 동작하며, 보안 정책이 명시적으로 액세스 권한을 부여하지 않는 한 상호 작용이 거부된다.</p>
+<p>예를 들어, <code class="language-text">ls -Z</code>를 사용하여 <code class="language-text">/bin/bash</code>의 <code class="language-text">SELinux Context</code>를 확인할 수 있다:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">ls</span> -Z /bin/bash
+-rwxr-xr-x. root root system_u:object_r:shell_exec_t:s0 /bin/bash</code></pre></div>
+<p>위에서는 <code class="language-text">SELinux Cotext</code>가 <code class="language-text">system_u:object_r:shell_exec_t:s0</code>이다.
+네 개의 field는 콜론으로 구분되며 각각 <code class="language-text">user:role:type:level</code>을 의미한다.</p>
+<p>즉, SELinux는 ”<code class="language-text">subject</code>기 <code class="language-text">object</code>에게 <code class="language-text">action</code>을 할 수 있는가?”라는 질문에 답할 수 있도록 정책을 설정한다.
+예를 들면, ”<code class="language-text">web server</code>가 <code class="language-text">user의 home dicectories에 있는 file</code>에 <code class="language-text">access</code>할 수 있는가?”에 대한 MAC permission을 구현한다.</p>
+<p><code class="language-text">SELinux Context</code>의 여러 field 중에서도 SELinux <code class="language-text">type</code>은 SELinux 정책에서 가장 중요한 역할을 한다.
+SELinux <code class="language-text">type</code>은 일반적으로 <code class="language-text">_t</code>로 끝나며, 다양한 <code class="language-text">type</code>이 있고 이를 subject에게 라벨링할 수 있다.
+예를 들어, 웹 서버의 <code class="language-text">type</code>은 <code class="language-text">httpd_t</code>이며, <code class="language-text">/var/www/html/</code> 위치에 있는 파일 및 디렉터리듸 <code class="language-text">type</code>은 <code class="language-text">httpd_sys_content_t</code>이다.
+또한, <code class="language-text">/tmp</code> 및 <code class="language-text">/var/tmp</code>에 있는 파일 및 디렉터리의 <code class="language-text">type</code>은 <code class="language-text">tmp_t</code>이며, 웹 서버 포트의 <code class="language-text">type</code>은 <code class="language-text">http_port_t</code>이다.</p>
+<p>SELinux에서 보안 정책을 설정하는 가장 일반적인 방법은 SELinux <code class="language-text">subject</code>(위의 예에서 <code class="language-text">user</code>)가 특정한 <code class="language-text">type</code>으로 라벨링된 <code class="language-text">object</code>에게 수행할 수 있는 <code class="language-text">action</code>을 지정하는 것이다.
+위의 예로 다시 살펴보면, 기본 DAC permission(위의 예에서 <code class="language-text">-rwxr-xr-x</code>)은 시스템의 모든 사용자가 <code class="language-text">bash</code>를 읽고 실행할 수 있음을 나타낸다.
+하지만, SELinux를 사용하면 보안 관리자가 <code class="language-text">shell_exec_t</code> type의 <code class="language-text">/bin/bash</code> 파일을 실행하거나 읽을 수 있는 <code class="language-text">subject</code>를 추가로 지정할 수 있다.</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 39.44444444444444%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAIAAAB2/0i6AAAACXBIWXMAAAsTAAALEwEAmpwYAAABEUlEQVQY022PcW+DIBDF+f7frNmSdd1itKZVlLuRQKtR7KRwsIir25L9wh/vwb3wjpkHY2IVzrn4C+/99jQMw6qNMaxpmrZtq6p6fnoqy7Jt27quh2EgopAOEY3jWNe1ECLP891ut441TcMuK1pzgUrpJPU8z95755zzC9ZarfX1elVKcYGXi15DbOumbp7Cw4RF3TifTqfNxhgpRPXptwi7JwKRHK1Lv1lrA1GMce77ueuWLNE6dndeGkve2+QYAAghsiw7vL2/Hg6ccwDous45l/ZdYn3fCyEQMcuyl/2+KApEBAD2kSgTx+MRABDRGPPdNhWepgkApJTV+VzkOedcSomILCTiz7J/7L/3ROQSX/gzxVIR3A0/AAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="LSM-3.png"
+        title="LSM-3.png"
+        src="/static/f7b4d4a7ee54ec0153a3422060470895/37523/LSM-3.png"
+        srcset="/static/f7b4d4a7ee54ec0153a3422060470895/e9ff0/LSM-3.png 180w,
+/static/f7b4d4a7ee54ec0153a3422060470895/f21e7/LSM-3.png 360w,
+/static/f7b4d4a7ee54ec0153a3422060470895/37523/LSM-3.png 720w,
+/static/f7b4d4a7ee54ec0153a3422060470895/302a4/LSM-3.png 1080w,
+/static/f7b4d4a7ee54ec0153a3422060470895/07a9c/LSM-3.png 1440w,
+/static/f7b4d4a7ee54ec0153a3422060470895/891d5/LSM-3.png 1520w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>위의 그림에서 SELinux는 <code class="language-text">httpd_t</code> type으로 실행되는 Apache 프로세스가 <code class="language-text">/var/www/html/</code> 디렉터리에 액세스하는 것을 allow하지만, 동일한 프로세스가 <code class="language-text">/data/mysql</code> 디렉터리에 액세스하는 것은 deny된다.
+<code class="language-text">mysqld_db_t</code> type의 Context에 대한 allow 규칙을 가지고 있지 않기 때문이다.</p>
+<p>반면에, <code class="language-text">mysqld_t</code>로 실행되는 MariaDB 프로세스는 <code class="language-text">/data/mysql</code> 디렉터리에 액세스할 수 있으며, SELinux는 <code class="language-text">mysql_t</code> type의 프로세스가 <code class="language-text">httpd_sys_content_t</code>로 레이블된 <code class="language-text">/var/www/html/</code> 디렉터리에 액세스하는 것을 deny한다.</p>
+<h4 id="selinux의-이점" style="position:relative;"><a href="#selinux%EC%9D%98-%EC%9D%B4%EC%A0%90" aria-label="selinux의 이점 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>SELinux의 이점</h4>
+<ul>
+<li>모든 프로세스와 파일에 <code class="language-text">type</code>으로 레이블이 지정된다. SELinux의 policy rule은 ‘프로세스-파일’ 간의 상호 작용 방식과 ‘프로세스-프로세스’ 간의 상호 작용 방식을 정의한다. 서로 간의 액세스는 SELinux에 정의된 policy rule이 있는 경우에만 allow된다.</li>
+<li>세분화된 액세스 제어가 가능한다. 기존에 리눅스가 DAC으로 제공하는 사용자 및 그룹 ID를 기반으로 하는 Permission 제어를 넘어서, user, type, role, level과 같이 확장된 permission을 제어할 수 있다.</li>
+<li>SELinux policy는 관리자가 정의하며, 시스템 전체에 적용된다.</li>
+<li>privilege escalation attack(권한 상승 공격)에 대해 더 나은 완화 기능을 제공한다. 만약 프로세스가 손상된 경우, 공격자는 해당 프로세스의 일반적인 기능과 SELinux에 의해 프로세스가 액세스할 수 있도록 allow된 파일에만 액세스 가능하다. 예를 들어, Apache HTTP Server가 손상된 경우, 공격자는 특정 SELinux policy에 의해 사용자의 home 디렉터리에 위치한 파일들에 접근할 수 없다.</li>
+<li>SELinux는 데이터의 Confidentiality(기밀성)과 Integrity(무결성)을 강화하며, 신뢰할 수 없는 입력으로부터 프로세스를 보호하는 데에도 사용될 수 있다.</li>
+</ul>
+<h4 id="selinux의-한계" style="position:relative;"><a href="#selinux%EC%9D%98-%ED%95%9C%EA%B3%84" aria-label="selinux의 한계 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>SELinux의 한계</h4>
+<ul>
+<li>Anti-virus 소프트웨어가 아니다.</li>
+<li>암호, 방화벽, 기타 보안 시스템을 대체할 수 없다.</li>
+<li>All-in-One 보안 솔루션이 아니다.</li>
+</ul>
+<p>SELinux는 기존 보안 솔루션을 완전히 대체하는 솔루션이 아니라, 기존 보안 솔루션을 강화하도록 설계되었다.
+따라서 SELinux를 시스템에 적용하더라도 기존의 보안 관행(e.g., 소프트웨어 최신 상태로 업데이트, 추측하기 어려운 암호 사용, 방화벽 사용)을 계속 따라야한다.</p>
+<h3 id="32-apparmor" style="position:relative;"><a href="#32-apparmor" aria-label="32 apparmor permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.2. AppArmor</h3>
+<p><a href="https://apparmor.net">AppArmor</a>는 리눅스 커널 v2.6.36 릴리스에서 커널에 병합된 또 다른 MAC 구현체이다.
+SELinux와 차이점은 AppAmor의 경우 Debian 기반 시스템의 기본 MAC 구현체라는 것이다.</p>
+<p>이 외에도 AppArmor와 SELinux의 또 다른 가장 큰 차이점은 attribute 기반이 아닌 path 기반을 작동한다는 것이다.
+이를 통해 AppAmor는 SELinux의 복잡성을 다소 낮췄다고 볼 수 있다.</p>
+<p>이러한 path 기반 구현은 Security Context를 저장하는 데 따로 확장 attribute가 필요하지 않기 때문에 모든 파일 시스템의 파일을 보호할 수 있다.
+실제 파일이나 디렉터리에 따로 레이블을 지정할 필요 없이 policy rule에 path를 저장할 수 있으므로 아직 존재하지 않는 파일에 대해서도 규칙을 지정할 수 있다.</p>
+<p>하지만, path 기반 구현은 Hard link 등과 같이 실제 파일을 참조하는 여러 경로가 있을 수 있다는 점이다.
+즉, 파일에 대한 policy rule(Profile)은 해당 파일에 도달하는 데까지 사용된 경로에 따라 다르게 적용될 수 있으며, 이것이 보안 허점을 만들어 낼 수 있다.</p>
+<p>AppArmor는 Enforcement, Compain 2가지 모드로 동작한다.</p>
+<ul>
+<li>Enforcement 모드: 프로그램의 허용되지 않은 동작을 deny하고 log에 이를 남긴다. 실제 프로그램을 운영하면서 동작을 제한할 때 이용하는 모드이다.</li>
+<li>Complain 모드: 프로그램의 허용되지 않은 동작을 deny하지는 않고 log만 남긴다. 특정 프로그램의 AppArmor Profile을 작성할 때 이용하는 모드이다. 기록된 log를 통해서 AppArmor Profile 작성 시 어떤 동작을 allow해야 하는지에 대해 참고할 수 있다.</li>
+</ul>
+<p><code class="language-text">aa-status</code> 명령어를 이용하여 AppArmor의 상태를 조회할 수 있다.
+해당 명령어는 AppArmor가 이용하는 Profile과 Profile이 적용된 프로세스를 출력한다.
+AppArmor의 정보는 <code class="language-text">/sys/kernel/security/apparmor</code> 폴더 안에 위치하고 있으며, 해당 명령어는 이 폴더 안의 내용을 정리해서 보여주는 역할이다.</p>
+<p><code class="language-text">/sys/kernel/securiy/apparmor</code> 폴더 안에는 다음과 같은 파일들이 위치하고 있다:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">root@bastion:/home<span class="token comment"># ll /sys/kernel/security/apparmor/</span>
+total <span class="token number">0</span>
+drwxr-xr-x  <span class="token number">3</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 ./
+drwxr-xr-x  <span class="token number">4</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 <span class="token punctuation">..</span>/
+-rw-rw-rw-  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .access
+drwxr-xr-x <span class="token number">15</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 features/
+-rw-rw-rw-  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .load
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .ns_level
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .ns_name
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .ns_stacked
+crw-rw-rw-  <span class="token number">1</span> root root <span class="token number">1</span>, <span class="token number">3</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .null
+lr--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 policy -<span class="token operator">></span> <span class="token string">'apparmorfs:[14707]'</span>
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 profiles
+-rw-rw-rw-  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .remove
+-rw-rw-rw-  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .replace
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 revision
+-r--r--r--  <span class="token number">1</span> root root    <span class="token number">0</span>  <span class="token number">8</span>월  <span class="token number">4</span> <span class="token number">11</span>:25 .stacked</code></pre></div>
+<p><code class="language-text">aa-status</code> 명령어의 출력 결과는 다음과 같다:</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">root@bastion:/home<span class="token comment"># aa-status</span>
+apparmor module is loaded.
+<span class="token number">63</span> profiles are loaded.
+<span class="token number">60</span> profiles are <span class="token keyword">in</span> enforce mode.
+   /snap/snapd/16010/usr/lib/snapd/snap-confine
+   /snap/snapd/16010/usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /snap/snapd/16292/usr/lib/snapd/snap-confine
+   /snap/snapd/16292/usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /snap/snapd/16778/usr/lib/snapd/snap-confine
+   /snap/snapd/16778/usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /snap/snapd/17029/usr/lib/snapd/snap-confine
+   /snap/snapd/17029/usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /snap/snapd/17336/usr/lib/snapd/snap-confine
+   /snap/snapd/17336/usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /usr/bin/evince
+   /usr/bin/evince-previewer
+   /usr/bin/evince-previewer//sanitized_helper
+   /usr/bin/evince-thumbnailer
+   /usr/bin/evince//sanitized_helper
+   /usr/bin/man
+   /usr/lib/NetworkManager/nm-dhcp-client.action
+   /usr/lib/NetworkManager/nm-dhcp-helper
+   /usr/lib/connman/scripts/dhclient-script
+   /usr/lib/cups/backend/cups-pdf
+   /usr/lib/snapd/snap-confine
+   /usr/lib/snapd/snap-confine//mount-namespace-capture-helper
+   /usr/sbin/cups-browsed
+   /usr/sbin/cupsd
+   /usr/sbin/cupsd//third_party
+   /usr/sbin/ntpd
+   /usr/sbin/tcpdump
+   /<span class="token punctuation">{</span>,usr/<span class="token punctuation">}</span>sbin/dhclient
+   docker-default
+   ippusbxd
+   libvirt-1aba34b6-ccf2-49d3-9a32-e7dee5c2f701
+   libvirt-1cd08b80-0ed0-428f-84ba-ac68b01b37f5
+   libvirt-2c02a164-4e6b-4447-873d-8f9d9c257d3b
+   libvirt-612f8ff8-9f42-4166-94f4-4ea329845093
+   libvirt-61a08af2-1e8b-4d1e-bb78-14f69e2d0d94
+   libvirt-6345c508-715e-4291-a178-bce70d2e442c
+   libvirt-6d586ec1-444e-417f-81f1-ab3204e55edd
+   libvirt-6ff38ba8-b31e-4bdf-b0f8-6713fcd606a1
+   libvirt-7198fda1-825d-4eaf-b993-ef08304e765c
+   libvirt-970b6862-1c8a-46b2-bed4-467699ca9fd3
+   libvirt-98179a8a-6ee5-4a0c-bcb3-20a869d51934
+   libvirt-9b850c34-dec9-4f83-b7e6-f3667556aa1a
+   libvirt-b6b75415-de22-4846-a56b-45e0ace7a6f6
+   libvirt-ccf5b79c-0ba1-4067-92c4-475d85c3e91c
+   libvirt-e2416988-4191-4209-9b38-dfaabf2015d1
+   libvirt-ed563373-5625-4e84-8bbb-4fa569418c66
+   libvirt-ef0a4fc5-8a0a-4f2b-8a06-78348397ef3b
+   libvirtd
+   libvirtd//qemu_bridge_helper
+   lsb_release
+   man_filter
+   man_groff
+   nvidia_modprobe
+   nvidia_modprobe//kmod
+   snap-update-ns.snap-store
+   snap.snap-store.hook.configure
+   snap.snap-store.snap-store
+   snap.snap-store.ubuntu-software
+   snap.snap-store.ubuntu-software-local-file
+   virt-aa-helper
+<span class="token number">3</span> profiles are <span class="token keyword">in</span> complain mode.
+   /usr/lib/ibus/ibus-engine-hangul
+   /usr/lib/ibus/ibus-setup-hangul
+   /usr/lib/ibus/ibus-setup-hangul//python_profile
+<span class="token number">21</span> processes have profiles defined.
+<span class="token number">21</span> processes are <span class="token keyword">in</span> enforce mode.
+   /usr/sbin/cups-browsed <span class="token punctuation">(</span><span class="token number">3637361</span><span class="token punctuation">)</span> 
+   /usr/sbin/cupsd <span class="token punctuation">(</span><span class="token number">3637359</span><span class="token punctuation">)</span> 
+   /usr/sbin/ntpd <span class="token punctuation">(</span><span class="token number">31958</span><span class="token punctuation">)</span> 
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">3899868</span><span class="token punctuation">)</span> libvirt-1aba34b6-ccf2-49d3-9a32-e7dee5c2f701
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">3899509</span><span class="token punctuation">)</span> libvirt-1cd08b80-0ed0-428f-84ba-ac68b01b37f5
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">2185176</span><span class="token punctuation">)</span> libvirt-2c02a164-4e6b-4447-873d-8f9d9c257d3b
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">383493</span><span class="token punctuation">)</span> libvirt-612f8ff8-9f42-4166-94f4-4ea329845093
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">2185167</span><span class="token punctuation">)</span> libvirt-61a08af2-1e8b-4d1e-bb78-14f69e2d0d94
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">1297476</span><span class="token punctuation">)</span> libvirt-6345c508-715e-4291-a178-bce70d2e442c
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">365800</span><span class="token punctuation">)</span> libvirt-6d586ec1-444e-417f-81f1-ab3204e55edd
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">2103334</span><span class="token punctuation">)</span> libvirt-6ff38ba8-b31e-4bdf-b0f8-6713fcd606a1
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">3899196</span><span class="token punctuation">)</span> libvirt-7198fda1-825d-4eaf-b993-ef08304e765c
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">385028</span><span class="token punctuation">)</span> libvirt-970b6862-1c8a-46b2-bed4-467699ca9fd3
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">3899363</span><span class="token punctuation">)</span> libvirt-98179a8a-6ee5-4a0c-bcb3-20a869d51934
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">366380</span><span class="token punctuation">)</span> libvirt-9b850c34-dec9-4f83-b7e6-f3667556aa1a
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">3246640</span><span class="token punctuation">)</span> libvirt-b6b75415-de22-4846-a56b-45e0ace7a6f6
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">1254500</span><span class="token punctuation">)</span> libvirt-ccf5b79c-0ba1-4067-92c4-475d85c3e91c
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">2185108</span><span class="token punctuation">)</span> libvirt-e2416988-4191-4209-9b38-dfaabf2015d1
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">365344</span><span class="token punctuation">)</span> libvirt-ed563373-5625-4e84-8bbb-4fa569418c66
+   /usr/bin/qemu-system-x86_64 <span class="token punctuation">(</span><span class="token number">387769</span><span class="token punctuation">)</span> libvirt-ef0a4fc5-8a0a-4f2b-8a06-78348397ef3b
+   /usr/sbin/libvirtd <span class="token punctuation">(</span><span class="token number">2013</span><span class="token punctuation">)</span> libvirtd
+<span class="token number">0</span> processes are <span class="token keyword">in</span> complain mode.
+<span class="token number">0</span> processes are unconfined but have a profile defined.</code></pre></div>
+<p>위의 AppArmor Profile에 따르면, <code class="language-text">/</code>로 시작하는 이름과 <code class="language-text">/</code>로 시작하지 않는 이름으로 구분된다.
+두 가지 이름의 차이점은 Profile이 자동으로 적용되는지 여부이다.</p>
+<p><code class="language-text">/</code>로 시작하는 Profile의 경우, Profile의 이름이 해당 Profile이 적용되는 프로그램을 나타낸다.
+즉, 위의 Bash 출력 결과에서 <code class="language-text">/usr/sbin/tcpdump</code> Profile의 경우, <code class="language-text">/usr/sbin/tcpdump</code> 프로그램이 실행되면 자동으로 <code class="language-text">/usr/sbin/tcpdump</code> Profile이 적용되어 동작하게 된다.</p>
+<p><code class="language-text">/</code>로 시작하지 않는 Profile의 경우, 해당 프로그램을 동작시킬 때 <code class="language-text">aa-exec</code> 명령어를 통해 수동으로 Profile을 적용시켜야 한다.</p>
+<p>AppArmor에 적용된 Profile은 <code class="language-text">/etc/apparmor.d</code>에 위치하고 있다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">root@bastion:/etc/apparmor.d<span class="token comment"># ll</span>
+total <span class="token number">156</span>
+drwxr-xr-x   <span class="token number">8</span> root root  <span class="token number">4096</span> <span class="token number">10</span>월  <span class="token number">6</span> 06:48 ./
+drwxr-xr-x <span class="token number">160</span> root root <span class="token number">12288</span> <span class="token number">10</span>월 <span class="token number">29</span> 06:53 <span class="token punctuation">..</span>/
+drwxr-xr-x   <span class="token number">4</span> root root  <span class="token number">4096</span>  <span class="token number">5</span>월  <span class="token number">4</span> 06:06 abstractions/
+drwxr-xr-x   <span class="token number">2</span> root root  <span class="token number">4096</span>  <span class="token number">8</span>월  <span class="token number">1</span>  <span class="token number">2020</span> disable/
+drwxr-xr-x   <span class="token number">2</span> root root  <span class="token number">4096</span>  <span class="token number">2</span>월 <span class="token number">12</span>  <span class="token number">2020</span> force-complain/
+drwxr-xr-x   <span class="token number">2</span> root root  <span class="token number">4096</span>  <span class="token number">8</span>월 <span class="token number">17</span> <span class="token number">13</span>:47 libvirt/
+drwxr-xr-x   <span class="token number">3</span> root root  <span class="token number">4096</span> <span class="token number">10</span>월 <span class="token number">17</span>  <span class="token number">2021</span> local/
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">1313</span>  <span class="token number">5</span>월 <span class="token number">20</span>  <span class="token number">2020</span> lsb_release
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">1108</span>  <span class="token number">5</span>월 <span class="token number">20</span>  <span class="token number">2020</span> nvidia_modprobe
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">3461</span>  <span class="token number">6</span>월 <span class="token number">21</span> <span class="token number">19</span>:44 sbin.dhclient
+drwxr-xr-x   <span class="token number">5</span> root root  <span class="token number">4096</span> <span class="token number">10</span>월 <span class="token number">17</span>  <span class="token number">2021</span> tunables/
+-rw-r--r--   <span class="token number">1</span> root root <span class="token number">11082</span>  <span class="token number">7</span>월  <span class="token number">7</span>  <span class="token number">2020</span> usr.bin.evince
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">9793</span>  <span class="token number">8</span>월 <span class="token number">19</span> <span class="token number">14</span>:25 usr.bin.firefox
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">3202</span>  <span class="token number">2</span>월 <span class="token number">26</span>  <span class="token number">2020</span> usr.bin.man
+-rw-r--r--   <span class="token number">1</span> root root   <span class="token number">633</span> <span class="token number">12</span>월 <span class="token number">11</span>  <span class="token number">2019</span> usr.lib.ibus.ibus-engine-hangul
+-rw-r--r--   <span class="token number">1</span> root root   <span class="token number">941</span> <span class="token number">12</span>월 <span class="token number">11</span>  <span class="token number">2019</span> usr.lib.ibus.ibus-setup-hangul
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">2581</span> <span class="token number">10</span>월  <span class="token number">8</span>  <span class="token number">2020</span> usr.lib.libvirt.virt-aa-helper
+-rw-r--r--   <span class="token number">1</span> root root <span class="token number">28249</span>  <span class="token number">2</span>월 <span class="token number">18</span>  <span class="token number">2022</span> usr.lib.snapd.snap-confine.real
+-rw-r--r--   <span class="token number">1</span> root root   <span class="token number">540</span>  <span class="token number">4</span>월 <span class="token number">10</span>  <span class="token number">2020</span> usr.sbin.cups-browsed
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">5797</span>  <span class="token number">4</span>월 <span class="token number">24</span>  <span class="token number">2020</span> usr.sbin.cupsd
+-rw-r--r--   <span class="token number">1</span> root root   <span class="token number">672</span>  <span class="token number">2</span>월 <span class="token number">19</span>  <span class="token number">2020</span> usr.sbin.ippusbxd
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">4653</span>  <span class="token number">6</span>월 <span class="token number">14</span>  <span class="token number">2021</span> usr.sbin.libvirtd
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">2425</span> <span class="token number">11</span>월 <span class="token number">28</span>  <span class="token number">2020</span> usr.sbin.ntpd
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">1575</span>  <span class="token number">2</span>월 <span class="token number">12</span>  <span class="token number">2020</span> usr.sbin.rsyslogd
+-rw-r--r--   <span class="token number">1</span> root root  <span class="token number">1385</span> <span class="token number">12</span>월  <span class="token number">8</span>  <span class="token number">2019</span> usr.sbin.tcpdump</code></pre></div>
+<h4 id="apparmor-profile" style="position:relative;"><a href="#apparmor-profile" aria-label="apparmor profile permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>AppArmor Profile</h4>
+<p>다음은 AppArmor의 예제 Profile인 <code class="language-text">apparmor-example</code>이다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># vim:syntax=apparmor</span>
+<span class="token comment">#include &lt;tunables/global></span>
+
+profile apparmor-example <span class="token punctuation">{</span>
+  <span class="token comment">#include &lt;abstractions/base></span>
+
+  capability net_admin,
+  capability setuid,
+  capability setgid,
+
+  <span class="token function">mount</span> <span class="token assign-left variable">fstype</span><span class="token operator">=</span>proc -<span class="token operator">></span> /mnt/proc/**,
+
+  /etc/hosts.allow rw,
+  /root/test.sh rwix,
+  /root/test_file w,
+
+  network tcp,
+<span class="token punctuation">}</span></code></pre></div>
+<p>프로필은 각각 다음과 같은 의미를 나타내고 있다.</p>
+<ul>
+<li><code class="language-text">net_admin</code>, <code class="language-text">setuid</code>, <code class="language-text">setgid</code> Capability를 이용할 수 있다.</li>
+<li><code class="language-text">proc</code> 파일 시스템을 <code class="language-text">/mnt/proc/</code> 아래의 경로에만 mount 시킬 수 있다.</li>
+<li><code class="language-text">/etc/hosts.allow</code> 파일을 읽고 쓸 수 있다.</li>
+<li><code class="language-text">/root/test.sh</code> 파일을 읽고, 쓰고, 실행할 수 있다.</li>
+<li><code class="language-text">/root/test_file</code> 파일을 쓸 수만 있다.</li>
+<li><code class="language-text">tcp</code> 프로토콜만 이용할 수 있다.</li>
+</ul>
+<p>해당 Profile을 <code class="language-text">apparmor_parser</code> 명령어를 이용하여 AppArmor에 등록하고, <code class="language-text">aa-status</code> 명령어를 통해 AppArmor Profile에 등록된 <code class="language-text">apparmor-example</code> Profile을 확인할 수 있다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">root@hoth:/etc/apparmor.d<span class="token comment"># apparmor_parser /etc/apparmor.d/test/apparmor-example </span>
+root@hoth:/etc/apparmor.d<span class="token comment"># aa-status</span>
+apparmor module is loaded.
+<span class="token number">64</span> profiles are loaded.
+<span class="token number">61</span> profiles are <span class="token keyword">in</span> enforce mode.
+   <span class="token punctuation">..</span>.
+   /usr/sbin/tcpdump
+   /<span class="token punctuation">{</span>,usr/<span class="token punctuation">}</span>sbin/dhclient
+   apparmor-example
+   docker-default
+   ippusbxd
+   <span class="token punctuation">..</span>.
+<span class="token number">0</span> processes are <span class="token keyword">in</span> complain mode.
+<span class="token number">0</span> processes are unconfined but have a profile defined.</code></pre></div>
+<p>아래는 <code class="language-text">aa-exec</code> 명령어를 통해 <code class="language-text">apparmor-example</code> Profile을 <code class="language-text">cat</code>과 <code class="language-text">echo</code> 명령어에 적용시킨 모습을 보여준다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">root@hoth:/etc/apparmor.d<span class="token comment"># echo test > /root/test_file</span>
+root@hoth:/etc/apparmor.d<span class="token comment"># aa-exec -p apparmor-example cat /root/test_file</span>
+cat: /root/test_file: Permission denied
+root@hoth:/etc/apparmor.d<span class="token comment"># aa-exec -p apparmor-example echo apparmor > /root/test_file </span>
+root@hoth:/etc/apparmor.d<span class="token comment"># cat /root/test_file </span>
+apparmor</code></pre></div>
+<p>Profile에 따라 <code class="language-text">/root/test_file</code> 파일에 쓰기 동작은 정상적으로 수행되지만, 읽기 동작은 deny되는 것을 볼 수 있다.</p>
+<p>참고로 해당 프로필을 삭제하고, 전체 프로필을 reload 하는 명령어는 <code class="language-text">sudo service apparmor reload</code>이다.</p>
+<h3 id="33-smack---simplified-mandatory-access-control" style="position:relative;"><a href="#33-smack---simplified-mandatory-access-control" aria-label="33 smack   simplified mandatory access control permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.3. SMACK - Simplified Mandatory Access Control</h3>
+<p>SMACK은 리눅스 커널 v2.6.24 릴리즈에서 메인스트림에 병합되었고 커널에 2번째로 추가된 LSM Module이다.</p>
+<p>SMACK은 SELiux와 마찬가지로 attribute 기반 MAC의 구현제로 임베디드 시스템을 위해 설계되었으며, SELinux와 비교했을 때, 보다 관리가 간편하다는 장점이 있다.
+또한, SMACK은 Automotive Grade Linux와 Tizen의 기본 MAC 구현체로 지정되어 있다.</p>
+<blockquote>
+<p>Automative Grade Linux: 자동차 애플리케이션을 위한 개방형 운영 체제 및 프레임워크를 구축하는 Linux Foundation에서 주최하는 오픈 소스 프로젝트
+Tizen: 리눅스 재단, 리모 재단, 삼성전자, 인텔이 공동으로 개발한 IT기기를 지원하는 운영 체제. TV, 냉장고, 휴대용 장치와 같은 모든 전자기기에 포함을 목적으로 하는 오픈 소스 모바일 운영 체제.</p>
+</blockquote>
+<p>SMACK은 각 subject(e.g., 사용자, application, 프로세스)와 object(e.g., 파일, 소켓, 디렉터리, 디바이스)에 연결된 레이블을 기준으로 어떤 subject가 어떤 object에 액세스할 수 있는지에 대해 DAC을 넘어 추가적인 제어가 가능한다.</p>
+<p>SMACK 역시 extended attributes(<code class="language-text">xattrs</code>)를 사용하여 파일 시스템 object에 레이블을 저장하고 extended security namespace에 저장된다.</p>
+<h3 id="34-tomoyo" style="position:relative;"><a href="#34-tomoyo" aria-label="34 tomoyo permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4. TOMOYO</h3>
+<p>TOMOYO는 리눅스 커널 v2.6.30에 병합되었으며, SELinux, AppArmor, SMACK과 함께 4가지 표준 LSM Module 중 하나이다.
+AppArmor와 비슷하게, Path 기반 MAC을 제공하는 구현체이다.
+주요 기능으로는 프로세스의 실행 기록을 기반으로 시스템을 분석하여 자동으로 정책을 결정하는 기능이 있다.</p>
+<h3 id="35-loadpin" style="position:relative;"><a href="#35-loadpin" aria-label="35 loadpin permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.5. LoadPin</h3>
+<p>LoadPin은 리눅스 커널 v4.7에 병합된 Minor LSM Module이다.
+LoadPin은 모든 커널 로드 파일이 동일한 파일 시스템에서 생성되도록 보장하는 기능을 수행한다.
+이를 통해 커널 모듈 signing infrastructure나 읽기 전용 장치에서 부팅하도록 시스템이 구성되어 있는지에 대한 여부를 확인할 필요가 없어지므로 임베디드 시스템에서 강점을 가진다.</p>
+<h3 id="36-yama" style="position:relative;"><a href="#36-yama" aria-label="36 yama permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.6. Yama</h3>
+<p>Yama는 리눅스 커널 v3.4에 병합된 Minor LSM으로 코어 커널에 의해 처리되지 않는 시스템 전체의 DAC 보안 방법들을 모아둔 LSM Module이다.
+최근 Yama는 <code class="language-text">ptrace()</code> 시스템콜이 어떠한 프로세스에 보안 공격에 이루어졌을 때, 해당 프로세스에서 중요한 정보를 추출할 수 없도록 <code class="language-text">ptrace()</code> 시스템콜의 영역을 제한하는 기능을 지원한다.</p>
+<h3 id="37-safesetid" style="position:relative;"><a href="#37-safesetid" aria-label="37 safesetid permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.7. SafeSetID</h3>
+<p>SafeSetID는 리눅스 커널 v5.1에 병합된 Minor LSM이다.
+주어진 UID/GID에서 시스템 전체 whitelist에 의해 승인된 것으로만 UID/GID 전환을 제한하기 위해 사용한다.</p>
+<h3 id="38-landlock" style="position:relative;"><a href="#38-landlock" aria-label="38 landlock permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.8. Landlock</h3>
+<p>Landlock은 리눅스 커널 v5.13에 병합된 Minor LSM Module이다.
+권한 있는 프로세스이더라도 자신의 불필요한 권한(e.g., 파일 액세스)을 제한함으로써, 어플리케이션이 안전하게 구동할 수 있는 샌드박스 환경을 제공하는 것을 목표로한다.</p>
+<h3 id="39-lockdown" style="position:relative;"><a href="#39-lockdown" aria-label="39 lockdown permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.9. Lockdown</h3>
+<p>Lockdown은 리눅스 커널 v5.4에 병합된 Minor LSM Module로써 커널에 대한 ‘Lockdown(잠금)’ 기능을 제공한다.
+Lockdown LSM을 사용하도록 설정할 경우, 커널 command line 매개변수를 사용해서 integrity(무결성) 및 confidentiality(기밀성)을 위해 커널을 locking하는 것이 가능해진다.</p>
+<p>Lockdown LSM을 integrity 모드로 설정하면 아래와 같은 경우에 커널을 수정할 수 없게 된다.</p>
+<ul>
+<li>서명되지 않은 모듈 로딩, <code class="language-text">/dev/{mem,kmem,port}</code>에 대한 접근</li>
+<li>서명되지 않은 이미지에 대한 <code class="language-text">kexec</code>, <code class="language-text">hibernation</code>, 직접 PCI 접근</li>
+<li>Raw IO Port 접근, raw MSR 액세스, ACPI 테이블 수정, 안전하지 않은 모듈 파라미터, 안전하지 않은 mmio와 debugfs 접근</li>
+</ul>
+<p>Lockdown LSM을 integrity와 confidentiality 모드로 설정한 경우 <code class="language-text">/proc/kcore</code> 액세스와 같이 실행 중인 커널에서 잠재적으로 기밀 정보를 추출할 수 있는 기능이 비활성화되며, kprobe 사용, BPF에서 커널 RAM 읽기, 안전하지 않은 perf 사용 및 tracefs 사용이 제한된다.</p>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li><a href="https://www.kernel.org/doc/html/v5.8/security/lsm.html">https://www.kernel.org/doc/html/v5.8/security/lsm.html</a></li>
@@ -410,6 +759,8 @@ AppArmor는 곧 <code class="language-text">LSM_FLAG_EXCLUSIVE</code> 구분을 
 <li><a href="https://www.lesstif.com/ws/access-control-dac-mac-43843837.html">https://www.lesstif.com/ws/access-control-dac-mac-43843837.html</a></li>
 <li><a href="https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html">https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html</a></li>
 <li><a href="https://www.starlab.io/blog/a-brief-tour-of-linux-security-modules">https://www.starlab.io/blog/a-brief-tour-of-linux-security-modules</a></li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/chap-security-enhanced_linux-introduction">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/chap-security-enhanced_linux-introduction</a></li>
+<li><a href="https://www.redhat.com/sysadmin/apparmor-selinux-isolation">https://www.redhat.com/sysadmin/apparmor-selinux-isolation</a></li>
 </ul>
 <script src="https://utteranc.es/client.js"
         repo="sominsong/sominsong.github.io"
@@ -456,11 +807,44 @@ AppArmor는 곧 <code class="language-text">LSM_FLAG_EXCLUSIVE</code> 구분을 
 <li>
 <p><a href="#3-security-module">3. Security Module</a></p>
 <ul>
-<li><a href="#31-apparmor">3.1. AppArmor</a></li>
+<li>
+<p><a href="#31-selinux---security-enhanced-linux">3.1. SELinux - Security Enhanced Linux</a></p>
+<ul>
+<li><a href="#selinux%EC%9D%98-%EC%9D%B4%EC%A0%90">SELinux의 이점</a></li>
+<li><a href="#selinux%EC%9D%98-%ED%95%9C%EA%B3%84">SELinux의 한계</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#32-apparmor">3.2. AppArmor</a></p>
+<ul>
+<li><a href="#apparmor-profile">AppArmor Profile</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#33-smack---simplified-mandatory-access-control">3.3. SMACK - Simplified Mandatory Access Control</a></p>
+</li>
+<li>
+<p><a href="#34-tomoyo">3.4. TOMOYO</a></p>
+</li>
+<li>
+<p><a href="#35-loadpin">3.5. LoadPin</a></p>
+</li>
+<li>
+<p><a href="#36-yama">3.6. Yama</a></p>
+</li>
+<li>
+<p><a href="#37-safesetid">3.7. SafeSetID</a></p>
+</li>
+<li>
+<p><a href="#38-landlock">3.8. Landlock</a></p>
+</li>
+<li>
+<p><a href="#39-lockdown">3.9. Lockdown</a></p>
+</li>
 </ul>
 </li>
 <li>
 <p><a href="#reference">Reference</a></p>
 </li>
 </ul>
-</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/BPF-LSM/"><div class="direction">이전 글</div><div class="title">TIL - BPF-LSM</div></a></div><div class="post-navigator-card-wrapper"><a class="post-card next" href="/BCC/"><div class="direction">다음 글</div><div class="title">TIL - BCC (eBPF Compiler Collection)</div></a></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">미니</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/LSM/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>
+</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/xcrun_error/"><div class="direction">이전 글</div><div class="title">Error - Mac 업그레이드 후 xcrun error 해결</div></a></div><div class="post-navigator-card-wrapper"><a class="post-card next" href="/Security_3/"><div class="direction">다음 글</div><div class="title">TIL - 정보 보안의 3요소</div></a></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">미니</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/LSM/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>
