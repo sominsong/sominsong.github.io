@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-js",
     "path": "/posts/All",
-    "result": {"pageContext":{"currentCategory":"All","categories":["All","Cisco","Interview","TIL","Linux","Security","Error","Mac","AWS"],"edges":[]}},
+    "result": {"pageContext":{"currentCategory":"All","categories":["All","PhD","Cisco","Interview","TIL","Linux","Algorithm","Security","Error","Mac","AWS"],"edges":[]}},
     "staticQueryHashes": ["1073350324","1956554647","2938748437"]}
