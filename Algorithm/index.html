@@ -679,8 +679,734 @@ a <span class="token operator">=</span> <span class="token punctuation">[</span>
 </li>
 </ul>
 <h3 id="5-dynamic-programming" style="position:relative;"><a href="#5-dynamic-programming" aria-label="5 dynamic programming permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Dynamic Programming</h3>
+<ul>
+<li>다이나믹 프로그래밍(=동적 계획법)은 <strong>메모리를 적절히 사용하여 수행 시간 효율성을 비약적으로 향상시키는 방법</strong>
+<ul>
+<li>이미 계산된 결과(작은 문제)는 별도의 메모리 영역에 저장하여 다시 계산하지 않도록 함</li>
+</ul>
+</li>
+<li>다이나믹 프로그래밍의 구현: Top-Down (하향식) / Bottom-Up (상향식)
+<ol>
+<li>
+<p>Top-Down (하향식): <strong>Memorization</strong> 구현</p>
+<ul>
+<li>Memorization 구현이란? 한 번 계산한 결과를 메모리 공간(<code class="language-text">DP table</code>)에 메모하는 기법 (**Caching)</li>
+<li>같은 문제를 다시 호출하면 메모했던 결과를 그대로 가져옴</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 43.333333333333336%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBklEQVQoz5WPUW+CMBSF+/9/0xQiD2ZsfRigDwZiBhomncTRbqUIPUs7MEx50Jt8hN5zOD0Q9KO1xtS7mf3xC5v8iLZt/+2vfWZIL+FP0xcTlzWErHFuFIoTx76s0CgFpRSapkHXdZOhxCzGWFN7RpQdsC3KcR/7NC2FEDZ4CBxDruuX4gcfpwpSKchaoZbShuiRx5yHhje/PCR3vTnJGTb55+WSqqpsGz3RZgpiPjB8C45kl2O1zcCKAxhj4Jxj0O+FpGmK9zTFLstAwzWWbyvEcYwkSWC0RyFBECAMQ1BK4fvPePF90FeKMIpgtEchnufB4LouHMfB/GkGZza3O2+xwKDfyy9Qx6UEJvDPFAAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="fibonacci-2.png"
+        title="Memorization 동작 분석: 실제 호출되는 함수 분석"
+        src="/static/309210947c189b1d725b82cc90a7ca45/37523/fibonacci-2.png"
+        srcset="/static/309210947c189b1d725b82cc90a7ca45/e9ff0/fibonacci-2.png 180w,
+/static/309210947c189b1d725b82cc90a7ca45/f21e7/fibonacci-2.png 360w,
+/static/309210947c189b1d725b82cc90a7ca45/37523/fibonacci-2.png 720w,
+/static/309210947c189b1d725b82cc90a7ca45/302a4/fibonacci-2.png 1080w,
+/static/309210947c189b1d725b82cc90a7ca45/07a9c/fibonacci-2.png 1440w,
+/static/309210947c189b1d725b82cc90a7ca45/53e84/fibonacci-2.png 2074w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+<li>
+<p>Bottom-Up (상향식): 반복문 구현</p>
+</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>“일반적인 프로그래밍 분애에서의 Dynamic이란 어떤 의미?</p>
+<ul>
+<li>자료 구조에서 Dynamic Allocation은 **‘프로그램이 실행되는 도중에 실행에 필요한 메모리를 할당하는 기법’**을 의미</li>
+<li>반면, Dynamic Programming에서 ‘Dynamic’은 <strong>별다른 의미 없이 사용된 단어</strong></li>
+</ul>
+</blockquote>
+<ul>
+<li>다이나믹 프로그래밍의 조건
+<ol>
+<li><strong>최적 부분 구조 (Optimal Substructure)</strong>: 큰 문제를 작은 문제로 나눌 수 있으며, 작은 문제의 답을 모아서 큰 문제 해결 가능</li>
+<li><strong>중복되는 부분 문제 (Overlapping Subproblem)</strong>: 동일한 작은 문제를 반복적으로 해결해야 함</li>
+</ol>
+</li>
+</ul>
+<h4 id="예시-문제-피보나치-수열-fibonacci-numberssequence" style="position:relative;"><a href="#%EC%98%88%EC%8B%9C-%EB%AC%B8%EC%A0%9C-%ED%94%BC%EB%B3%B4%EB%82%98%EC%B9%98-%EC%88%98%EC%97%B4-fibonacci-numberssequence" aria-label="예시 문제 피보나치 수열 fibonacci numberssequence permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>예시 문제: 피보나치 수열 (Fibonacci Numbers/Sequence)</h4>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">1,1,2,3,5,8,13,21,34,55,89,...</code></pre></div>
+<ul>
+<li>점화식: 인접한 항들 사이의 관계식
+<ul>
+<li>피보나치 수열의 점화식: a_n = a_(n-1) + a_(n-2), a_1 = 1, a_2 = 1</li>
+</ul>
+</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 82.22222222222221%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAABYlAAAWJQFJUiTwAAABWElEQVQ4y5WU25aDIAxF/f9vnId56aitFeTmBTSzTiyOWOhakxeVmE2SQ6ioYNu2HU9jLBljKISQ+HJWlWAxSGvNsHGcSCmdbPQvIMyHQMMwUN/31N7vZK0l78PbpkVg/On8s5SSgdM0UV03tK7rW0vO4KrUt/guhCApJANRMsrPtSY+q1K5B0zKxB+h3vvPGZ4dKEspxT2DKMuyJECtDVnrWKhrbBYIEMRo25aB+IbN88zrj8eDpBw402LJZyD6hVKRZQxk1b0nISRDsRF82QxzYtxuNw7suicHR0OZEAll5/pY5WDojzb6WIM4cUquwl3PYvU+Zoaa+icBIJNn15HRmqaMEPs7/WWYjpmmcXQMjofYuZGUGvZ1Zw/Vc9OSlBwVbJqWgyHOflTU4dNPSfYlUnb0rhkiEMcEKscMo+rOORJf3+TnpQzM9RDA68yid3yFbevH2+YXLXzrXkjYbtYAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="fibonacci.png"
+        title="fibonacci.png"
+        src="/static/d23afc07cfb886f9d2244c6901d50105/37523/fibonacci.png"
+        srcset="/static/d23afc07cfb886f9d2244c6901d50105/e9ff0/fibonacci.png 180w,
+/static/d23afc07cfb886f9d2244c6901d50105/f21e7/fibonacci.png 360w,
+/static/d23afc07cfb886f9d2244c6901d50105/37523/fibonacci.png 720w,
+/static/d23afc07cfb886f9d2244c6901d50105/30c92/fibonacci.png 874w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># 단순 재귀</span>
+<span class="token keyword">def</span> <span class="token function">fibo</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> x <span class="token operator">==</span> <span class="token number">1</span> <span class="token keyword">or</span> x <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>    <span class="token comment"># 종료 조건</span>
+        <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">return</span> fibo<span class="token punctuation">(</span>x<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> fibo<span class="token punctuation">(</span>x<span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>fibo<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># 3</span></code></pre></div>
+<ul>
+<li>
+<p>단순 재귀 피보나치 수열의 시간 복잡도</p>
+<ul>
+<li>
+<p>단순 재귀 함수로 피보나치 수열을 해결할 경우 -> O(2^N) 지수 시간 복잡도 가짐</p>
+</li>
+<li>
+<p><code class="language-text">f(2)</code>가 여러 번 호출되는 것을 확인할 수 있음 (<strong>중복되는 부분 문제</strong>)</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 48.888888888888886%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAACXBIWXMAABYlAAAWJQFJUiTwAAABW0lEQVQoz51Qy27CMBDM/39Hr+2FA0VUqqIgUCgkAQe1IUnpCfKQSt7iFabaTY0gbS9daeQdj3c8tnI+n0HVXmWdTiekaYqqqn5o1zOyV34zq+uacTgcUJYlkiRBURTY7Xa8R5o0aZsqbYEqyzI2oWF5gdSPxyO22y3yorhJejFsP4FS5HnOifb7PZvJov5ap17qlydfuydpyukkz9KU/09yTpbnDa9ruOsYXvB5+2S6if6JDgZBgCiKLgnCMGQQz7JGj+OYOc18rEOs1hGqskRRlLyn0KHNZgPXdbF6f8dYvEG3HUwXDoazV3ieB9/3MbQWmCwc+N+c5kJCGHAvodDAcunAMk2I+RyjqYnRdAbdmGEwMWELASEEBi8GdHMO2xYQts0BXM9rVtfliwmKYRjoPmt4UgcYDYcY6zqbW1YD02zQ5n9BUVUVdw8d3He66PUe0e/3oWnav/EFmzvoOlxdNr4AAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="fibonacci-1.png"
+        title="fibonacci-1.png"
+        src="/static/30f19d3a77ce7006256e0f535f469a58/37523/fibonacci-1.png"
+        srcset="/static/30f19d3a77ce7006256e0f535f469a58/e9ff0/fibonacci-1.png 180w,
+/static/30f19d3a77ce7006256e0f535f469a58/f21e7/fibonacci-1.png 360w,
+/static/30f19d3a77ce7006256e0f535f469a58/37523/fibonacci-1.png 720w,
+/static/30f19d3a77ce7006256e0f535f469a58/302a4/fibonacci-1.png 1080w,
+/static/30f19d3a77ce7006256e0f535f469a58/07a9c/fibonacci-1.png 1440w,
+/static/30f19d3a77ce7006256e0f535f469a58/7e21b/fibonacci-1.png 1626w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+</ul>
+</li>
+<li>
+<p>피보나치 수열의 다이나밍 프로그래밍</p>
+<ul>
+<li>사용 조건 확인
+<ol>
+<li><strong>최적 부분 구조</strong>: 큰 문제를 작은 문제로 나눌 수 있음 (=점화식)</li>
+<li><strong>중복되는 부분 문제</strong>: 동일한 작은 문제를 반복적으로 해결</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># Top-Down Dynamic Programming </span>
+<span class="token comment"># 한 번 계산된 결과를 Memoization하기 위한 리스트 초기화</span>
+d <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">100</span>
+
+<span class="token comment"># 피보나치 함수를 재귀함수로 구현(Top-Down Programming)</span>
+<span class="token keyword">def</span> <span class="token function">fibo</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 종료 조건 (1 or 2일 때 1 return)</span>
+    <span class="token keyword">if</span> x <span class="token operator">==</span> <span class="token number">1</span> <span class="token keyword">or</span> x <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token comment"># 이미 계산한 적 있는 문제라면 그대로 반환</span>
+    <span class="token keyword">if</span> d<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> d<span class="token punctuation">[</span>x<span class="token punctuation">]</span>
+    <span class="token comment"># 아직 계산하지 않은 문제라면 점화식에 따라서 피보나치 결과 반환</span>
+    d<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> fibo<span class="token punctuation">(</span>x<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> fibo<span class="token punctuation">(</span>x<span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> d<span class="token punctuation">[</span>x<span class="token punctuation">]</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>fibo<span class="token punctuation">(</span><span class="token number">99</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment"># 218922...026</span></code></pre></div>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># Bottom-Up Dynamic Programming</span>
+<span class="token comment"># 앞서 계산된 결과를 저장하기 위한 DP 테이블 초기화</span>
+d <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span><span class="token number">100</span>
+
+<span class="token comment"># 첫 번째 피보나치 수와 두 번째 피보나치 수는 1</span>
+d<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
+d<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span>
+n <span class="token operator">=</span> <span class="token number">99</span>
+
+<span class="token comment"># 피보나치 함수 반복문으로 구현</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    d<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> d<span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> d<span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>Memorization을 이용하는 피보나치 수열의 시간 복잡도: O(N)
+<ul>
+<li>이미 계산된 결과는 상수 시간으로 반환</li>
+</ul>
+</li>
+</ul>
+<h4 id="dynamic-programming-vs-divide-and-conquer" style="position:relative;"><a href="#dynamic-programming-vs-divide-and-conquer" aria-label="dynamic programming vs divide and conquer permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dynamic Programming VS Divide-and-Conquer</h4>
+<ul>
+<li>공통점: 최적 부분 구조 (Optimal Substructure)를 가질 때 사용 가능
+<ul>
+<li>큰 문제를 작은 문제로 나눌 수 있으며 작은 문제의 답을 모아 큰 문제를 해결할 수 있는 상황</li>
+</ul>
+</li>
+<li><strong>차이점: 부분 문제의 중복 (Overlapping Subproblem)</strong>
+<ul>
+<li>다이나믹 프로그래밍: 각 부분 문제들이 서로 영향을 미치며 부분 문제가 중복됨</li>
+<li>분할 정복 문제: 동일한 부분 문제가 반복적으로 계산되지 않음
+<ul>
+<li>e.g., Quick Sort: 한 번 Pivot이 자리를 변경해서 자리를 잡으면, 그 기준 원소의 위치는 바뀌지 않음 -> 분할 이후에 해당 pivot을 다시 처리하는 부분 문제는 호출하지 않음</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="dynamic-programming-문제에-접근하는-방법" style="position:relative;"><a href="#dynamic-programming-%EB%AC%B8%EC%A0%9C%EC%97%90-%EC%A0%91%EA%B7%BC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95" aria-label="dynamic programming 문제에 접근하는 방법 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dynamic Programming 문제에 접근하는 방법</h4>
+<ul>
+<li>주어진 문제가 Dynamic Programming 유형임을 파악하는 것이 중요</li>
+</ul>
+<blockquote>
+<ol>
+<li>가장 먼저 greedy, implementation, brute-force 등의 아이디어로 문제를 해결할 수 있는지 검토</li>
+<li>다른 알고리즘으로 풀이 방법이 떠오르지 않는다면 dynamic programming을 고려</li>
+</ol>
+</blockquote>
+<p>or</p>
+<blockquote>
+<ol>
+<li>우선 recursive로 비효율적인 brute-force 프로그램 작성(Top-Down)</li>
+<li>작은 문제에서 구한 답이 큰 문제에서 그대로 사용될 수 있다면, DP table을 이용해 코드 개선</li>
+</ol>
+</blockquote>
+<ul>
+<li>일반적인 코딩 테스트 수준에서는 기본 유형의 dynamic programming 문제가 출제</li>
+</ul>
 <h3 id="6-shortest-path" style="position:relative;"><a href="#6-shortest-path" aria-label="6 shortest path permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. Shortest Path</h3>
+<ul>
+<li>가장 짧은 경로를 찾는 알고리즘</li>
+<li>최단 경로 알고리즘이 사용될 수 있는 다양한 문제 상황
+<ul>
+<li>한 지점에서 다른 한 지점까지의 최단 경로</li>
+<li>한 지점에서 다른 모든 지점까지의 최단 경로</li>
+<li>모든 지점에서 다른 모든 지점까지의 최단 경로</li>
+</ul>
+</li>
+<li>Dynamic Programming 문제로 분류되기도 함</li>
+</ul>
+<h4 id="dijkstra-shortest-path-알고리즘" style="position:relative;"><a href="#dijkstra-shortest-path-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" aria-label="dijkstra shortest path 알고리즘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dijkstra Shortest Path 알고리즘</h4>
+<ul>
+<li><strong>특정한 한 노드</strong>에서 출발하여 <strong>다른 모든 노드</strong>로 가는 최단 경로 계산</li>
+<li>조건: 음수 Edge가 없을 때 (현실 세계의 도로)</li>
+<li>Greedy 알고리즘으로 분류: 매 상황에서 가장 비용이 적은 Node를 선택</li>
+</ul>
+<blockquote>
+<p>💡 알고리즘 동작 과정</p>
+<ol>
+<li>출발 노드 설정</li>
+<li>최단 거리 테이블 초기화 (모든 노드까지의 거리 무한으로 설정 &#x26; 자기 자신까지의 거리는 0으로 설정)
+<ul>
+<li>최단 거리 테이블: 각 노드에 대한 현재끼ㅏ지의 최단 거리 정보 저장</li>
+</ul>
+</li>
+<li>방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드 선택</li>
+<li>해당 노드를 거쳐 다른 노드로 가는 비용을 계산하여 최단 거리 테이블 갱신</li>
+<li>위 과정에서 3번과 4번을 반복</li>
+</ol>
+</blockquote>
+<ul>
+<li>
+<p>Dijkstra 알고리즘 특징</p>
+<ul>
+<li>Greedy 알고리즘: 매 상황에서 방문하지 않은 가장 비용이 적은 노드를 선택해 임의의 과정 반복</li>
+</ul>
+</li>
+<li>
+<p>단계를 거치며 <strong>한 번 처리된 노드의 최단 거리는 고정</strong>되어 더 이상 바뀌지 않음</p>
+<ul>
+<li>한 단계당 하나의 노드에 대한 최단 거리를 확실하게 찾음</li>
+</ul>
+</li>
+<li>
+<p>알고리즘을 수행한 뒤에 테이블에 각 노드까지의 최단 <strong>거리</strong> 정보만 저장됨</p>
+<ul>
+<li>완벽한 형태의 최단 <strong>경로</strong>를 구하려면 소스코드에 추가적인 기능을 더 넣어야 함</li>
+</ul>
+</li>
+<li>
+<p>간단한 구현 방법</p>
+<ul>
+<li>단계마다 방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택하기 위해 <strong>매 단계마다 1차원 테이블의 모든 원소를 확인(순차 탐색)</strong></li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
+<span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>readline
+INF <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span> <span class="token comment"># 무한을 의미하는 값으로 10억을 설정</span>
+
+<span class="token comment"># 노드의 개수, 간선의 개수를 입력 받기</span>
+n<span class="token punctuation">,</span>m <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 시작 노드 번호 입력받기</span>
+start <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 각 노드에 연결되어 있는 노드에 대한 정보를 담는 리스트</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token comment"># 방문한 적이 있는지 체크하는 목적의 리스트</span>
+visited <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token boolean">False</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># 최단 거리 테이블을 모두 무한으로 초기화</span>
+distance <span class="token operator">=</span> <span class="token punctuation">[</span>INF<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 모든 간선 정보 입력 받기</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># a번 노드에서 b번 노드로 가는 비용이 c라는 의미</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 방문하지 않은 노드 중에서, 가장 최단 거리가 짧은 노드의 번호를 반환</span>
+<span class="token keyword">def</span> <span class="token function">get_smallest_node</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    min_value <span class="token operator">=</span> INF
+    index <span class="token operator">=</span> <span class="token number">0</span> <span class="token comment"># 가장 최단 거리가 짧은 노드(인덱스)</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> distance<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&lt;</span> min_value <span class="token keyword">and</span> <span class="token keyword">not</span> visited<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            min_value <span class="token operator">=</span> distnace<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+            index <span class="token operator">=</span> i
+    <span class="token keyword">return</span> index
+
+<span class="token keyword">def</span> <span class="token function">dijkstra</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 시작 노드에 대해서 초기화</span>
+    distance<span class="token punctuation">[</span>start<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+    visited<span class="token punctuation">[</span>start<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+    <span class="token comment"># 시작 노드와 연결된 노드까지의 거리</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> graph<span class="token punctuation">[</span>start<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        distance<span class="token punctuation">[</span>j<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> j<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    <span class="token comment"># 시작 노드를 제외한 전체 n-1개의 노드에 대해 반복</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 현재 최단 거리가 가장 짧은 노드를 꺼내서, 방문 처리</span>
+        now <span class="token operator">=</span> get_smallest_node<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        visited<span class="token punctuation">[</span>now<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+        <span class="token comment"># 현재 노드와 연결된 다른 노드 확인</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> graph<span class="token punctuation">[</span>now<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            <span class="token comment"># 현재 노드를 거쳐 해당 노드로 갈 때의 거리</span>
+            cost <span class="token operator">=</span> distance<span class="token punctuation">[</span>now<span class="token punctuation">]</span> <span class="token operator">+</span> j<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+            <span class="token comment"># 현재 노드를 거쳐서 해당 노드로 이동하는 거리가 더 짧은 경우 최단 거리 테이블 update</span>
+            <span class="token keyword">if</span> cost <span class="token operator">&lt;</span> distance<span class="token punctuation">[</span>j<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                distance<span class="token punctuation">[</span>j<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> cost
+
+<span class="token comment"># 다익스트라 알고리즘 수행</span>
+dikstra<span class="token punctuation">(</span>start<span class="token punctuation">)</span>
+
+<span class="token comment"># 모든 노드로 가기 위한 최단 거리 출력</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 도달할 수 없는 경우, 무한(INFINITY)라고 출력</span>
+    <span class="token keyword">if</span> distance<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> INF<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"INFINITY"</span><span class="token punctuation">)</span>
+    <span class="token comment"># 도달할 수 있는 경우 거리 출력</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>distnace<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span></code></pre></div>
+</li>
+<li>
+<p>‘간단한 구현 방법’ 성능 분석</p>
+<ul>
+<li>전체 시간 복잡도: <strong>O(V^2)</strong>
+<ul>
+<li>총 O(V)번에 걸쳐서 최단 거리가 가장 짧은 노드를 매번 선형 탐색</li>
+</ul>
+</li>
+<li>전체 노드의 개수가 5,000개 이하일 경우 가능 BUT <strong>만 개를 넘어간다면 불가능</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>💡 우선순위 큐 (Priority Queue)
+: 우선 순위가 가장 높은 데이터를 가장 먼저 삭제하는 자료구조
+e.g., 여러 개의 물건 데이터를 자료 구조에 넣었다가 가치가 높은 물건 데이터부터 꺼내서 확인해야 하는 경우</p>
+<ul>
+<li>Heap: Priority Queue를 구현하기 위해 사용하는 자료구조
+<ul>
+<li>Min Heap &#x26; Max Heap 존재</li>
+</ul>
+</li>
+<li>시간 복잡도: O(NlogN) (merge sort, quick sort와 동일)</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>우선순위 큐 구현 방식</th>
+<th>삽입 시간</th>
+<th>삭제 시간</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List</td>
+<td>O(1)</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>Heap</td>
+<td>O(logN)</td>
+<td>O(logN)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Min Heap 예시</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq
+
+<span class="token comment"># 오름차순 힙 정렬(Heap Sort)</span>
+<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token comment"># 모든 원소를 차례대로 힙에 삽입</span>
+    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
+        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+    <span class="token comment"># 힙에 삽입된 모든 원소를 차례때로 꺼내어 담기</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> result
+
+result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [0,1,2,3,4,5,6,7,8,9]</span></code></pre></div>
+<ul>
+<li>Max Heap 예시</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq
+
+<span class="token comment"># 내림차순 힙 정렬(Heap Sort)</span>
+<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token comment"># 모든 원소를 차례때로 힙에 삽입</span>
+    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
+        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> <span class="token operator">-</span>value<span class="token punctuation">)</span>
+    <span class="token comment"># 힙에 삽입된 모든 원소를 차례대로 꺼내어 담기</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token operator">-</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> result
+
+result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [9,8,7,6,5,4,3,2,1,0]</span></code></pre></div>
+<ul>
+<li>
+<p>개선된 구현 방법</p>
+<ul>
+<li>단계마다 <strong>방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택</strong>하기 위해 <strong>Heap</strong> 자료구조 이용</li>
+<li>알고리즘이 동작하는 기본 원리는 동일</li>
+<li>현재 가장 가까운 노드를 저장해 놓기 위해 Heap 자료구조를 추가로 이용한다는 점이 다름</li>
+<li>현재의 최단 거리가 가장 짧은 노드를 선택해야 함으로 <strong>Min Heap 사용</strong></li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq
+<span class="token keyword">import</span> sys
+<span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>readline
+INF <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span> <span class="token comment"># 무한을 의미하는 값으로 10억을 설정</span>
+
+<span class="token comment"># 노드의 개수, 간선의 개수를 입력 받기</span>
+n<span class="token punctuation">,</span>m <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 시작 노드 번호 입력받기</span>
+start <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 각 노드에 연결되어 있는 노드에 대한 정보를 담는 리스트</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token comment"># 최단 거리 테이블을 모두 무한으로 초기화</span>
+distance <span class="token operator">=</span> <span class="token punctuation">[</span>INF<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 모든 간선 정보 입력 받기</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># a번 노드에서 b번 노드로 가는 비용이 c라는 의미</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment">#### 여기까지는 기존 방법과 동일 ####</span>
+
+<span class="token keyword">def</span> <span class="token function">dikstra</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    q <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token comment"># 시작 노드로 가기 위한 최단 경로르 0으로 설정, 큐에 삽입</span>
+    heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>q<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> start<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    distance<span class="token punctuation">[</span>start<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> q<span class="token punctuation">:</span>    <span class="token comment"># 큐가 비어있지 않다면</span>
+        <span class="token comment"># 가장 최단 거리가 짧은 노드에 대한 정보 꺼내기</span>
+        dist<span class="token punctuation">,</span> now <span class="token operator">=</span> heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>q<span class="token punctuation">)</span>
+        <span class="token comment"># 현재 노드가 이미 처리된 적이 있는 노드라면 무시</span>
+        <span class="token keyword">if</span> distance<span class="token punctuation">[</span>now<span class="token punctuation">]</span> <span class="token operator">&lt;</span> dist<span class="token punctuation">:</span>
+            <span class="token keyword">continue</span>
+        <span class="token comment"># 현재 노드와 연결된 다른 인접 노드들 확인</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> graph<span class="token punctuation">[</span>now<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            cost <span class="token operator">=</span> dist <span class="token operator">+</span> i<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+            <span class="token comment"># 현재 노드를 거쳐서, 다른 노드로 이동하는 거리가 더 짧은 경우</span>
+            <span class="token keyword">if</span> cost <span class="token operator">&lt;</span> distance<span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                distance<span class="token punctuation">[</span>i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> cost
+                heapq<span class="token punctuation">.</span>append<span class="token punctuation">(</span>q<span class="token punctuation">,</span> <span class="token punctuation">(</span>cost<span class="token punctuation">,</span> i<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 다익스트라 알고리즘 수행</span>
+dijkstra<span class="token punctuation">(</span>start<span class="token punctuation">)</span>
+
+<span class="token comment"># 모든 노드로 가기 위한 최단 거리 출력</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 도달할 수 없는 경우, 무한으로 출력</span>
+    <span class="token keyword">if</span> distance<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> INF<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"INFINITY"</span><span class="token punctuation">)</span>
+    <span class="token comment"># 도다랗ㄹ 수 있는 경우 거리 출력</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>distance<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span></code></pre></div>
+</li>
+<li>
+<p>‘개선된 구현 방법’ 성능 분석</p>
+<ul>
+<li>시간 복잡도: O(ElogV)
+<ul>
+<li>노드를 하나씩 꺼내 검사하는 반복문(<code class="language-text">while</code>문)은 노드의 개수 V 이상 처리되지 않음
+: 결과적으로 현재 우선순위 큐에서 꺼낸 노드와 연결된 다른 노드들을 확인하는 총 횟수는 최대 edge의 개수(E)만큼 수행됨</li>
+</ul>
+</li>
+<li>직관적으로 전체 과정은 E개의 원소를 우선순위 큐에 넣었다가 모두 빼내는 연산과 매우 유사
+<ul>
+<li>O(ElogE)로 판단할 수 있음</li>
+<li>중복 간선을 초함하지 않는 경우 O(ElogV)로 정리 가능
+: O(ElogE) -> O(ElogV^2) -> O(2ElogV) -> O(ElogV)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="floyd-warshall-알고리즘" style="position:relative;"><a href="#floyd-warshall-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" aria-label="floyd warshall 알고리즘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Floyd-Warshall 알고리즘</h4>
+<ul>
+<li><strong>모든 노드</strong>에서 <strong>다른 모든 노드</strong>까지의 최단 경로를 모두 계산</li>
+<li>다익스트라 알고리즘과 마찬가지로 단계별로 거쳐 가는 노드를 기준으로 알고리즘 수행
+<ul>
+<li>다만 매 단계마다 방문하지 않은 노드 중에서 최단 거리를 갖는 노드를 찾는 과정 필요하지 않음</li>
+</ul>
+</li>
+<li>2차원 테이블에 최단 거리 정보 저장</li>
+<li>Dynamic Programming 유형에 속함: 2차원 최단 거리 테이블을 점화식으로 update
+<ul>
+<li>각 단계마다 <strong>특정한 노드 K를 거쳐 가는 경우 확인</strong>: a에서 b로 가는 최단 거리보다 a에서 k를 거처 b로 가는 거리가 더 짧은지 검사</li>
+<li>점화식: <code class="language-text">D_ab = min(D_ab, D_ak + D_kb)</code></li>
+</ul>
+</li>
+<li>시간 복잡도: O(N^3) -> 노드가 적은 경우에만 이용할 수 있음</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python">INF <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span> <span class="token comment"># 무한을 의미하는 값으로 10억을 설정</span>
+
+<span class="token comment"># 노드의 개수 및 간선의 개수를 입력받기</span>
+n <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+m <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 2차원 리스트(그래프 표현)를 만들고, 무한으로 초기화</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span>INF<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+<span class="token comment"># 자기 자신에서 자기 자신으로 가는 비용은 0으로 초기화</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> b <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> a<span class="token operator">==</span>b<span class="token punctuation">:</span>
+            graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token comment"># 각 간선에 대한 정보를 입력 받아, 그 값으로 초기화</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># A에서 B로 가는 비용은 C라고 설정</span>
+    a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> c
+
+<span class="token comment"># 점화식에 따라 플로이스 워션 알고리즘 수행</span>
+<span class="token keyword">for</span> k <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> a <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> b <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token builtin">min</span><span class="token punctuation">(</span>graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">,</span> graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token operator">+</span>graph<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 수행된 결과를 출력</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> b <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 도달할 수 없는 경우, 무한</span>
+        <span class="token keyword">if</span> graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">==</span> INF<span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"INFINITY"</span><span class="token punctuation">)</span>
+        <span class="token comment"># 도달할 수 있는 경우, 거리 출력</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">" "</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>Floyd-Warshall 알고리즘 성능 분석
+<ul>
+<li>시간 복잡도: O(N^3)
+<ul>
+<li>노드의 개수가 N개일 때, 알고리즘 상으로 N번의 단계(k를 거쳐 가는 경우)를 수행함</li>
+<li>각 단계마다 O(N^2)의 연산을 통해 현재 노드를 거쳐가는 모든 경로를 고려함</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="7-graph" style="position:relative;"><a href="#7-graph" aria-label="7 graph permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. Graph</h3>
+<h4 id="disjoint-sets-서로소-집합-자료구조" style="position:relative;"><a href="#disjoint-sets-%EC%84%9C%EB%A1%9C%EC%86%8C-%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0" aria-label="disjoint sets 서로소 집합 자료구조 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disjoint Sets (서로소 집합) 자료구조</h4>
+<ul>
+<li>
+<p>서로소: ‘공통 원소가 없는 두 집합’ 의미</p>
+</li>
+<li>
+<p>서로소 집합 자료구조: 서로소 부분 집합들로 나누어진 원소들의 데이터를 처리하기 위한 자료구조</p>
+</li>
+<li>
+<p>서로소 집합 자료구조(= <strong>Union Find 자료구조</strong>)의 연산</p>
+<ul>
+<li><strong>Union(합집합)</strong></li>
+<li><strong>Find(찾기)</strong>: 특정한 원소가 속한 집합이 어떤 집합인지 알려주는 연산</li>
+</ul>
+</li>
+<li>
+<p>서로소 집합 자료구조 동작 과정</p>
+<ol>
+<li>Union 연산 확인 -> 서로 연결된 두 노드 A, B 확인
+<ol>
+<li>A와 B의 루트 노드 A’, B’를 각각 찾음</li>
+<li>A’를 B’의 부모 노드로 설정</li>
+</ol>
+</li>
+<li>모든 Union 연산을 처리할 때까지 1번 과정 반복</li>
+</ol>
+</li>
+<li>
+<p>서로소 집합 자료구조의 연결성</p>
+<ul>
+<li>기본적인 형태로 서로소 집합 자료구조에서는 root 노드에 즉시 접근할 수 없음
+-> root 노드를 찾기 위해 부모 테이블을 계속해서 확인하며 거슬러 올라가야 함</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 37.77777777777778%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABWElEQVQoz22PQU/CQBCF+6c96NWDJ3+GF9GTiSEaEhI1lBZtDdaWEoQ2ECPQbUvbBbbbPrOLJdQwyZd5szvvZVcpyxKiqp7nuaQqoTnn+x3GGIqiqHlEr1AqUZlplmFNqQwRc5omoJTKEBGWJLv5WJgMxEGJkCiOsUoSlEWBgnMsAyJnlCVyxkAIQZqm+8D/pYgQgfxGWSDbbLHI1mCcY81yLLM1ArrBlnNQliOmG/lysV95D1HiOEYURViQEPOAYElCkDDCT0AwJwSrv/vdHEp9iPAfonzPZhhMfFw+6Di/beGiqaNjjzDzJ/B9H+PxGK7rSu17HobDIb5GI3ieJ8+m02kNxR04eLVsnFzd4/S6hbM7Fc2uAcfq48Oy0O/3YZgmLMuSvJkm3lUVlmHg07bhOE4NpdfroaNpaDy2cdN6QqP1jPZLB7rWRbe7Q1XVo1rTNOi6XuMXuy1T+a8HV44AAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="disjoint_set-1.png"
+        title="노드 3의 root를 찾기 위해 노드 2를 거쳐 노드 1에 접근해야 함"
+        src="/static/2b3fece62ca0d1847f7c7b8d807fba18/37523/disjoint_set-1.png"
+        srcset="/static/2b3fece62ca0d1847f7c7b8d807fba18/e9ff0/disjoint_set-1.png 180w,
+/static/2b3fece62ca0d1847f7c7b8d807fba18/f21e7/disjoint_set-1.png 360w,
+/static/2b3fece62ca0d1847f7c7b8d807fba18/37523/disjoint_set-1.png 720w,
+/static/2b3fece62ca0d1847f7c7b8d807fba18/302a4/disjoint_set-1.png 1080w,
+/static/2b3fece62ca0d1847f7c7b8d807fba18/07a9c/disjoint_set-1.png 1440w,
+/static/2b3fece62ca0d1847f7c7b8d807fba18/17d12/disjoint_set-1.png 1666w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+<li>
+<p>기본적인 구현 방법</p>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># 특정 원소가 속한 집합을 찾기</span>
+<span class="token keyword">def</span> <span class="token function">find_partent</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># root 노드를 찾을 때까지 재귀 호출</span>
+    <span class="token keyword">if</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">!=</span> x<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> x
+
+<span class="token comment"># 두 원소가 속한 집합 합치기</span>
+<span class="token keyword">def</span> <span class="token function">union_parent</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">)</span>
+    b <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> a <span class="token operator">&lt;</span> b<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> a
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">=</span> b
+
+<span class="token comment"># 노드의 개수와 edge(union 연산)의 개수 입력 받기</span>
+v<span class="token punctuation">,</span> e <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+parent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 부모 테이블 초기화</span>
+
+<span class="token comment"># 부모 테이블상에서, 부모를 자기 자신으로 초기화</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parent<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i
+
+<span class="token comment"># Union 연산 각각 수행</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    union_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span>b<span class="token punctuation">)</span>
+
+<span class="token comment"># 각 원소가 속한 집합 출력</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"각 원소가 속한 집합: "</span><span class="token punctuation">,</span> end<span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 부모 테이블 내용 출력하기</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'부모 테이블: '</span><span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>parent<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>
+<p>‘기본적인 구현 방법’의 문제점</p>
+<ul>
+<li>Union 연산이 편향되게 이루어지는 경우 Find 함수가 비효율적으로 동작</li>
+<li>최악의 경우에는 Find 함수가 모든 노드를 다 확인하게 되어 시간 복잡도다 O(V)</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 36.11111111111111%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABiElEQVQoz02RS4sTQRSF+/f6A9y5c6kuXbp0IwyKDMMM6CTd6XZQJpmeJJ1MhIQk/UgC6Uz6/f6kLiIWXM6pc27dunVLq+uaxWLBZDJhuVyy3+/Z7XZ4nsd6vZbwfV9QaSpntVqJdgxD1Hm1uq4T1Nq25XA4sNlspFiaJMRRRBzHpGkqkSQJURSRZxlZmgpv/ivUNM0/rvF3VXVNWTeotLKqyfOcsmllXxQFeVFQdVA3rXhZWVK1HVmWk2UZqjHpsKoq6rIgjc6kSUxRlkRxTHg8ck4SkrzgdDoRhiFxXhAnqXinKCItS57PZ05hKJeoWpp65q/fa67vJ3y3nzCfNqw2Lr7nSXiuK/NyXVd4EPgyHuUFvs92uxUvCAIZmaY+5N2lwYsPX3j56ZZXlz8Z3D8wdxzsx0dGowdmsxm2bTMajXAcR3A8HjOdThkOh4JKn8/naHd3P3h/ccXrj195+/kbby5uuLnVsUwT3TAwDAPTstB1nX6/j2magqKbJr1ej8FgINyyLP4AJ9P/2tPubNUAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="disjoint_set-2.png"
+        title="최악의 경우 예시"
+        src="/static/d719cb6e7e8378a8a39bf9ebb59cde3b/37523/disjoint_set-2.png"
+        srcset="/static/d719cb6e7e8378a8a39bf9ebb59cde3b/e9ff0/disjoint_set-2.png 180w,
+/static/d719cb6e7e8378a8a39bf9ebb59cde3b/f21e7/disjoint_set-2.png 360w,
+/static/d719cb6e7e8378a8a39bf9ebb59cde3b/37523/disjoint_set-2.png 720w,
+/static/d719cb6e7e8378a8a39bf9ebb59cde3b/302a4/disjoint_set-2.png 1080w,
+/static/d719cb6e7e8378a8a39bf9ebb59cde3b/07a9c/disjoint_set-2.png 1440w,
+/static/d719cb6e7e8378a8a39bf9ebb59cde3b/96191/disjoint_set-2.png 2176w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+<li>
+<p>Path Compression (경로 압축)</p>
+<ul>
+<li>Find 함수를 최적화하기 위한 방법</li>
+<li>Find 함수를 재귀적으로 호출한 뒤에 <strong>부모 테이블 값을 바로 갱신</strong>
+<ul>
+<li>Find 함수를 호출한 이후에 해당 노드의 root 노드가 바로 부모 노드가 됨</li>
+</ul>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># 특정 원소가 속한 집합 찾기</span>
+<span class="token keyword">def</span> <span class="token function">find_parent</span><span class="token punctuation">(</span>partent<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># root 노드가 아니라면 root 노드를 찾을 때까지 재귀적으로 호출</span>
+    <span class="token keyword">if</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">!=</span> x<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span></code></pre></div>
+</li>
+</ul>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li><a href="http://www.yes24.com/Product/Goods/91433923">나동빈. (2021). 이것이 취업을 위한 코딩 테스트다</a></li>
@@ -741,12 +1467,24 @@ a <span class="token operator">=</span> <span class="token punctuation">[</span>
 </li>
 <li>
 <p><a href="#5-dynamic-programming">5. Dynamic Programming</a></p>
+<ul>
+<li><a href="#%EC%98%88%EC%8B%9C-%EB%AC%B8%EC%A0%9C-%ED%94%BC%EB%B3%B4%EB%82%98%EC%B9%98-%EC%88%98%EC%97%B4-fibonacci-numberssequence">예시 문제: 피보나치 수열 (Fibonacci Numbers/Sequence)</a></li>
+<li><a href="#dynamic-programming-vs-divide-and-conquer">Dynamic Programming VS Divide-and-Conquer</a></li>
+<li><a href="#dynamic-programming-%EB%AC%B8%EC%A0%9C%EC%97%90-%EC%A0%91%EA%B7%BC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95">Dynamic Programming 문제에 접근하는 방법</a></li>
+</ul>
 </li>
 <li>
 <p><a href="#6-shortest-path">6. Shortest Path</a></p>
+<ul>
+<li><a href="#dijkstra-shortest-path-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98">Dijkstra Shortest Path 알고리즘</a></li>
+<li><a href="#floyd-warshall-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98">Floyd-Warshall 알고리즘</a></li>
+</ul>
 </li>
 <li>
 <p><a href="#7-graph">7. Graph</a></p>
+<ul>
+<li><a href="#disjoint-sets-%EC%84%9C%EB%A1%9C%EC%86%8C-%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0">Disjoint Sets (서로소 집합) 자료구조</a></li>
+</ul>
 </li>
 </ul>
 </li>
