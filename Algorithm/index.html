@@ -919,7 +919,7 @@ n <span class="token operator">=</span> <span class="token number">99</span>
 <h4 id="dijkstra-shortest-path-알고리즘" style="position:relative;"><a href="#dijkstra-shortest-path-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" aria-label="dijkstra shortest path 알고리즘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dijkstra Shortest Path 알고리즘</h4>
 <ul>
 <li><strong>특정한 한 노드</strong>에서 출발하여 <strong>다른 모든 노드</strong>로 가는 최단 경로 계산</li>
-<li>조건: 음수 Edge가 없을 때 (현실 세계의 도로)</li>
+<li>조건: <strong>음수 Edge가 없을 때</strong> (현실 세계의 도로)</li>
 <li>Greedy 알고리즘으로 분류: 매 상황에서 가장 비용이 적은 Node를 선택</li>
 </ul>
 <blockquote>
@@ -1048,65 +1048,7 @@ e.g., 여러 개의 물건 데이터를 자료 구조에 넣었다가 가치가 
 <li>시간 복잡도: O(NlogN) (merge sort, quick sort와 동일)</li>
 </ul>
 </blockquote>
-<table>
-<thead>
-<tr>
-<th>우선순위 큐 구현 방식</th>
-<th>삽입 시간</th>
-<th>삭제 시간</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>List</td>
-<td>O(1)</td>
-<td>O(N)</td>
-</tr>
-<tr>
-<td>Heap</td>
-<td>O(logN)</td>
-<td>O(logN)</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Min Heap 예시</li>
-</ul>
-<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq
-
-<span class="token comment"># 오름차순 힙 정렬(Heap Sort)</span>
-<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    <span class="token comment"># 모든 원소를 차례대로 힙에 삽입</span>
-    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
-        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
-    <span class="token comment"># 힙에 삽입된 모든 원소를 차례때로 꺼내어 담기</span>
-    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> result
-
-result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [0,1,2,3,4,5,6,7,8,9]</span></code></pre></div>
-<ul>
-<li>Max Heap 예시</li>
-</ul>
-<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq
-
-<span class="token comment"># 내림차순 힙 정렬(Heap Sort)</span>
-<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    <span class="token comment"># 모든 원소를 차례때로 힙에 삽입</span>
-    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
-        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> <span class="token operator">-</span>value<span class="token punctuation">)</span>
-    <span class="token comment"># 힙에 삽입된 모든 원소를 차례대로 꺼내어 담기</span>
-    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token operator">-</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> result
-
-result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [9,8,7,6,5,4,3,2,1,0]</span></code></pre></div>
+<p><a href="#1-priority-queue-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90--heap-%ED%9E%99">Priority 정리 참고</a></p>
 <ul>
 <li>
 <p>개선된 구현 방법</p>
@@ -1252,6 +1194,127 @@ graph <span class="token operator">=</span> <span class="token punctuation">[</s
 </ul>
 </li>
 </ul>
+<h4 id="bellman-ford-알고리즘" style="position:relative;"><a href="#bellman-ford-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98" aria-label="bellman ford 알고리즘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Bellman-Ford 알고리즘</h4>
+<ul>
+<li>
+<p>조건: 음수 Edge가 포함된 상황에서의 최단 거리 문제</p>
+<ul>
+<li>e.g. <a href="https://www.acmicpc.net/problem/11657">https://www.acmicpc.net/problem/11657</a></li>
+<li>음수 Edge에 대한 최단 경로 문제의 분류
+<ol>
+<li>모든 edge가 양수인 경우</li>
+<li>음수 edge가 있는 경우
+<ol>
+<li>음수 edge cycle이 없는 경우</li>
+<li>음수 edge cycle이 있는 경우</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>Bellan-Ford 알고리즘</p>
+<ul>
+<li>음수 edge가 포함된 상황에서 사용 가능</li>
+<li>음수 edge의 cycle 감지 가능</li>
+<li>기본 시간 복잡도: O(VE)
+<ul>
+<li>Dijkstra 알고리즘에 비해 느림</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Bellman-Ford 알고리즘 동작 과정</p>
+<ol>
+<li>출발 노드 설정</li>
+<li>최단 거리 테이블 초기화</li>
+<li>다음 과정은 N-1번 반복
+<ol>
+<li>전체 edge E개를 하나씩 확인함</li>
+<li>각 edge를 거쳐 다른 노드로 가는 비용을 계산하여 최단거리 테이블 update</li>
+</ol>
+</li>
+</ol>
+<ul>
+<li>If, 음수 edge cycle이 발생하는지 체크하고 싶다면 3번의 과정을 한 번 더 수행
+<ul>
+<li>이 때, 최단거리 테이블이 update된다면 음수 edge cycle이 존재한다는 의미</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>💡 Bellman-Ford 알고리즘 v.s. Dijkstra 알고리즘</p>
+<ul>
+<li>Dijkstra 알고리즘
+<ul>
+<li><strong>매번 방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드 선택</strong></li>
+<li>음수 edge가 없다면 최적의 해를 찾을 수 있음</li>
+</ul>
+</li>
+<li>Bellman-Ford 알고리즘
+<ul>
+<li><strong>매번 모든 edge를 전부 확인함</strong>-> 따라서 <strong>Dijkstra 알고리즘에서의 최적의 해를 항상 포함</strong></li>
+<li>Dijkstra 알고리즘에 비해서 시간이 오래 걸리지만 음수 edge cycle을 탐지할 수 있음</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
+<span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>realine
+INF <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e9</span><span class="token punctuation">)</span>  <span class="token comment"># 무한을 의미하는 값으로 10억 설정</span>
+
+<span class="token keyword">def</span> <span class="token function">bf</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 시작 노드에 대해서 초기화</span>
+    dist<span class="token punctuation">[</span>start<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token comment"># 전체 n번의 round를 반복</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 매 반복마다 '모든 edge'를 확인하며</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            cur <span class="token operator">=</span> edges<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+            next_node <span class="token operator">=</span> edges<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+            cost <span class="token operator">=</span> edge<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>
+            <span class="token comment"># 현재 edge를 거쳐서 다른 노드로 이동하는 거리가 더 짧은 경우</span>
+            <span class="token keyword">if</span> dist<span class="token punctuation">[</span>cur<span class="token punctuation">]</span> <span class="token operator">!=</span> INF <span class="token keyword">and</span> dist<span class="token punctuation">[</span>next_node<span class="token punctuation">]</span> <span class="token operator">></span> dist<span class="token punctuation">[</span>cur<span class="token punctuation">]</span> <span class="token operator">+</span> cost<span class="token punctuation">:</span>
+                dist<span class="token punctuation">[</span>next_node<span class="token punctuation">]</span> <span class="token operator">=</span> dist<span class="token punctuation">[</span>cur<span class="token punctuation">]</span> <span class="token operator">+</span> cost
+                <span class="token comment"># n번째 라운드에서도 값이 갱신된다면 음수 cycle이 존재</span>
+                <span class="token keyword">if</span> i <span class="token operator">==</span> n <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>
+                    <span class="token keyword">return</span> <span class="token boolean">True</span>
+    <span class="token keyword">return</span> <span class="token boolean">False</span>
+
+<span class="token comment"># 노드의 개수, edge의 개수 입력받기</span>
+n<span class="token punctuation">,</span>m <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 모든 edge에 대한 정보를 담는 리스트 만들기</span>
+edges <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token comment"># 최단 거리 테이블을 모두 무한으로 초기화</span>
+dist <span class="token operator">=</span> <span class="token punctuation">[</span>INF<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 모든 edge 정보를 입력받기</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># a번 노드에서 b번 노드로 가는 비용이 c라는 의미</span>
+    edges<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 벨만 포드 알고리즘 수행</span>
+negative_cycle <span class="token operator">=</span> bf<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 1번 노드가 시작 노드</span>
+
+<span class="token keyword">if</span> negative_cycle<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"-1"</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    <span class="token comment"># 1번 노드를 제외한 다른 모든 노드로 가기 위한 최단 거리 출력</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 도달할 수 없는 경우 -1 출력</span>
+        <span class="token keyword">if</span> dist<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> INF<span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"-1"</span><span class="token punctuation">)</span>
+        <span class="token comment"># 도달할 수 있는 경우 거리 출력</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>dist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+
+</code></pre></div>
 <h3 id="7-graph" style="position:relative;"><a href="#7-graph" aria-label="7 graph permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. Graph</h3>
 <h4 id="disjoint-sets-서로소-집합-자료구조" style="position:relative;"><a href="#disjoint-sets-%EC%84%9C%EB%A1%9C%EC%86%8C-%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0" aria-label="disjoint sets 서로소 집합 자료구조 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disjoint Sets (서로소 집합) 자료구조</h4>
 <ul>
@@ -1407,6 +1470,704 @@ parent <span class="token operator">=</span> <span class="token punctuation">[</
     <span class="token keyword">return</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span></code></pre></div>
 </li>
 </ul>
+<h4 id="disjoint-set을-활용한-cycle-판별" style="position:relative;"><a href="#disjoint-set%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-cycle-%ED%8C%90%EB%B3%84" aria-label="disjoint set을 활용한 cycle 판별 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Disjoint Set을 활용한 Cycle 판별</h4>
+<ul>
+<li>서로소 집합은 <strong>무방향 그래프(Undirected Graph) 내에서의 사이클을 판별</strong>할 때 사용 가능
+<ul>
+<li>cf. 방향 그래프(Directed Graph)에서의 사이클 여부는 DFS를 이용하여 판별 가능</li>
+</ul>
+</li>
+<li>Cycle 판별 알고리즘
+<ol>
+<li>각 Edge를 하나씩 확인하여 두 노드의 root 노드를 확인함
+<ol>
+<li>root 노드가 서로 다르다면 두 노드에 대해 Union 수행</li>
+<li>root 노드가 서로 같다면 Cycle이 발생한 것임</li>
+</ol>
+</li>
+<li>그래프에 포함되어 있는 모든 Edge에 대해 1번 과정을 반복</li>
+</ol>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># 특정 원소가 속한 집합 찾기</span>
+<span class="token keyword">def</span> <span class="token function">find_parent</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># root 노드를 찾을 때까지 재귀 호출</span>
+    <span class="token keyword">if</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">!=</span> x<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span>
+
+<span class="token comment"># 두 원소가 속한 집합 합치기</span>
+<span class="token keyword">def</span> <span class="token function">union_parent</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">)</span>
+    b <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> a <span class="token operator">&lt;</span> b<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> a
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">=</span> b
+
+<span class="token comment"># 노드의 개수와 edge(Union 연산)의 개수 입력 받기</span>
+v<span class="token punctuation">,</span> e <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+parent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>v <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 부모 테이블 초기화하기</span>
+
+<span class="token comment"># 부모 테이블에서 부모를 자기 자신으로 초기화</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parent<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i
+
+cycle <span class="token operator">=</span> <span class="token boolean">False</span> <span class="token comment"># 사이클 발생 여부</span>
+
+<span class="token comment"># Edge를 순회하며 cycle 탐색</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># cycle이 발생한 경우 종료</span>
+    <span class="token keyword">if</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">)</span> <span class="token operator">==</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        cycle <span class="token operator">=</span> <span class="token boolean">True</span>
+        <span class="token keyword">break</span>
+    <span class="token comment"># cycle이 발생하지 않았다면 Union 연산 수행</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        union_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span>b<span class="token punctuation">)</span>
+<span class="token keyword">if</span> cycle<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"there is cycle"</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"no cycle"</span><span class="token punctuation">)</span></code></pre></div>
+<h4 id="minimum-spanning-tree-최소-신장-트리" style="position:relative;"><a href="#minimum-spanning-tree-%EC%B5%9C%EC%86%8C-%EC%8B%A0%EC%9E%A5-%ED%8A%B8%EB%A6%AC" aria-label="minimum spanning tree 최소 신장 트리 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Minimum Spanning Tree (최소 신장 트리)</h4>
+<ul>
+<li>Spanning Tree: 그래프에서 <strong>모든 노드를 포함</strong>하면서 <strong>cycle이 존재하지 않는 부분 그래프</strong> 의미
+<ul>
+<li>cf. Tree의 조건: 모든 노드가 포함되어 서로 연결되면서 사이클이 존재하지 않는다</li>
+<li>Edge의 개수 = Vertex의 개수 - 1</li>
+</ul>
+</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 27.22222222222222%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAFCAYAAABFA8wzAAAACXBIWXMAABYlAAAWJQFJUiTwAAAA70lEQVQY002ObW+DMAyE+f//a6q6VUzTNqFC2/HyYZogQCgqISE8k1PR7STL9tm+cwTgvWee55CttSzLwgbpnVtwy322IdzIrl+ZZxt6QbSJTdP0EJTaOYd1jts0Yaxj8R5j5oehZCNPrOv9xpjAR3JojAnqQqzrGgyE2752/0IMRGD7VubaedR4wxpDpLVGKcUwDNR1Td/3dF33F1rTdj2NUlzHEdW2YUeyHq781DXfnUY1DX1TExVFQVmWZFlGHMckSUJVVeR5TlkWJOmZ+D3l9SPl7TMjLwryy4XjfkcWH0hf9pwPzxx3T3ydMn4BG7x+0KXicSUAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="spanning_tree-1.png"
+        title="spanning_tree-1.png"
+        src="/static/646bf58eedfaacc58c1aa3f2785ca3a1/37523/spanning_tree-1.png"
+        srcset="/static/646bf58eedfaacc58c1aa3f2785ca3a1/e9ff0/spanning_tree-1.png 180w,
+/static/646bf58eedfaacc58c1aa3f2785ca3a1/f21e7/spanning_tree-1.png 360w,
+/static/646bf58eedfaacc58c1aa3f2785ca3a1/37523/spanning_tree-1.png 720w,
+/static/646bf58eedfaacc58c1aa3f2785ca3a1/302a4/spanning_tree-1.png 1080w,
+/static/646bf58eedfaacc58c1aa3f2785ca3a1/07a9c/spanning_tree-1.png 1440w,
+/static/646bf58eedfaacc58c1aa3f2785ca3a1/b918a/spanning_tree-1.png 2780w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<ul>
+<li>
+<p>Minimum Spanning Tree: <strong>최소한의 비용으로 구성되는 신장 트리</strong></p>
+<ul>
+<li>e.g., N개의 도시가 존재하는 상황에서 두 도시 사이에 도로를 놓아 <strong>전체 도시가 서로 연결</strong>될 수 있게 도로를 설치하는 경우 (= 두 도시 A, B를 선택했을 때 A에서 B로 이동하는 경로가 반드시 존재)</li>
+</ul>
+</li>
+<li>
+<p><strong>Kruskal 알고리즘</strong></p>
+<ul>
+<li>대표적인 Minimum Spanning Tree 알고리즘</li>
+<li>Greedy 알고리즘</li>
+<li>동작 과정:
+<blockquote>
+<ol>
+<li>edge 데이터를 cost에 따라 <strong>오름차순으로 정렬</strong></li>
+<li>edge를 하나씩 확인하며 <strong>현재의 간선이 사이클을 발생시키는지 확인</strong>
+<ol>
+<li>사이클이 발생하지 않는 경우: MSP에 포함시킴</li>
+<li>사이클이 발생하지 않는 경우: MSP에 포함시키지 않음</li>
+</ol>
+</li>
+<li>모든 edge에 대해 2번 과정 반복</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token comment"># 특정 원소가 속한 집합 찾기</span>
+<span class="token keyword">def</span> <span class="token function">find_parent</span><span class="token punctuation">(</span>parent x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># root 노드를 찾을 때까지 재귀 호출</span>
+    <span class="token keyword">if</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">!=</span> x<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> x<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span>
+
+<span class="token comment"># 두 원소가 속한 집합 합치기</span>
+<span class="token keyword">def</span> <span class="token function">union_parent</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">)</span>
+    b <span class="token operator">=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> a <span class="token operator">&lt;</span> b<span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> a
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">=</span> b
+
+<span class="token comment"># 노드의 개수와 간선(union 연산)의 개수 입력 받기</span>
+v<span class="token punctuation">,</span> e <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+parent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 자기 자신을 부모로 parent table 초기화</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parent<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i
+
+<span class="token comment"># 모든 edge를 담을 리스트와 final cost를 담을 변수</span>
+edges <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+result <span class="token operator">=</span> <span class="token number">0</span>  <span class="token comment"># 연산에 포함될 경우 = MST에 포함된다는 의미</span>
+
+<span class="token comment"># 모든 간선에 대한 정보 입력 받기</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> cost <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># 비용순으로 정렬하기 위해서 튜플의 첫 번째 원소를 cost으로 설정</span>
+    edges<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>cost<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># edge를 cost순으로 정렬</span>
+edges<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># edge를 하나씩 확인해가며</span>
+<span class="token keyword">for</span> edge <span class="token keyword">in</span> edges<span class="token punctuation">:</span>
+    cost<span class="token punctuation">,</span> a<span class="token punctuation">,</span> b <span class="token operator">=</span> edge
+    <span class="token comment"># 사이클이 발생하지 않는 경우에만 집합에 포함</span>
+    <span class="token keyword">if</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">)</span> <span class="token operator">!=</span> find_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        union_parent<span class="token punctuation">(</span>parent<span class="token punctuation">,</span> a<span class="token punctuation">,</span>b<span class="token punctuation">)</span>
+        result <span class="token operator">+=</span> cost
+
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>Kruskal 알고리즘의 성능 분석
+<ul>
+<li>시간 복잡도: O(ElogE) (Edge 개수 = E일 때)</li>
+<li>가장 많은 시간 요구하는 곳: edge 정렬 부분
+<ul>
+<li>표준 라이브러리(<code class="language-text">sort()</code>)를 이용해 E개의 데이터를 정렬하기 위한 시간 복잡도: O(ElogE)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="topological-sort-위상-정렬" style="position:relative;"><a href="#topological-sort-%EC%9C%84%EC%83%81-%EC%A0%95%EB%A0%AC" aria-label="topological sort 위상 정렬 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Topological Sort (위상 정렬)</h4>
+<ul>
+<li>**Cycle이 없는 Directed Graph(DAG, Directed Acyclic Graph)**의 모든 노드를 <strong>방향성에 거스르지 않도록 순서대로 나열</strong>
+<blockquote>
+<p>💡 DAG 여야하는 이유?
+: Cycle이 존재할 경우 Cycle이 존재하는 모든 노드의 Indegree가 1 이상이 되므로 다음 알고리즘을 사용할 경우, Cycle이 존재하는 모든 노드가 영원히 Queue에 들어갈 수 없음(=Sorting 수행할 수 없음)</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>cf. Indegree와 Outdegree</p>
+<ul>
+<li>Indegree: 특정한 노드로 들어오는 edge의 개수</li>
+<li>Outdegree: 특정한 노드에서 나가는 edge의 개수</li>
+</ul>
+</blockquote>
+<ul>
+<li>
+<p><strong>Queue</strong>를 이용하는 Topological Sort 알고리즘 동작 과정\</p>
+<ul>
+<li>각 노드가 Queue에 들어온 순서 = Topological Sort 수행 결과</li>
+</ul>
+<blockquote>
+<ol>
+<li>Indegree가 0인 모든 노드를 Queue에 넣음</li>
+<li>Queue가 빌 때까지 다음의 과정 반복</li>
+<li>Queue에서 원소를 꺼내 해당 노드에서 Outdegree를 그래프에서 제거함</li>
+<li>새롭게 Indegree가 0이 된 노드를 Queue에 넣음</li>
+</ol>
+</blockquote>
+</li>
+<li>
+<p>Topological Sort 특징</p>
+<ul>
+<li>DAG (Direct Acyclic Graph), 순환하지 않는 방향 그래프에서만 수행 가능</li>
+<li><strong>여러 가지 답이 존재</strong>할 수 있음
+<ul>
+<li>한 단계에서 Queue에 새롭게 드어가는 원소가 2개 이상 있다면, 여러 가지 답이 존재</li>
+</ul>
+</li>
+<li><strong>모든 원소를 방문하기 전에 큐가 빈다면 Cycle이 존재</strong>한다고 판단
+<ul>
+<li>Cycle에 포함된 원소 중에서 어떠한 원소도 Queue에 들어가지 못함</li>
+</ul>
+</li>
+<li>Stack을 활용한 DFS를 이용해서도 Topological Sort 수행 가능</li>
+</ul>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> deque
+
+<span class="token comment"># 노드의 개수와 Edge의 개수 입력 받기</span>
+v<span class="token punctuation">,</span> e <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 모든 노드에 대한 indegree를 0으로 초기화</span>
+indegree <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment"># 각 노드에 연결된 edge 정보를 담기 위한 연결 리스트 초기화</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> ragne<span class="token punctuation">(</span>v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+<span class="token comment"># 방향 그래프의 모든 간선 정보 입력 받기</span>
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span>b<span class="token punctuation">)</span>  <span class="token comment"># A에서 B로 이동 가능</span>
+    <span class="token comment"># indegree를 1 증가</span>
+    indegree<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+
+<span class="token comment"># Topological Sort</span>
+<span class="token keyword">def</span> <span class="token function">topology_sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token comment"># 알고리즘 수행 결과를 담을 리스트</span>
+    q <span class="token operator">=</span> deque<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># queue</span>
+    <span class="token comment"># 처음 시작할 때는 진입 차수가 0인ㅇ 노드를 queue에 삽입</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> v<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> indegree<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            q<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+    <span class="token comment"># 큐가 빌 때까지 반복</span>
+    <span class="token keyword">while</span> q<span class="token punctuation">:</span>
+        <span class="token comment"># 큐에서 원소 꺼내기</span>
+        now <span class="token operator">=</span> q<span class="token punctuation">.</span>popleft<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>now<span class="token punctuation">)</span>
+        <span class="token comment"># 해당 원소와 연결된 노드들의 indegree에서 1 빼기</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> graph<span class="token punctuation">[</span>now<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            indegree<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">-=</span> <span class="token number">1</span>
+            <span class="token comment"># 새롭게 indegree가 0이 되는 노드를 queue에 삽입</span>
+            <span class="token keyword">if</span> indegree<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+                q<span class="token punctuation">.</span>append<span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+    <span class="token comment"># Topological Sort 수행 결과 출력</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> result<span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">" "</span><span class="token punctuation">)</span>
+
+topology_sort<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>Topology Sort의 성능 분석
+<ul>
+<li>시간 복잡도: O(V+E)</li>
+<li>차례대로 모든 Vertex를 확인해가며 각 Vertex에서 나가는 Edge를 차례대로 제거해야 함</li>
+</ul>
+</li>
+</ul>
+<h2 id="자료-구조-정리" style="position:relative;"><a href="#%EC%9E%90%EB%A3%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC" aria-label="자료 구조 정리 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>자료 구조 정리</h2>
+<h3 id="1-priority-queue-우선순위-큐--heap-힙" style="position:relative;"><a href="#1-priority-queue-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90--heap-%ED%9E%99" aria-label="1 priority queue 우선순위 큐  heap 힙 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. Priority Queue (우선순위 큐) &#x26; Heap (힙)</h3>
+<ul>
+<li>
+<p>Priority Queue: 우선순위가 가장 높은 데이터를 가장 먼저 삭제하는 자료구조</p>
+<ul>
+<li>데이터를 우선순위에 따라 처리하고 싶을 때 사용함</li>
+</ul>
+</li>
+<li>
+<p>Priority Queue 구현 방법</p>
+<ol>
+<li>List 이용: 차례로 데이터 삽입 &#x26; 꺼낼 때 우선 순위 비교해서 높은 것부터 꺼냄</li>
+<li>Heap 이용</li>
+</ol>
+</li>
+<li>
+<p>데이터 개수가 N일 때, 구현 방식에 따른 시간 복잡도</p>
+<table>
+<thead>
+<tr>
+<th>우선순위 큐 구현 방식</th>
+<th>삽입 시간</th>
+<th>삭제 시간</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List</td>
+<td>O(1)</td>
+<td>O(N)</td>
+</tr>
+<tr>
+<td>Heap</td>
+<td>O(logN)</td>
+<td>O(logN)</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>단순히 데이터를 Heap에 넣었다가 모두 꺼내는 작업 = 정렬 작업</p>
+<ul>
+<li>‘힙 정렬’이라고 함</li>
+<li>시간 복잡도: O(NlogN)</li>
+</ul>
+</li>
+<li>
+<p>Heap의 특징</p>
+<ul>
+<li>Heap은 Complete Binary Tree(완전 이진 트리)의 일종</li>
+<li>항상 Root node를 제거함</li>
+<li>Min Heap (최소 힙)
+<ul>
+<li>root 노드가 가장 작은 값을 가짐</li>
+<li>값이 작은 데이터가 우선적으로 제거됨</li>
+</ul>
+</li>
+<li>Max Heap (최대 힙)
+<ul>
+<li>root 노드가 가장 큰 값을 가짐</li>
+<li>값이 큰 데이터가 우선적으로 제거됨</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>💡 Complete Binary Tree (완전 이진 트리)란?
+: root 노드부터 시작해서 왼쪽 child 노드, 오른쪽 child 노드 순으로 데이터가 차례대로 삽입되는 tree를 의미</p>
+</blockquote>
+<ul>
+<li>
+<p><code class="language-text">Min-Heapify()</code>: 최소 힙 구성 함수</p>
+<ul>
+<li>(Bottom-Up) parent 노드로 거슬러 올라가며, parent보다 자신의 값이 더 작은 경우 위치를 교체함</li>
+<li>(Top-Bottom) 더 작은 child 노드로 내려가며, child보다 자신의 값이 더 큰 경우 위치를 교체</li>
+</ul>
+</li>
+<li>
+<p>Heap 연산 시간 복잡도</p>
+<ul>
+<li>새로운 원소가 삽입되었을 때: O(logN)
+<ul>
+<li>leaf node에 추가된 원소 삽입 (heap 높이: logN) -> Bottom-Up <code class="language-text">Heapify()</code></li>
+</ul>
+</li>
+<li>원소가 제거될 때: O(logN)
+<ul>
+<li>root 노드 제거 -> 제거된 root 노드 자리에 leaf 노드 위치시킴 -> Top-Down <code class="language-text">Heapify()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Min Heap 예시</p>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq <span class="token comment"># 기본적으로 Min Heap 제공</span>
+
+<span class="token comment"># 오름차순 힙 정렬(Heap Sort)</span>
+<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token comment"># 모든 원소를 차례대로 힙에 삽입</span>
+    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
+        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+    <span class="token comment"># 힙에 삽입된 모든 원소를 차례때로 꺼내어 담기</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> result
+
+result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [0,1,2,3,4,5,6,7,8,9]</span></code></pre></div>
+<ul>
+<li>Max Heap 예시</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> heapq 
+
+<span class="token comment"># 내림차순 힙 정렬(Heap Sort)</span>
+<span class="token keyword">def</span> <span class="token function">heapsort</span><span class="token punctuation">(</span>iterable<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token comment"># 모든 원소를 차례때로 힙에 삽입</span>
+    <span class="token keyword">for</span> value <span class="token keyword">in</span> iterable<span class="token punctuation">:</span>
+        heapq<span class="token punctuation">.</span>heappush<span class="token punctuation">(</span>h<span class="token punctuation">,</span> <span class="token operator">-</span>value<span class="token punctuation">)</span>
+    <span class="token comment"># 힙에 삽입된 모든 원소를 차례대로 꺼내어 담기</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        result<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token operator">-</span>heapq<span class="token punctuation">.</span>heappop<span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> result
+
+result <span class="token operator">=</span> heapsort<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">,</span><span class="token number">7</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># [9,8,7,6,5,4,3,2,1,0]</span></code></pre></div>
+<blockquote>
+<p>💡 “그래서 Priority Queue와 Heap의 차이가 뭐야?”
+Priority Queue는 <strong>Abstract Datatype</strong>이다. 그러니까 특정 interface와 그 행위를 지칭하는 <strong>개념적인 용어</strong>이고, 기본 구현에 대해서는 언급하지 않는다.
+반면에, Heap은 <strong>자료구조</strong>이다. 즉, 특정 작업에 대해 매우 효율적으로 동작하도록 설계한 데이터 저장 방식에 대한 명칭이다.
+결국, Heap 자료구조를 이용한 데이터 저장 방식이 Priority Queue를 구현할 수 있도록 해주는 것이다.</p>
+</blockquote>
+<h3 id="2-tree-트리" style="position:relative;"><a href="#2-tree-%ED%8A%B8%EB%A6%AC" aria-label="2 tree 트리 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. Tree (트리)</h3>
+<ul>
+<li>
+<p>가계도와 같이 계층적인 구조(Hierarchical Structure)를 표현할 때 사용할 수 있는 자료 구조</p>
+</li>
+<li>
+<p>관련 용어</p>
+<ul>
+<li>root node: 부모가 없는 최상위 노드</li>
+<li>leaf node: 자식이 없는 노드</li>
+<li>size: 트리에 포함된 모든 노드의 개수</li>
+<li>depth: root 노드로부터의 거리</li>
+<li>height: depth 중 최댓값</li>
+<li>degree: 각 노드의 (자식 방향) edge 개수</li>
+</ul>
+</li>
+<li>
+<p>Tree의 특징</p>
+<ul>
+<li>Tree의 Size가 N일 때, 전체 Edge의 개수는 N-1</li>
+</ul>
+</li>
+<li>
+<p>Binary Search Tree (이진 탐색 트리)</p>
+<ul>
+<li>이진 탐색이 효율적으로 통작할 수 있도록 고안된 자료구조</li>
+<li>Binary Search Tree의 특징: left child node &#x3C; root node &#x3C; right child node</li>
+<li>Complete Bineary Search Tree일 경우(이상적인 조건), 탐색 시간이 O(logN) 소요</li>
+</ul>
+</li>
+<li>
+<p>Tree Traversal (트리 순회)</p>
+<ul>
+<li>Tree 자료구조에 포함된 노드를 특정한 방법으로 한 번씩 방문하는 방법 의미</li>
+<li>대표적인 Tree Traversal 방법
+<ol>
+<li>Pre-order traverse(전위 순회): root 먼저 방문</li>
+<li>In-order traverse(중위 순회): left child -> root -> right child</li>
+<li>Post-order traverse(후위 순회): left child -> right child -> root</li>
+</ol>
+</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 40.55555555555556%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAABYlAAAWJQFJUiTwAAABBUlEQVQoz3WQyaqFQAxE/f+PcyO4EL2KOOCI86y5nDx0IfcFYnfsSlUlhvyI67qee13XEkWR7Pv+vN357iGNN8l9rusqwzBInueaEM/zLOd5Ppht2ySOY+n7/iE2fjmjCSDO7qApCAIVIZZlka7rpKoqPanV4XsEyLIskzzLHnXGTZJEyrLUE6e4RhCXiJD0Gu/9AQ4+Hzm2VYqylDRNlQiR4zi05s4/13W1xuE4jn+EfKZp0mRvELIvACTKjNO2rRLiGFxRFGKapliWpW+PQ5ocxxHbtsX3fd0TGYahApumUQc0UCNMUOOO0eHAiO4QAIQoMQKknucpKQuH8HYAMQ5x+l98AQChaFptiqH6AAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="tree_traverse-1.png"
+        title="tree_traverse-1.png"
+        src="/static/98d45563b2ee7caaa7e58cb1d1054200/37523/tree_traverse-1.png"
+        srcset="/static/98d45563b2ee7caaa7e58cb1d1054200/e9ff0/tree_traverse-1.png 180w,
+/static/98d45563b2ee7caaa7e58cb1d1054200/f21e7/tree_traverse-1.png 360w,
+/static/98d45563b2ee7caaa7e58cb1d1054200/37523/tree_traverse-1.png 720w,
+/static/98d45563b2ee7caaa7e58cb1d1054200/302a4/tree_traverse-1.png 1080w,
+/static/98d45563b2ee7caaa7e58cb1d1054200/e40ed/tree_traverse-1.png 1378w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">Node</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> data<span class="token punctuation">,</span> left_node<span class="token punctuation">,</span> right_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>data <span class="token operator">=</span> data
+        self<span class="token punctuation">.</span>left_node <span class="token operator">=</span> left_node
+        self<span class="token punctuation">.</span>right_node <span class="token operator">=</span> right_node
+
+<span class="token comment"># Pre-order Traversal</span>
+<span class="token keyword">def</span> <span class="token function">pre_order</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># root</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>node_data<span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">" "</span><span class="token punctuation">)</span>
+    <span class="token comment"># left</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>left_node <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        pre_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>left_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment"># right</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>right_mode <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        pre_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>right_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># In-order Traversal</span>
+<span class="token keyword">def</span> <span class="token function">in_order</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># left</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>left_node <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        in_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>left_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment"># root</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span>data<span class="token punctuation">,</span> end <span class="token operator">=</span> <span class="token string">' '</span><span class="token punctuation">)</span>
+    <span class="token comment"># right</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>right_node <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        in_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>left_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    
+<span class="token comment"># Post-order Traversal</span>
+<span class="token keyword">def</span> <span class="token function">post_order</span><span class="token punctuation">(</span>node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># left</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>left_node <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        post_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>left_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment"># right</span>
+    <span class="token keyword">if</span> node<span class="token punctuation">.</span>right_node <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        post_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span>node<span class="token punctuation">.</span>right_node<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment"># root</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span>data<span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">)</span>
+
+<span class="token comment"># node 개수</span>
+n <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+tree <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data<span class="token punctuation">,</span> left_node<span class="token punctuation">,</span> right_node <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> left_node <span class="token operator">==</span> <span class="token string">"None"</span><span class="token punctuation">:</span>
+        left_node <span class="token operator">=</span> <span class="token boolean">None</span>
+    <span class="token keyword">if</span> right_node <span class="token operator">==</span> <span class="token string">"None"</span><span class="token punctuation">:</span>
+        right_node <span class="token operator">=</span> <span class="token boolean">None</span>
+    tree<span class="token punctuation">[</span>data<span class="token punctuation">]</span> <span class="token operator">=</span> Node<span class="token punctuation">(</span>data<span class="token punctuation">,</span> left_node<span class="token punctuation">,</span> right_node<span class="token punctuation">)</span>
+
+pre_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span><span class="token string">'A'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+in_oreder<span class="token punctuation">(</span>tree<span class="token punctuation">[</span><span class="token string">'A'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+post_order<span class="token punctuation">(</span>tree<span class="token punctuation">[</span><span class="token string">'A'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre></div>
+</li>
+</ul>
+<h3 id="3-binary-indexed-tree-bit-fenwick-tree" style="position:relative;"><a href="#3-binary-indexed-tree-bit-fenwick-tree" aria-label="3 binary indexed tree bit fenwick tree permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. Binary Indexed Tree (BIT, Fenwick Tree)</h3>
+<ul>
+<li>
+<p>조건: 데이터 update가 가능한 상황에서의 Interval Sum(구한 합) 문제</p>
+<ul>
+<li><a href="https://www.acmicpc.net/problem/2042">https://www.acmicpc.net/problem/2042</a></li>
+</ul>
+</li>
+<li>
+<p>2진법 인덱스 구조를 활용해 구간 합 문제를 효과적으로 해결해 줄 수 있는 자료구조 의미</p>
+<ul>
+<li>
+<p>cf. 정수에 따른 2진수 표기</p>
+<table>
+<thead>
+<tr>
+<th>정수</th>
+<th>2진수 표기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td>00000000 00000000 00000000 0000111</td>
+</tr>
+<tr>
+<td>-7</td>
+<td>11111111 11111111 11111111 1111001</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p>0이 아닌 마지막 비트를 찾는 방법</p>
+<ul>
+<li>특정한 숫자 K의 0이 아닌 마지막 비트를 찾기 위해서 K &#x26; -K를 계산하면 됨</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 44.99999999999999%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABYlAAAWJQFJUiTwAAABR0lEQVQoz22S6arCQAxGff+nEtSq1Wr9477vS6nWDQrV73IiI3K1EGaSmZx8mTSXZZmiKNLpdNLhcNBut9P5fBbf4/HQ5/d8Pr/s/1kO53q9qtPpaL/f2x4gdrlcNBwO1W63tV6vzSeeJMn7DufL5dL2aZq+gKgiaTqdajKZqFQqyfM8VSoV5fN584vFovmFQkHNZlOLxULz+Vz9fl/j8dhyKWhA2l2tVqZwu90qCAI1Gg1LZG21WraGYah6vW4Qnon7KEcQdr/fX8Dj8ajZbGYwLvi+r1qtZsnVatUKEGNFZa/Xexen3c1mY/YFJAjQwQCwR51biXe7XVPkgOT8BDqFDuYAtI7v1sFg8G7zp8I4jm0YwLjAQMrlsrXHQGjbDYk4fwTFgSCE9yf3dru9gDwwE+MA41cYjUZmbv8Zc8Uxpk0OQgD+AT2KkIxQPoq3AAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="binary_number-1.png"
+        title="binary_number-1.png"
+        src="/static/8ae80739754c9ac95b26a6ab4a9db1fa/37523/binary_number-1.png"
+        srcset="/static/8ae80739754c9ac95b26a6ab4a9db1fa/e9ff0/binary_number-1.png 180w,
+/static/8ae80739754c9ac95b26a6ab4a9db1fa/f21e7/binary_number-1.png 360w,
+/static/8ae80739754c9ac95b26a6ab4a9db1fa/37523/binary_number-1.png 720w,
+/static/8ae80739754c9ac95b26a6ab4a9db1fa/302a4/binary_number-1.png 1080w,
+/static/8ae80739754c9ac95b26a6ab4a9db1fa/d8817/binary_number-1.png 1238w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+<li>
+<p>Binary Index Tree 구조</p>
+<ul>
+<li>0이 아닌 마지막 bit = 내가 저장하고 있는 값들의 개수</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 35.55555555555556%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABO0lEQVQozz2M6XLCMBCD8/4vxg2lpJ1yDCElxIacDjltJ+rsUvJDI0uf1k4Sx7g8MrjXCLvfO758ie9bgp1/x6cv8SNSuNcHv3njS35vPfHqLwJbL8SHJ+DJBE7T1IjUE2H2RJgWEHkJqUqEWcFZqor9ImMEcQ7BOzVuyW+Jwi0tEOVPOMMwQHcdht6OMrqDNfqVrcFgLdqm5g5Dz73VGrprxxv0Pf/j9H2Ptm1hjEWnNYwxqJsGdV3DWstZG4PqP7ddB601qqpCWZbjhkT/OASyLEOe54iiiJ1ykiRjr5RCHMechRAjS9OUnVQUBbsTBAHO5zNOpxPL9314nofD4YD9fs+MuuPxyJk2xKl/b4i97xzXdbFarbBYLDCfzzGbzbBerzGdTrFcLlnEqCcnNplMxj1x2hLfbDb4A/HBCMk6opL/AAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="binary_index_tree-1.png"
+        title="binary_index_tree-1.png"
+        src="/static/764a86048c100680b6b2c5a6c2f22821/37523/binary_index_tree-1.png"
+        srcset="/static/764a86048c100680b6b2c5a6c2f22821/e9ff0/binary_index_tree-1.png 180w,
+/static/764a86048c100680b6b2c5a6c2f22821/f21e7/binary_index_tree-1.png 360w,
+/static/764a86048c100680b6b2c5a6c2f22821/37523/binary_index_tree-1.png 720w,
+/static/764a86048c100680b6b2c5a6c2f22821/302a4/binary_index_tree-1.png 1080w,
+/static/764a86048c100680b6b2c5a6c2f22821/07a9c/binary_index_tree-1.png 1440w,
+/static/764a86048c100680b6b2c5a6c2f22821/8fc63/binary_index_tree-1.png 2756w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<ul>
+<li>Update: 0이 아닌 마지막 bit만큼 더하면서 구간들의 값을 변경 -> O(logN)</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 36.66666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABc0lEQVQozz2M65KaQBBGef93yUskpryALKIr4n0XUJgZmFlFESKeLUnij1Pf16e72tJFTiQK/LhgGimmcU6QFPifEu9DMEsK3g+GyYdk8ql422XMEo23F133I4W3l7i7jCCSWI8HnE8phfDQatZxUlPMv27yd0w+RxzfUKmLlhOM8jHP7Pqkc1q+kYs5FkB9jmhUj9Y4tMamyQfUsker+9yLPm3xm0q5NOWRxy2jrTKaMuF2irhf045HlVKd078Pn4tK/KKSAyrZ5yr6nPM1zfXIrUyoy5jylFE3LZdr/eLrdKH586Bu7t2uvFRYl2tFISNE7CHiKfkxQGcBWZYilUblGvN1RgiFEILDIUEpidYFQmRIKVBKYYxGCoEVxzGbzZZFuCYMF6xCj+1uTxAELBYLwjBku912+d9tNhvW6zXz+fx1s1qtWC6XWL7v47pjbNvBGfUY/vyB6zqMRiMcx3lh23bnxuNx159uMBi85uFw2Llvygn/7QHBcJoAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="binary_index_tree-2.png"
+        title="3rd 변경하는 예시"
+        src="/static/8142f2e1bc876b2d34b43d92e812cf18/37523/binary_index_tree-2.png"
+        srcset="/static/8142f2e1bc876b2d34b43d92e812cf18/e9ff0/binary_index_tree-2.png 180w,
+/static/8142f2e1bc876b2d34b43d92e812cf18/f21e7/binary_index_tree-2.png 360w,
+/static/8142f2e1bc876b2d34b43d92e812cf18/37523/binary_index_tree-2.png 720w,
+/static/8142f2e1bc876b2d34b43d92e812cf18/302a4/binary_index_tree-2.png 1080w,
+/static/8142f2e1bc876b2d34b43d92e812cf18/07a9c/binary_index_tree-2.png 1440w,
+/static/8142f2e1bc876b2d34b43d92e812cf18/0d721/binary_index_tree-2.png 2774w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<ul>
+<li>Prefix Sum (누적 합): 0이 아닌 마지막 비트만큼 빼면서 구간들의 값의 합을 계산 -> O(logN)</li>
+</ul>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 35.55555555555556%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAABYlAAAWJQFJUiTwAAABcklEQVQoz02MTXOiQBRF+f8/ZfazzWIWE0XLqowGUQhCVJAINNDy2S1nil6ksrh1z33v3WcVecb5XvAe5+w+U97PKW6SszunbMPY5P01w7nc2X6mvJ1inGvGv/BmeBvdjN7ChOMlxRr6nrxuSKqBuOxIyo60Hkiq/jvPu+ir5HwXxEVNUkrjsfjhQpLkJRbA2GZMTcDURtBGaBmgZGB4akOm5sQgY7RSMGl4avQ4Mg49k9ZMTw3Tk77rsKYJ+scXSnoMtc8offrqSFPs0c38+MPs2jpmVDCMimEc6boOKR8orVFKoZSmbVustm0QoqKsHtwzQfGDRSkRZU0tO7L7jSL1uV09siynLCuyLEMIYVTXtcnW5XLlFAR43tEoCALCMMR19xwOBzOLok98d8N+85vj9oXww+F0CnBdF8dx8DzPdHzfx9rtdmw2G1arFbZts1gsTJ59ni2XS9brteHF0mZl/8X+84uVveT1dfHdm+9m/g/RjgWEXA3LEgAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="binary_index_tree-3.png"
+        title="11th 까지의 누적 합을 구하는 예시"
+        src="/static/c6e19751c02dbaee76f0e1ba37a066ff/37523/binary_index_tree-3.png"
+        srcset="/static/c6e19751c02dbaee76f0e1ba37a066ff/e9ff0/binary_index_tree-3.png 180w,
+/static/c6e19751c02dbaee76f0e1ba37a066ff/f21e7/binary_index_tree-3.png 360w,
+/static/c6e19751c02dbaee76f0e1ba37a066ff/37523/binary_index_tree-3.png 720w,
+/static/c6e19751c02dbaee76f0e1ba37a066ff/302a4/binary_index_tree-3.png 1080w,
+/static/c6e19751c02dbaee76f0e1ba37a066ff/07a9c/binary_index_tree-3.png 1440w,
+/static/c6e19751c02dbaee76f0e1ba37a066ff/0d721/binary_index_tree-3.png 2774w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
+<span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>readline
+
+<span class="token comment"># 데이터의 개수</span>
+</code></pre></div>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li><a href="http://www.yes24.com/Product/Goods/91433923">나동빈. (2021). 이것이 취업을 위한 코딩 테스트다</a></li>
@@ -1478,14 +2239,26 @@ parent <span class="token operator">=</span> <span class="token punctuation">[</
 <ul>
 <li><a href="#dijkstra-shortest-path-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98">Dijkstra Shortest Path 알고리즘</a></li>
 <li><a href="#floyd-warshall-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98">Floyd-Warshall 알고리즘</a></li>
+<li><a href="#bellman-ford-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98">Bellman-Ford 알고리즘</a></li>
 </ul>
 </li>
 <li>
 <p><a href="#7-graph">7. Graph</a></p>
 <ul>
 <li><a href="#disjoint-sets-%EC%84%9C%EB%A1%9C%EC%86%8C-%EC%A7%91%ED%95%A9-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0">Disjoint Sets (서로소 집합) 자료구조</a></li>
+<li><a href="#disjoint-set%EC%9D%84-%ED%99%9C%EC%9A%A9%ED%95%9C-cycle-%ED%8C%90%EB%B3%84">Disjoint Set을 활용한 Cycle 판별</a></li>
+<li><a href="#minimum-spanning-tree-%EC%B5%9C%EC%86%8C-%EC%8B%A0%EC%9E%A5-%ED%8A%B8%EB%A6%AC">Minimum Spanning Tree (최소 신장 트리)</a></li>
+<li><a href="#topological-sort-%EC%9C%84%EC%83%81-%EC%A0%95%EB%A0%AC">Topological Sort (위상 정렬)</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li>
+<p><a href="#%EC%9E%90%EB%A3%8C-%EA%B5%AC%EC%A1%B0-%EC%A0%95%EB%A6%AC">자료 구조 정리</a></p>
+<ul>
+<li><a href="#1-priority-queue-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90--heap-%ED%9E%99">1. Priority Queue (우선순위 큐) &#x26; Heap (힙)</a></li>
+<li><a href="#2-tree-%ED%8A%B8%EB%A6%AC">2. Tree (트리)</a></li>
+<li><a href="#3-binary-indexed-tree-bit-fenwick-tree">3. Binary Indexed Tree (BIT, Fenwick Tree)</a></li>
 </ul>
 </li>
 <li>
