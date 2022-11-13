@@ -2166,8 +2166,221 @@ post_order<span class="token punctuation">(</span>tree<span class="token punctua
 <div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
 <span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>readline
 
-<span class="token comment"># 데이터의 개수</span>
-</code></pre></div>
+<span class="token comment"># 데이터의 개수(n), 변경 횟수(m), 구간 합 계산 횟수(k)</span>
+n<span class="token punctuation">,</span>m<span class="token punctuation">,</span>k <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 전체 데이터의 개수는 최대 1,000,000개</span>
+arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">*</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>     <span class="token comment"># input 데이터를 담는 용도</span>
+tree <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment"># binary index tree</span>
+
+<span class="token comment"># i번째 수까지의 누적 합을 계산하는 함수</span>
+<span class="token keyword">def</span> <span class="token function">prefix_sum</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    result <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> i <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
+        result <span class="token operator">+=</span> tree<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+        <span class="token comment"># 0이 아닌 마지막 비트만큼 빼가면서 이동</span>
+        i <span class="token operator">-=</span> <span class="token punctuation">(</span>i<span class="token operator">&amp;</span><span class="token operator">-</span>i<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> result
+
+<span class="token comment"># i번째 수를 dif만큼 더하는 함수</span>
+<span class="token keyword">def</span> <span class="token function">update</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> dif<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">while</span> i <span class="token operator">&lt;=</span> n<span class="token punctuation">:</span>
+        tree<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+=</span> dif
+        i <span class="token operator">+=</span> <span class="token punctuation">(</span>i<span class="token operator">&amp;</span><span class="token operator">-</span>i<span class="token punctuation">)</span>
+
+<span class="token comment"># start부터 end까지의 구간 합을 계산하는 함수</span>
+<span class="token keyword">def</span> <span class="token function">interval_sum</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">return</span> prefix_sum<span class="token punctuation">(</span>end<span class="token punctuation">)</span> <span class="token operator">-</span> prefix_end<span class="token punctuation">(</span>start<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    x <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    arr<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> x
+    update<span class="token punctuation">(</span>i<span class="token punctuation">,</span> x<span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token operator">+</span>k<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># operation, index, value</span>
+    a<span class="token punctuation">,</span>b<span class="token punctuation">,</span>c <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># 업데이트(update) 연산인 경우</span>
+    <span class="token keyword">if</span> a <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        update<span class="token punctuation">(</span>b<span class="token punctuation">,</span> c<span class="token operator">-</span>arr<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment"># 바뀐 크기(diff, 원래 arr[b]였는데 c가 되어야 하니까 c-arr[b]만큼 더해줘야함)만큼 적용</span>
+        arr<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">=</span> c
+    <span class="token comment"># 구간 합(interval sum) 연산의 경우</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>interval_sum<span class="token punctuation">(</span>b<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre></div>
+<h3 id="4-lowest-common-ancestor-lca-최소-공통-조상" style="position:relative;"><a href="#4-lowest-common-ancestor-lca-%EC%B5%9C%EC%86%8C-%EA%B3%B5%ED%86%B5-%EC%A1%B0%EC%83%81" aria-label="4 lowest common ancestor lca 최소 공통 조상 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. Lowest Common Ancestor (LCA, 최소 공통 조상)</h3>
+<ul>
+<li>
+<p><a href="https://www.acmicpc.net/problem/11437">BOJ ‘LCA’ 문제</a></p>
+</li>
+<li>
+<p>LCA(Lowest Common Ancestor) 문제는 <strong>두 노드의 공통된 조상 중에서 가장 가까운 조상을 찾는 문제</strong></p>
+</li>
+<li>
+<p>기본적인 LCA 알고리즘 동작 과정</p>
+<ol>
+<li>모든 노드에 대한 depth 계산 (DFS 이용)</li>
+<li>최소 공통 조상을 찾을 두 노드 확인
+<ol>
+<li>먼저 두 노드의 depth가 동일하도록 거슬러 올라감</li>
+<li>이후에 parent가 같아질 때까지 반복적으로 두 노드의 parent 방향으로 거슬러 올라감</li>
+</ol>
+</li>
+<li>모든 LCA(a,b) 연산에 대해 2번 과정 반복</li>
+</ol>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
+sys<span class="token punctuation">.</span>setrecursionlimit<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e5</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment"># 런타임 오휴 피하기</span>
+n<span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+parent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># parent 노드 정보</span>
+d <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 각 노드까지의 depth</span>
+c <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 각 노드의 depth가 계산되었는지 여부</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token comment"># graph 정보</span>
+
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+<span class="token comment"># root 노드부터 시작하여 depth를 구하는 함수</span>
+<span class="token keyword">def</span> <span class="token function">dfs</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> depth<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    c<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+    d<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> depth
+    <span class="token keyword">for</span> y <span class="token keyword">in</span> graph<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> c<span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>    <span class="token comment"># 이미 depth를 구했다면 넘기</span>
+            <span class="token keyword">continue</span>
+        parent<span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> x
+        dfs<span class="token punctuation">(</span>y<span class="token punctuation">,</span> depth<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># A와 B의 최소 공통 조상을 찾는 함수</span>
+<span class="token keyword">def</span> <span class="token function">lca</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 먼저 depth가 동일하도록 (시작 지점 동일하도록)</span>
+    <span class="token keyword">while</span> d<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">!=</span> d<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> d<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">></span> d<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            a <span class="token operator">=</span> parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            b <span class="token operator">=</span> parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span>
+    <span class="token comment"># 노드가 같아지도록 (LCA 찾아서)</span>
+    <span class="token keyword">while</span> a <span class="token operator">!=</span> b<span class="token punctuation">:</span>
+        a <span class="token operator">=</span> parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span>
+        b <span class="token operator">=</span> parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span>
+    <span class="token keyword">return</span> a
+
+dfs<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token comment"># root 노드 = 1번 노드, dfs로 depth 조사</span>
+
+m <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>lca<span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre></div>
+<ul>
+<li>
+<p>기본적인 LCA 알고리즘 성능 분석</p>
+<ul>
+<li>시간 복잡도: O(NM)
+<ul>
+<li>매 query마다 부모 방향으로 거슬러 올라가기 위해 O(N) 시간 복잡도 소요 x query 개수(M)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://www.acmicpc.net/problem/11438">BOJ ‘LCA’ 심화 문제</a></p>
+<ul>
+<li>N과 M이 10만개가 넘어갈 때, 위의 알고리즘으로는 시간 초과 판정</li>
+</ul>
+</li>
+<li>
+<p>LCA 알고리즘 개선하기</p>
+<ul>
+<li>각 노드가 <strong>거슬러 올라가는 속도를 빠르게 만드는 방법</strong> 개선
+<ul>
+<li>2의 제곱 형태로 거슬러 올라가게 할 경우 -> O(logN) 시간 복잡도
+<ul>
+<li>e.g. 15칸 거슬러 올라가야 할 경우, 8칸 -> 4칸 -> 2칸 -> 1칸</li>
+</ul>
+</li>
+<li>메모리를 조금 더 사용하여 2^i 번째 부모에 대한 정보 기록
+<ul>
+<li>각 노드 별로 logN만큼의 메모리 추가 필요: 노드가 N일 때, 총 NlogN만큼의 메모리 추가 소요</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>개선된 LCA 알고리즘</p>
+<ul>
+<li>모든 노드의 깊이와 부모 구하기 + 2^i번 째 부모 구하기
+<ul>
+<li>모든 노드의 깊이와 부모: dfs로 구하기</li>
+<li>2^i번 째 부모 구하기: dynamic programming 이용 -> trade-off를 통해 시간 복잡도 개선 가능</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>개선된 LCA 알고리즘의 시간 복잡도</p>
+<ul>
+<li>O(MlogN)</li>
+<li>매 쿼리마다 부모로 거슬러 올라가기 위해서는 O(logN)의 복잡도 필요 -> 쿼리 M개를 처리하기 위해서는 O(MlogN)</li>
+</ul>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="python"><pre class="language-python"><code class="language-python"><span class="token keyword">import</span> sys
+<span class="token builtin">input</span> <span class="token operator">=</span> sys<span class="token punctuation">.</span>stdin<span class="token punctuation">.</span>readline  <span class="token comment"># 시간 초과를 피하기 위한 빠른 입력 함수</span>
+sys<span class="token punctuation">.</span>setrecursionlimit<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">1e5</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment"># 런타임 오류를 피하기 위한 재귀 깊이 제한 설정</span>
+LOG <span class="token operator">=</span> <span class="token number">21</span> <span class="token comment"># 2^20 = 1,000,000</span>
+
+n <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+parent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> LOG <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token comment"># parent 노드 정보</span>
+d <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 각 노드까지의 거리</span>
+c <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 각 노드의 depth가 change되었는지 여부</span>
+graph <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token comment"># graph 정보</span>
+
+<span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a<span class="token punctuation">,</span>b <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span>b<span class="token punctuation">)</span>
+    graph<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+
+<span class="token comment"># root 노드로부터 시작해서 depth를 구하는 함수</span>
+<span class="token keyword">def</span> <span class="token function">dfs</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> depth<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    c<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span>
+    d<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> depth
+    <span class="token keyword">for</span> y <span class="token keyword">in</span> graph<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> c<span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">:</span>    <span class="token comment"># 이미 depth를 구한 노드라면 넘기기</span>
+            <span class="token keyword">continue</span>
+        parent<span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> x
+        dfs<span class="token punctuation">(</span>y<span class="token punctuation">,</span> depth<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 전체 parent 관계 설정 함수</span>
+<span class="token keyword">def</span> <span class="token function">set_parent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    dfs<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>   <span class="token comment"># root 노드부터 전체 노드의 parent 정보 저장</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> LOG<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> n<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            parent<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> parent<span class="token punctuation">[</span>parent<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+
+<span class="token comment"># A와 B의 최소 공통 조상을 찾는 함수</span>
+<span class="token keyword">def</span> <span class="token function">lca</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># b가 더 깊도록 설정</span>
+    <span class="token keyword">if</span> d<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">></span> d<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">:</span>
+        a<span class="token punctuation">,</span>b <span class="token operator">=</span> b<span class="token punctuation">,</span>a
+    <span class="token comment"># 먼저 depth가 동일하도록</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>LOG<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> d<span class="token punctuation">[</span>b<span class="token punctuation">]</span> <span class="token operator">-</span> d<span class="token punctuation">[</span>a<span class="token punctuation">]</span> <span class="token operator">>=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">&lt;&lt;</span>i<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            b <span class="token operator">=</span> parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    <span class="token comment"># 부모가 같아지도록</span>
+    <span class="token keyword">if</span> a <span class="token operator">==</span> b<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> a
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>LOG<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 조상을 향해 2^i만큼 거슬러 올라가기</span>
+        <span class="token keyword">if</span> parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">!=</span> parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">:</span>
+            a <span class="token operator">=</span> parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+            b <span class="token operator">=</span> parent<span class="token punctuation">[</span>b<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    <span class="token comment"># 이후에 부모 = 찾고자 하는 조상</span>
+    <span class="token keyword">return</span> parent<span class="token punctuation">[</span>a<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span></code></pre></div>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li><a href="http://www.yes24.com/Product/Goods/91433923">나동빈. (2021). 이것이 취업을 위한 코딩 테스트다</a></li>
@@ -2259,6 +2472,7 @@ post_order<span class="token punctuation">(</span>tree<span class="token punctua
 <li><a href="#1-priority-queue-%EC%9A%B0%EC%84%A0%EC%88%9C%EC%9C%84-%ED%81%90--heap-%ED%9E%99">1. Priority Queue (우선순위 큐) &#x26; Heap (힙)</a></li>
 <li><a href="#2-tree-%ED%8A%B8%EB%A6%AC">2. Tree (트리)</a></li>
 <li><a href="#3-binary-indexed-tree-bit-fenwick-tree">3. Binary Indexed Tree (BIT, Fenwick Tree)</a></li>
+<li><a href="#4-lowest-common-ancestor-lca-%EC%B5%9C%EC%86%8C-%EA%B3%B5%ED%86%B5-%EC%A1%B0%EC%83%81">4. Lowest Common Ancestor (LCA, 최소 공통 조상)</a></li>
 </ul>
 </li>
 <li>
