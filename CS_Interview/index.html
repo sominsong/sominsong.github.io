@@ -211,105 +211,468 @@
 <blockquote>
 <p>MAC(Media Access Control) 주소는 OSI 모델의 데이터 링크 계층인 2계층에서 네트워크 인터페이스에 할당된 고유 식별자이며, 네트워크 인터페이스에는 IP 주소는 없더라도 하드웨어 주소라고도 하는 MAC 주소가 항상 존재한다.</p>
 </blockquote>
-<h2 id="research-interview" style="position:relative;"><a href="#research-interview" aria-label="research interview permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Research Interview</h2>
-<h3 id="1-cloud-computing" style="position:relative;"><a href="#1-cloud-computing" aria-label="1 cloud computing permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. Cloud Computing</h3>
+<ul>
+<li><strong>Networking 용어 설명</strong></li>
+</ul>
+<blockquote>
+<p>디바이스가 네트워크에 연결되어 서로 통신하는 것을 의미한다.
+It means that devices are connected to the network and communicate with each other.</p>
+</blockquote>
+<ul>
+<li><strong>Network 유형</strong></li>
+</ul>
+<blockquote>
+<p>“거리”에 따라 5m 전후의 인접 통신인 PAN(Personal Area Network), 소규모 공간 내의 고속 통신 회선인 LAN(Local Area Network), LAN과 WAN의 중간 형태인 MAN(Metropolitan Area Network), 광대역 네트워크 망으로 관련된 LAN을 서로 연결한 WAN(Wide Area Network)기 있다.
+“데이터 전송 방식”에 따라 단방향 통신(Simplex), 서로 데이터를 전송할 수 있지만, 하나의 회선을 사용하기 때문에 동시에 전송을 불가능한 반이중 통신(Half Duplex), 서로 언제나 필요한 데이터를 동시에 송수신할 수 있는 Full Duplex가 있다.
+“네트워크 토폴로지”에 따라 Tree형, Bus형, Star형, Ring현, Mesh형이 있다.</p>
+</blockquote>
+<ul>
+<li>P2P 및 Client-Server 네트워크 설명 및 장단점</li>
+</ul>
+<blockquote>
+<p>Client-Servier 네트워크는 정보를 가지고 있고, 이를 처리하는 서버 컴퓨터와 서버에 정보를 요청하여 응답을 받는 클라이언트로 구성된 네트워크이다.
+반면에 P2P 네트워크는 서버를 거치지 않고 클라이언트끼리 직접 통신하는 방식이다. 각 노드들은 요청과 응답 모두 가능하다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 실생활에서 P2P의 예</code></pre></div>
+<blockquote>
+<p>대표적으로는 암호 화페와 같은 블록체인 기술이 있습니다. 탈중앙화를 위해 P2P 네트워크를 채택하여 사용합니다.
+A representative example is blockchain technology such as cryptocurrency. It adopts P2P network decentralization.</p>
+</blockquote>
+<ul>
+<li><strong>Bridge와 Switch의 차이점</strong></li>
+</ul>
+<blockquote>
+<p>Bridge는 Switch와 비슷한 역할을 한다. 하지만 Switch는 처리 방식이 하드웨어이고, Bridge는 소프트웨어이기 때문에 속도가 Switch가 훨씬 빠르다. 또한 포트 10개도 채 지원되지 않는 Bridge에 비해 Switch의 포트 수가 훨씬 많다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __Router의 동작 과정을 간략하게 설명__</code></pre></div>
+<blockquote>
+<ol>
+<li>패킷은 목적지의 IP 주고와 데이터로 구성된다. 라우터는 패킷의 목적지가 같은 네트워크에 있는지 아니면 다른 네트워크에 있는지 확인하기 위해 LAN 테이블을 검사한다.</li>
+<li>네트워크 테이블을 검사하여 패킷을 전달할 네트워크 주소를 찾아낸다</li>
+<li>라우팅 테이블을 검색하여 가장 적합한 경로를 찾아내서 패킷을 보낸다.</li>
+</ol>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 경로에 오류가 있는 경우, dynamic routing protocol은 어떻게 경로를 전환하는가?</code></pre></div>
+<ul>
+<li><strong>OSI Reference Model에서 계층들</strong></li>
+</ul>
+<blockquote>
+<p>1 Physical Layer (cable, hub), 2 Data Link Layer (bridge, switch), 3 Network Layer (router), 4 Transport Layer (TCP, UDP), 5 Session Layer, 6 Presentation Layer (SSL), 7 Application Layer (HTTP, SMTP)</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __Router와 Switch는 어느 Layer에 위치해 있는지? 이 둘의 차이점은 무엇인지?__</code></pre></div>
+<blockquote>
+<p>Switch는 여러 디바이스를 서로 연결함으로써 하나의 네트워크(IntraNet)를 구축한다. Switch는 같은 네트워크 안에서 목적지에 맞게 데이터를 중간에 적합한 경로로 스위칭해주는 역할을 한다. Layer 2(데이터 링크 계층)에 해당하며, 데이터 링크 계층이기 때문에 MAC 주소 기반으로 동작한다.
+Router는 여러 스위치, 즉 각각의 서로 다른 네트워크들을 연결하여 더 큰 네트워크(인터넷)를 형성한다. Router 또한 서로 다른 네트워크 목적지로 가는 적합한 경로를 찾아주는 라우팅 기능을 한다. 라우터는 Layer 3(네트워크 계층)의 IP 주소를 기반으로 작동한다.
+둘의 차이점은 우선 서로 다른 계층에서 작동한다는 점이다. 또한, Switch의 경우 목적지가 없을 경우 모든 포트에 패킷을 전송하지만, 라우터의 경우 분명한 도착지 정보가 있을 때만 통신을 허락하ㅗ 없으면 패킷을 바로 버린다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- Networking에서 왜 이렇게 다른 Layer가 필요한지?</code></pre></div>
+<blockquote>
+<p>if is because of the fact that it will be easy for troubleshooting the network problems.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 물리적 계층에서는 어떤 일이 발생하는지?</code></pre></div>
+<blockquote>
+<p>물리적 계층에서는 이진수로된 신호를 전기 신호로 바꾸어 케이블을 통해 목적지로 전달함
+At the physical layer, the binary signal is converted into a electrical siganl and transmitted to the destination through the cables.</p>
+</blockquote>
+<ul>
+<li><strong>TCP/IP 설명</strong></li>
+</ul>
+<blockquote>
+<p>TCP는 애플리케이션이 네트워크에서 신뢰성 있는 통신 채널을 만들고, IP는 올바른 대상에 도달하도록 각 패킷의 주소를 지정하고 라우팅하는 방법을 정의한다.
+1 Network Access Layer (MAC), 2 Internet Layer (IP), 3 Transport Layer (TCP), 4 Application Layer (HTTP)로 구성되어 있다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TCP의 message에는 어떤 내용이 있는지?</code></pre></div>
+<blockquote>
+<p>Source port, destination port, sequence number, acknowledgment number, data offset, reserved, control bits, window, checksum, urgent pointer, options, padding, data</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TCP/IP는 어떻게 작동하는가?</code></pre></div>
+<blockquote>
+<p>Data -(Application)-> Message -(Transfer)-> Segment -(Internet)-> Packet -(Network Interface)-> Frame</p>
+</blockquote>
+<ul>
+<li>IPv4 address에서 클래스 설명</li>
+</ul>
+<blockquote>
+<p>IP 주소는 네트워크 주소 부분과 호스트 주소 부분으로 나뉘다. 클래스에 따라 네트워크 주소 부분과 호스트 주소 부분의 크기가 변한다.
+네트워크 클래스는 A, B, C, D, E로 나누어져 있으며, Class A는 0.0.0.0<del>127.255.255.255 범위이며, 네트워크 개수가 126개 &#x26; 호스트 개수가 (256<em>256</em>256 - 2)개이다.
+Class B는 128.0.0.0</del>191.255.255.255 범위이며, 네트워크 주소 개수가 64<em>256개, 호스트 주소 개수가 (256</em>256 - 2)개이다.
+Class C는 192.0.0.0<del>223.255.255.255 범위이며, 네트워크 주소 개수가 32<em>256</em>256개이며, 호스트 주소가 (256-2)개
+Class D는 224.0.0.0</del>239.255.255.255 범위로 네트워크 주소 16개, 호스트 주소 (256-2)개이다.
+Class E는 240.0.0.0~255.255.255.255 범위로 네트워크 주소 16개 호스트 주소 (256-2)개이다.
+(-2는 모두 0은 자기 자신, 모두 1은 브로드캐스트 주소를 의미하기 때문이다.)</p>
+</blockquote>
+<ul>
+<li>IPv4와 IPv6의 차이점은?</li>
+</ul>
+<blockquote>
+<p>IPv4는 주소 길이가 8bit씩 4부분으로 10진수(Decimal)로 표시된 32bit 인데 반면, IPv6는 16비트가 8부분으로 16진수(Hexadecimal)로 표시된 128bit 주소이다. IPv6은 IPv4의 주소 부족 문제를 해결하였다.</p>
+</blockquote>
+<ul>
+<li>Ethernet Cable은 무엇이고, 어떻게 작동하는가?</li>
+</ul>
+<blockquote>
+<p>Ethernet Cable은 디바이스와 네트워크 장치(Switch, Router)를 연결하는 케이블로, 로컬 네트워크 또는 인터넷에 대한 장치 액세스를 제공한다.</p>
+</blockquote>
+<ul>
+<li><strong>DNS 작동 방식</strong></li>
+</ul>
+<blockquote>
+<p>Domain Name System 호스트의 도메인 이름을 호스트의 IP 주소로 바꾸거나 그 반대를 수행하는 시스템이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __웹 브라우저에 www.google.com을 입력할 경우 어떻게 되는지?__</code></pre></div>
+<blockquote>
+<ol>
+<li>local DNS에게 <a href="http://www.google.com%EC%9D%B4%EB%9D%BC%EB%8A%94">www.google.com이라는</a> hostname에 대한 IP 주소를 request, local DNS에 없으면 Root DNS 정보 전달받음</li>
+<li>Root DNS 서버에 <a href="http://www.google.com">www.google.com</a> Request</li>
+<li>Root DNS 서버로부터 .com 도메인을 관리하는 TLD(Top-Level Domain) DNS 정보 전달 받음</li>
+<li>TLD에게 <a href="http://www.google.com">www.google.com</a> request</li>
+<li>TLD에서 google.com 관리하는 DNS 정보 전달</li>
+<li>google.com 도메인을 관리하는 DNS 서버에 <a href="http://www.google.com">www.google.com</a> 호스트네임에 대한 IP 주소 request</li>
+<li>해당 서버가 <a href="http://www.google.com">www.google.com</a> IP 주소 response</li>
+<li>Local DNS는 <a href="http://www.google.com%EC%97%90">www.google.com에</a> 대한 IP 주소를 caching하고 IP 주소 전달</li>
+</ol>
+</blockquote>
+<ul>
+<li>ARP(Address Resolution Protocol) 설명</li>
+</ul>
+<blockquote>
+<p>Address Resolution Protocol, IP 주소를 해당 IP 주소에 맞는 MAC 주소로 변환시켜주는 프로토콜
+송신자는 목적지 MAC 주소가 필요하므로, MAC 주소 요청을 위한 ARP request packet을 boadcast로 전송 -> 모든 호스트와 라우터는 송신자가 보낸 ARP 요청 패킷을 수신함 -> 해당되는 수신자만 자신의 IP 주소와 MAC 주소를 넣어 response 패킷을 Unicast로 전송</p>
+</blockquote>
+<ul>
+<li><strong>TCP와 UDP의 차이</strong></li>
+</ul>
+<blockquote>
+<p>둘 다 4계층, 전송 계층에 해당한다.
+TCP 프로토콜은 양종단 호스트 내 프로세스 상호 간에 신뢰적인 연결 지향적 서비스를 제공한다. 3-way handshaking(SYN->SYN/ACK->ACK) 과정을 통해 연결 설정 및 4-way handshaking(FIN->ACK->FIN->ACK)을 통해 연결 해제
+UDP 프로토콜은 비연결성이고, 신뢰성이 없으며, 순서화되지 않은 Datagram 서비스를 제공하지만, 빠른 요청과 응답이 가능하다.
+They are corresponds to the Layer 4, Transport Layer.
+TCP protocol provides reliable connection-oriented services between processes in both end to end. 3-way handshaking to connect and 4-way handshaking to disconnect.
+UDP protocol provides a connectionless, unreliable, unordered datagram service, but allows fast requests and responses.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 사용되는 실제 사례</code></pre></div>
+<blockquote>
+<ul>
+<li>TCP: email, HTTP, file transfer</li>
+<li>UDP: real-time video player, game</li>
+</ul>
+</blockquote>
+<ul>
+<li>HTTP란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>텍스트 기반의 통신 규약으로 인터넷에서 데이터를 주고받을 수 있는 프로토콜이다.</p>
+</blockquote>
+<ul>
+<li><strong>Super-Netting과 Sub-Netting이 무엇인가?</strong></li>
+</ul>
+<blockquote>
+<p>Subnetting은 Subnet을 만드는 것으로, Network를 나누는 개념이다. 즉, IP address에서 Network 범위는 늘이고, Host 범위는 줄이는 것이다.
+Supternetting은 Network를 합치는 것이다. 즉, IP address에서 Netowrk 범위는 줄이고, Host 범위는 늘이는 것이다.</p>
+</blockquote>
+<ul>
+<li>TraceRoute 설명</li>
+</ul>
+<blockquote>
+<p>패킷이 목적지까지 도달하는 동안 거치는 라우터의 IP를 확인할 수 있는 Tool 이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- ICMP 설명</code></pre></div>
+<blockquote>
+<p>Internet Control Message Protocol, TCP/IC에서 IP 패킷을 처리할 때 발생되는 문제를 알려주는 프로토콜이다. 이는 패킷이 오로지 목적지 도달만을 위한 내용으로 구성되어 있기 때문에 에러가 발생한 경우 출발지에게 이를 알릴 방법이 없어 이를 보완하기 위해 나왔다.</p>
+</blockquote>
 <ul>
 <li>
-<p>Cloud 기술은 무엇인가?</p>
+<p>IP header</p>
 </li>
 <li>
-<p>Cloud Computing의 Key 특징은 무엇인가?</p>
-</li>
-<li>
-<p>Cloud Delivery Model에는 무엇이 있는가?</p>
-</li>
-<li>
-<p>Cloud Deployment Model에는 무엇이 있는가?</p>
-</li>
-<li>
-<p>Cloud Computing Architecture에 대해 설명하라</p>
-</li>
-<li>
-<p>Cloud의 Storage Level에는 무엇이 있는가?</p>
-</li>
-<li>
-<p>Microservice란 무엇인가?</p>
-</li>
-<li>
-<p>Cloud-Native Application이란 무엇인가?</p>
+<p>Sliding Window Protocol 설명</p>
 </li>
 </ul>
+<blockquote>
+<p>두 호스트 간 데이터 전송 시 오류 제어와 흐름 제어를 지원하는 통신 프로토콜이다.
+즉, 수신 호스트가 연속적으로 수신할 수 있는 정보 프레임의 개수를 윈도우의 크기로 지정함으로써, 송신 호스트의 프레임 전송 속도를 제어한다.</p>
+</blockquote>
+<ul>
+<li>TTL이란</li>
+</ul>
+<blockquote>
+<p>Time To Live의 약자고 패킷의 생존 시간을 의미한다. 즉, 인터넷에서 IP 패킷이 거쳐갈 수 있는 라우터의 개수를 표현하는 수이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TTL의 기본값은?</code></pre></div>
+<blockquote>
+<p>TTL의 default 값은 OS마다 다르며, Linux는 64, Window는 128, Cisco는 256이다.</p>
+</blockquote>
+<ul>
+<li>SDN이란</li>
+</ul>
+<blockquote>
+<p>Software-Defined Networking으로 소프트웨어 애플리케이션과 API를 이용하여 네트워크를 프로그래밍하고, 중앙에서 전체 네트워크를 제어하고 관리하는 접근 방식이다.
+기존 Router에서는 Path를 결정하는 Control Plane과 전송을 담당하는 Data Plane이 함께 있었지만, SDN을 적용하면 이를 분리하여 Control Plane을 별도의 컴퓨팅 서버로 분리하고, Router는 전송만 담당하는 Data Plane 역할만 하도록 만들 수 있다.</p>
+</blockquote>
+<h3 id="3-dsa-data-structure--algorithm" style="position:relative;"><a href="#3-dsa-data-structure--algorithm" aria-label="3 dsa data structure  algorithm permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. DSA (Data Structure &#x26; Algorithm)</h3>
+<ul>
+<li>
+<p>공간 복잡도 O(1)로 하나의 숫자를 search할 확률</p>
+</li>
+<li>
+<p>Linked List 구현 (insertion, deletion, traversing)</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>Insertion:
+1. 메모리 공간 할당 받고 삽입할 내요응ㄹ 저장하여 삽입할 노드 생성
+2. 삽입할 노드의 next가 후행 노드가 될 노드를 가리키게 함
+3. 삽입할 노드의 선행 노드가 될 노드의 next가 삽입할 노드의 주소를 가리키게 함</li>
+<li>Deletion:
+1. 삭제할 노드의 선행 노드의 next를 삭제할 노드의 next를 가리키게 함
+2. 삭제할 노드를 메모리에 반환</li>
+<li>Traversing:
+1. head 노드부터 시작해서 next 노드로 계속 이동
+2. next가 NULl이면 linked list의 끝에 도달</li>
+</ul>
+</blockquote>
+<ul>
+<li>Stack 구현</li>
+</ul>
+<blockquote>
+<p>Stack은 LIFO(Last In First Out) 방식 자료구조이다.</p>
+</blockquote>
+<ul>
+<li>Queue를 Stack으로 변환하는 방법</li>
+<li>Queue를 사용해서 Stack을 구현하는 방법</li>
+<li><strong>Linked List에서 Loop를 감지하고 제거하는 방법</strong>
+<ul>
+<li>Linked List에서 교차점을 찾는 방법</li>
+</ul>
+</li>
+<li>Linked List에서 중간 요소 찾는 방법</li>
+<li>단 한 번의 traversal만을 사용하여 Linked List에서 끝에서부터 n번째 노드 찾기</li>
+<li>Single Pointer를 사용하여 Linked List에서 노드를 삭제하는 방법</li>
+<li>Linked List에서 동일한 메모리 위치에 다음 주소와 이전 주소를 모두 저장하는 방법 (XOR Linked List)</li>
+<li>Binary Tree의 대각선 합 코딩</li>
+<li>Tree Traversal의 모든 유형</li>
+<li>row-wise와 column-wise로 정렬된 행렬에서 검색하는 방법</li>
+<li><strong>Reverse Doubly Linke List</strong></li>
+<li>Reverse Linked List</li>
+<li>Infix(중위 표기법) 방법: Tree에서 In-Order</li>
+<li>Heap의 내부 작업</li>
+<li><a href="https://www.geeksforgeeks.org/write-a-function-to-get-the-intersection-point-of-two-linked-lists/">https://www.geeksforgeeks.org/write-a-function-to-get-the-intersection-point-of-two-linked-lists/</a></li>
+<li>HashMap, HashSet, Hast-Bucket 구현</li>
+<li>temp 변수 없이 int a와 b를 reverse하는 방법</li>
+<li>피보나치 수열을 생성하는 모든 방법</li>
+<li>Longest Palindromic Substring(가장 긴 회문 부분 문자열)</li>
+<li>Longest Bitonic Subsequece(가장 긴 bItonic 부분 시퀀스) 코딩</li>
+<li><strong>배열에서 3번째로 큰 수 찾기</strong></li>
+<li>0-1 sorting하는 모든 방법</li>
+<li>IP 주소를 유효성을 확인하는 python 프로그램 코딩</li>
+<li>Array에서 첫 번째 최대값과 두 번째 최대값을 찾는 코딩</li>
+<li>특정 알고리즘의 Complexity 분석</li>
+<li>Sorting 알고리즘의 유형</li>
+<li>2개의 정렬된 array을 교집합/합집합</li>
+<li>backspace 문자 처리 후 두 문자 비교</li>
+<li>이진수와 정수 N이 주어질 때, if-else 문 없이 bitwise AND와 OR만을 사용해서 N번째 비트를 뒤집는 함수 작성</li>
+<li>정수에서 2진수 bit의 수를 세는 코드</li>
+<li>숫자의 마지막 bit 반환</li>
+<li>숫자가 주어지면 m 위치에서 n 위치로 비트를 추출하여 10진수로 변환</li>
+<li><strong>Array에서 중복을 찾을 수 있는 최적화된 코드 (QuickSort)</strong></li>
+</ul>
+<h2 id="research-interview" style="position:relative;"><a href="#research-interview" aria-label="research interview permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Research Interview</h2>
+<h3 id="1-cloud-computing" style="position:relative;"><a href="#1-cloud-computing" aria-label="1 cloud computing permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. Cloud Computing</h3>
+<!-- - Cloud 기술은 무엇인가?
+
+- Cloud Computing의 Key 특징은 무엇인가?
+
+- Cloud Delivery Model에는 무엇이 있는가?
+
+- Cloud Deployment Model에는 무엇이 있는가?
+
+- Cloud Computing Architecture에 대해 설명하라
+
+- Cloud의 Storage Level에는 무엇이 있는가?
+
+- Microservice란 무엇인가?
+
+- Cloud-Native Application이란 무엇인가? -->
 <h3 id="2-container" style="position:relative;"><a href="#2-container" aria-label="2 container permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. Container</h3>
 <ul>
 <li>Container란 무엇인가?</li>
 </ul>
 <blockquote>
-<p>컨테이너란 개념적으로 단지 namespaced되고 isolated된 프로세스이다.
-<u>Containers are just conceptually namespaced and isolated processes.</u></p>
+<p>컨테이너란 어떤 환경에서나 소프트웨어 서비스를 실행하기 위해 필요한 모든 요소, 즉 라이브러리와 같은 종속 항목과 애플리케이션 코드를 포함하는 소프트웨어 패키지이다.
+<u>Containers are lightweight software package of application code with dependencies such as libraries required to run in any environment.</u>
+컨테이너는 3가지 커널의 기본 요소로 구성된다. 볼 수 있는 것을 제한하는 Namespace, 사용할 수 있는 리소스 양을 제한하는 Cgroup, 사용자의 행동을 제한하는 LSM Module이 그것들이다.
+<u>Container is made up of three kernel basic elements: Namespaces limit what can be seen, Cgroups limit the amount of resources that can be used, and LSM modules limit user behavior.</u></p>
 </blockquote>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- Virtual Machine과의 차이점은 무엇인가?
-- 가상화는 어떤 종류가 있는가?</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- Virtual Machine(VM)과의 차이점은 무엇인가?
+> 컨테이너와 VM은 모두 사용자에게 격리된 환경을 제공한다는 점에서 동일하다. 그러나 컨테이너는 OS 수준에서 가상화되며, VM은 하드웨어 수준에서 가상화됩니다. 따라서 컨테이너는 VM보다 훨씬 더 경량이며, OS 커널을 공유하기 때문에 VM에 필요한 것보다 훨씬 더 적은 메모리를 사용한다.
+> &lt;u>Containers and VMs both provide an isolated environment for users. However, containers are virtualized at the OS level, and VMs are virtualized at the hardware level. Containers are therefore much more lightweight than VMs, and because they share the OS kernel, they use much less memory than the VM needs.&lt;/u>
+
+- 가상화는 어떤 종류가 있는가?
+> 가상화는 3종류가 있다.
+> 첫 번째는 호스트 OS 가상화이며, 물리적 하드웨어 위에 호스트 OS가 존재하며 그 위에 가상화 소프트웨어를 통해 게스트 OS를 제공하는 방식이다. (e.g., VMWare, Virtual Box)
+> 두 번째는 하이퍼바이저 가상화이며, Host OS 없이 하드웨어 위에 하이퍼바이저를 직접 작동시켜, 이 하이퍼바이저 위에 게스트 OS를 제공하는 방식이다.
+    > 참고로 하이퍼바이저는 전가상화(Full Virtualization)과 반가상화(Para Virtualization)으로 나뉜다. 전가상화는 하이퍼바이저가 게스트 OS에서 요청하는 특권 명령을 Trap&amp;Emulate 한거나 Binary Translation하여 호스트 OS에게 전달하는 방식이며, 반가상화는 게스트 OS가 Hyper-call을 통해 하이퍼바이저에게 요청하는 방식이다. 
+> 세 번째는 컨테이너 형으로, 하드웨어 레벨에서 OS를 가상화하는 것이 아닌, OS 레벨에서 프로게스를 격리시킴으로써 소프트웨어를 가상화한다.
+> &lt;u>There are 3 types of Virtualization.&lt;/u>
+> &lt;u>The first is host OS virtualizationn, in which a host OS exists on physical HW and a guest OS is provided through virtualization software on top of host OS.&lt;/u>
+> &lt;u>The second is Hypervisor vitualization, which operates a hypervisor directly on HW without a host OS and provides a guest OS on this hypervisor.&lt;/u>
+&lt;u>The third is a container type, which virtualizes software by isolating processes at the OS level rather than virtualizing the OS at the HW level.&lt;/u></code></pre></div>
 <ul>
 <li>하이퍼바이저란 무엇인가?</li>
 </ul>
 <blockquote>
-<p>하이퍼바이저란 VM이 작동하도록 만드는 소프트웨어를 말하며, Linux에는 KVM이 포함되어 있다.
-<u>Hypervisor is a software that allow VMs to function, and Linux includes an excellent hypervisor called KVM</u></p>
+<p>가상 머신 모니터(VMM)이라고도 불리는 하이퍼바이저란 VM을 생성하고 구동하는 소프트웨어를 말하며, Linux에는 KVM이 포함되어 있다.
+<u>Hypervisor, also called a Virtual Machine Monitor(VMM), is a software that creates and executes VMs, and Linux includes an excellent hypervisor called KVM</u></p>
 </blockquote>
 <ul>
-<li>
-<p>Container Image란 무엇인가?</p>
-</li>
+<li>Container Image란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>컨테이너가 애플리케이션 실행에 필요한 것들을 패키징한 상태를 포착하여 데이터로 남긴 것
+<u>The container captures the packaged the things needed to run the application and leaves it as file.</u></p>
+</blockquote>
+<ul>
 <li>
 <p>Container가 실행되는 단계를 설명하라</p>
 </li>
 <li>
-<p>Docker란 무엇인가?</p>
-</li>
-<li>
-<p>Kubenetes란 무엇인가?</p>
-</li>
-<li>
-<p>gVisor에 대해 설명하라</p>
-</li>
-<li>
-<p>Kata Container에 대해 설명하라</p>
-</li>
-<li>
 <p>Container Runtime이란 무엇인가?</p>
 </li>
-<li>
-<p>OCI란 무엇인가?</p>
-</li>
-<li>
-<p>CRI란 무엇인가?</p>
-</li>
 </ul>
+<blockquote>
+<p>컨테이너 런타임이란 컨테이너를 실행하는 데 필요한 구성 요소를 실행하고 관리하는 소프트웨어이다.
+<u>The container runtime is the software that runs and manages the components needed to run containers.</u></p>
+</blockquote>
+<ul>
+<li>OCI란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Open Container Initiative 런타임으로, 컨테이너를 생성하고 실행, 삭제하는 컨테이너의 lifecycle 관리에 중점을 두고 있다.
+<u>As an Open Container Initiative runtimes, they focus on managing the lifecycle of containers like creating, running, deleting containers.</u>
+runC, crun과 같은 Native runtime과 gVisor, Nabla와 같은 Sandboxed runtime, Kata와 같은 virtualized runtime이 있다.
+<u>There are native runtimes such as runC and crun, sandboxed runtimes such as gVisor and Nabla, and virtualized runtimes such as Kata.</u></p>
+</blockquote>
+<ul>
+<li>CRI란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Container Runtime Interface 런타임으로, 컨테이너 오케스트레이션을 위한 컨테이너 런타임으로써, 이미지 관리 및 배포, 저장, 스냅샷, 네트워킹과 같이 컨테이너를 생성하는데 집중하는 OCI 런타임과 달리 컨테이너를 활용하는데 필요한 기능을 가지고 있으며, 실제로 CRI는 컨테이너 실행을 위한 부분은 OCI 런타임에게 위임한다. containerd와 cri-o가 있다.
+<u>As a Container Runtime Interface runtime, they are container runtimes for container ochestration. Unlike the OCI runtimes, which focuses on creating containers, they have funtions necessary to utilize containers such as image management and distribution, storage, snapshots, and networking. In fact, CRI delegate the part for container execution to the OCI runtimes. There are container-d and cri-o.</u></p>
+</blockquote>
+<ul>
+<li>Docker란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>도커는 컨테이너를 만들고 사용할 수 있도록 도와주는 도구 모음인 컨테이너 엔진이다.
+<u>Docker is a container engine which is a tool set that allows people to create and use container.</u>
+도커는 CRI와 OCI를 둘 다 (containerd + runC) 사용하며, CRI 또는 OCI 사양의 범위를 벗어나는 이미지 building 및 signing과 같은 추가 기능을 제공한다.
+<u>Docker uses both CRI and OCI (containerd+runC) and provides additional features such as image building and signing that are outside the scope of the CRI or OCI specifications.</u></p>
+</blockquote>
+<ul>
+<li>Kubenetes란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>다중 서버에서 컨테이너 운영 자동화와 오케스트레이션을 제공하는 툴이다.
+<u>It is a tool that provides automation and orchestration of container operations across multiple servers.</u></p>
+</blockquote>
+<ul>
+<li>gVisor에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>gVisor는 Sanboxed 컨테이너 런타임으로, Senty와 Gofer라는 애플리케이션을 통해 유저 공간에서 호출하는 시스템콜을 호스트 커널 대신 처리하여 Host OS의 Attack Surface를 줄이는 기술이다.
+<u>gVisor is a sanboxed container runtime, a technology that reduces the attacks surface of the host OS by processing system calls called from user space through applications called Sentry and Gofer instead of the host kernel.</u></p>
+</blockquote>
+<ul>
+<li>Kata Container에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>Kata Container는 virtualized 컨테이너 런타임으로, 컨테이너 전용 경량 ㄹ가상 머신을 사용하여 컨테이너 환경을 구현하는 기술이다.
+<u>Kata Container is a virtualized container runtime, a technology that implements a container environment using a lightweight virtual machine dedicated to container.</u></p>
+</blockquote>
 <h3 id="3-program-analysis" style="position:relative;"><a href="#3-program-analysis" aria-label="3 program analysis permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. Program Analysis</h3>
 <ul>
-<li>
-<p>GCC란 무엇인가?</p>
-<ul>
-<li>GCC IR은 무엇인가?</li>
-<li>GCC의 컴파일 단계에 대해 설명하라</li>
+<li>컴파일러란 무엇인가?</li>
 </ul>
-</li>
-<li>
-<p>LLVM은 무엇인가?</p>
+<blockquote>
+<p>특정 프로그래밍 언어로 쓰여 있는 문서를 다른 프로그래밍 언어 혹은 컴퓨터 언어로 옮기는, 일종의 번역 프로그램이다.
+<u>It is a kind of translation program that transfers a file written in a specific high-level programming language to another programming language or low-level computer language.</u></p>
+</blockquote>
 <ul>
-<li>LLVM IR은 무엇인가?</li>
-<li>LLVM의 컴파일 단계에 대해 설명하라</li>
+<li>GCC란 무엇인가?</li>
 </ul>
-</li>
-<li>
-<p>Clang은 무엇인가?</p>
-</li>
-<li>
-<p>GCC와 LLVM의 차이점은 무엇인가?</p>
-</li>
-<li>
-<p>컴파일 단계에 대해 설명하라</p>
-</li>
+<blockquote>
+<p>GNU Compiler Collection으로 GNU 프로젝트의 일환으로 개발된 컴파일 드라이버로써, 전처리기, 컴파일러, 어셈블러, 링커를 각각 호출해 주는 역할을 한다.
+<u>GNU Compiler Collection is a compilation driver developed as part of the GNU Project, and it plays a role of calling the preprocessor, compiler, assembler, and linker respectively.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GCC IR은 무엇인가?</code></pre></div>
+<blockquote>
+<p>전처리가 끝난 <code class="language-text">.i</code> 화장자 파일은 컴파일러를 통해 어셈블리어로 변환되는데, 그 과정에서 Front-end, Middle-end, Back-end로 단계를 나누어 동작하게된다. 이 중간 단계에서 생성되는 결과물들이 바로 IR(Intermediate Representation)이다. 순서대로 GIMPLE IR, SSA IR, RTL IR이 만들어진다.
+<u>The preprocessed <code class="language-text">.i</code> extension file is converted into assembly through the compiler. In this process, it operates by dividing the steps into Front-end, Middle-end, and Back-end. The outputs produced in this intermediate steps are IR(Intermediate Representation). GIMPLE IR, SSA IR, and RTL IR are created in order.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GCC의 컴파일 단계에 대해 설명하라</code></pre></div>
+<blockquote>
+<p>Front-end 부분에서는 전처리가 끝난 소스코드를 token으로 나누는 어휘 분석 단계, token으로 parse tree를 만들어 문법 오류를 검출하는 구문 분석 단계, parse tree를 문석하여 의미상 오류(e.g., 변수 자료형 불일치)를 검출하는 의미 분석 단계를 거친 후에 프로그래밍 언어 독립적인 GIMPLE Tree를 생성한다.
+<u>In the front-end part, after going thorugh the lexical analysis step of dividing the preprocessed source code into tokens, the syntax analysis step of detecting grammatical errors by creating a parse tree with tokens, and the semantic analysis step of detecting semantic errors(e.g., variable data type mismatch) by analyzing the parse tree, GIMPLE Tree which is independent from programming language is created.</u>
+Middle-end 부분에서는 GIMPLE 트리를 SSA(Static Single Assignment) 형태로 변환할 후 아키텍처 비종속적인 최적화를 수행한다. 그 후 고급 언어와 어셈블리 언어의 중간 형태인 RTL(Register Transfer Lanugage)를 생성한다.
+<u>In the middle-end part, architecture-independent optimization is performed after converting GIMPLE tree into SSA (Static Single Assignment) form. After that, it creates RTL named as Register Transfer Language, which is an intermediate form between high-level language and assembly language.</u>
+Back-end에서는 RTL optimizer에 의해 아키텍처 비종속적인 최적화 및 아키텍처 종속적인 최적화가 함께 이루어진다. 모든 최적화를 마치게 되면 code generator에 의해 어셈블리 언어로 구성된 <code class="language-text">.s</code> 파일이 만들어진다.
+<u>In the Back-end part, architecture-independent optimization and architecture-dependent optimization are performed together by the RTL optimizer. When all optimizations are completed, <code class="language-text">.s</code> file composed of assembly lanugage is created by the code generator.</u></p>
+</blockquote>
+<ul>
+<li>LLVM은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>LLVM은 modular, 재사용 가능한 컴파일러, 툴체인 기술의 집합체이다.
+<u>LLVM is a collection of modular, reusable compiler and toolchain technologies.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- LLVM IR은 무엇인가?</code></pre></div>
+<blockquote>
+<p>LLVM IR은 아키텍처 비종속 언어로써, LLVM의 컴파일 과정을 Front-end와 Back-end로 나누는 기준이다.
+<u>LLVM IR(Intermediate Representation)is an architecture-independent language, and is a standard for dividing the compilation process of LLM into front-end and back-end.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- LLVM의 컴파일 단계에 대해 설명하라</code></pre></div>
+<blockquote>
+<p>크게 Front-end와 Back-end로 컴파일 단계가 나뉜다. Front-end는 clang, rustc와 같은 컴파일러를 통해 프로그래밍 언어에서 아키텍처 비종속 언어인 LLVM-IR로 변환하는 과정이며, Back-end는 LLVM compiler를 통해 LLVM-IR에서 아키텍처에 맞는 기계어로 변환한다.
+<u>The compilation step is largely divided into front-end and back-end. Front-end is the process of converting from a programming language to LLVM-IR, an architecture-independent language, with compilers such as clang and rustc. Back-end converts LLVM-IR into machine language suitable for the architecture with LLVM compiler.</u></p>
+</blockquote>
+<ul>
+<li>Clang은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>LLVM IR 기반 컴파일러 중 하나로, C C++ 등의 다양한 언어들을 LLVM IR로 컴파일한다.
+<u>As one of the LLVM IR-based compilers, various languages such as C, C++ are compiled to LLVM IR with Clang.</u></p>
+</blockquote>
+<ul>
+<li>GCC와 LLVM의 차이점은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>두 가지 모두 고급 언어를 실행 파일로 바꿔주는 컴파일러이지만, GCC의 경우 각 과정들이 모놀리하게 설계되어 있어, 유지보수가 어려운 반면, LLVM은 GCC의 이러한 문제를 개선하고자 컴파일의 각 과정을 모듈로 제공하기 때문에 유지보수가 쉽다는 장점이 있다.
+<u>Both are compilers, However, in the case of GCC, each compilation process is monolithically designed, making maintenance difficult, whereas LLVM provides each process of compilation as a module to improve GCC’s problem, so it is easy to maintain.</u></p>
+</blockquote>
+<ul>
+<li>컴파일 단계에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>일반적으로, 소스 코드가 실행 파일이 되기 위해서는 pre-processor를 통한 전처리 단계, compiler를 통한 컴파일 단계, Assembler를 통한 어셈블 단계, Linker를 통한 링킹 단계를 거친다.
+<u>In general, in order for a source code to become an executable file, it goes through a preprocessing stage with a pre-processor, a compilation stage with a compiler, an assembly stage with an assembler, and a linking stage with a linker.</u>
+전처리 단계에서는 전처리기 지시자를 처리한다. 그 결과 <code class="language-text">.i</code> 확장자 파일이 생성된다.
+<u>In the pre-processing stage, pre-precessor directives are processed. As a result, file with the extension <code class="language-text">.i</code> is created.</u>
+컴파일 단계에서는 어셈블리어로 변환한다. 그 결과 <code class="language-text">.s</code> 확장자 파일이 생성된다.
+<u>In the compilation stage, it is converted into assembly. As a result, file with the extension <code class="language-text">.s</code> is created.</u>
+어셈블 단계에서는 기계어로 된 오브젝트 파일로 변환한다. 그 결과 <code class="language-text">.o</code> 확장자 파일이 생성된다.
+<u>In the assembly stage, it is converted into an object file in machine language. As a result, file with the extension <code class="language-text">.o</code> are created.</u>
+링킹 단계에서는 작성한 프로그램이 사용하는 다른 프로그램이나 라이브러리를 가져와서 연결함으로써, 하나의 실행 가능한 파일을 생성한다.
+<u>In the linking stage, single executable file is created by importing and linking other programs or libraries used by the written program.</u></p>
+</blockquote>
+<ul>
+<li>컴파일러 실행 단계에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>컴파일러는 3단계로, 구문 분석, 최적화, 코드 생성 단계가 있다. 구문 분석 단계에서는 소스 코드 파일을 읽어 추상 구문 트리를 생성하고, 문법을 검사한다. 최적화 단계에서는 추상 구문 트리를 분석하여 최적화한다. 코드 생성 단계에서는 목적 코드를 생성한다.
+<u>A compiler has three stages: syntax analysis, optimizing, and code generation. In the syntax analysis step, the syntax tree is created from the source code file, and the syntax is checked. In the optimization steop, the abstract syntax tree is analyzed and optimized. In the code generation step, object code is generated.</u></p>
+</blockquote>
+<ul>
 <li>
 <p>ftrace는 무엇인가?</p>
 <ul>
@@ -376,21 +739,37 @@ Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux�
 <li>시스템콜이란 무엇인가?</li>
 </ul>
 <blockquote>
+<p>커널 영역의 기능을 사용자 모드가 사용 가능하게, 즉 프로세스를 대신하여 하드웨어에 접근해서 필요한 기능을 프로세스가 사용할 수 있도록 해주는 인터페이스이다.
+<u>It is an interface that enables the user mode to use the funtions of the kernel space, that is, to access the HW on behalf of the process so that the process in user space can use the necessary functions in kernel space.</u></p>
 </blockquote>
 <h3 id="5-research---security" style="position:relative;"><a href="#5-research---security" aria-label="5 research   security permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Research - Security</h3>
 <ul>
-<li>
-<p>Malware란 무엇인가?</p>
-</li>
-<li>
-<p>Exploit이란 무엇인가?</p>
-</li>
-<li>
-<p>Malware와 Exploit의 차이점은?</p>
-</li>
-<li>
-<p>Vulnerability란 무엇인가?</p>
-</li>
+<li>Malware란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Malware is Malicious Software. There are warm, Trojan Horse, Smishing, Ransomware.</p>
+</blockquote>
+<ul>
+<li>Exploit이란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Exploit is a type of Malware and it is an attack which uses the software vulnerability to perform malicious behavior like privilege esaclation, DoS.</p>
+</blockquote>
+<ul>
+<li>Malware와 Exploit의 차이점은?</li>
+</ul>
+<blockquote>
+<p>Malware가 Exploit을 포함하는 개념이다. 즉, Malware는 악성 행위를 포함하는 모든 소프트웨어를 일컫고, Exploit은 Malware의 한 종류로써 SW의 취약점을 이용해서 악성 행위를 하는 공격이다.
+<u>Malware is a concept that includes exploits. In other words, Malware refers to all software including malicious behavior, and Exploit is a type of Malware and it is an attack which uses hte vulnerability of Software to perform malicious behavior.</u></p>
+</blockquote>
+<ul>
+<li>Vulnerability란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>시스템에 손실, 손상의 원인을 줄 수 있는 보안 상의 약점
+<u> A security weakness that could cause loss or damage to the system.</u></p>
+</blockquote>
+<ul>
 <li>
 <p>CVE란 무엇인가?</p>
 </li>
@@ -473,12 +852,19 @@ Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux�
 </li>
 <li>
 <p>GSP 알고리즘을 설명하라</p>
-<ul>
-<li>GSP 알고리즘 이외에 패턴 매칭(mining) 알고리즘을 말해보라</li>
-</ul>
 </li>
-<li>
-<p>TF-IDF란 무엇인가</p>
+</ul>
+<blockquote>
+<p>Sequence Data에 대한 패턴 매칭 알고리즘이다.
+이 알고리즘은 주어진 시퀀스 데이터에서 일정 길이의 패턴 후보를 생성하고, 각 패턴 후보의 빈도를 구하여, 일정 빈도 이상이 될 경우, 패턴으로 인식하는 알고리즘이다. 2부터 1씩 길이를 늘려가며 패턴을 매칭하는데, 이 때 후보는 이전 패턴의 조합을 통해 생성된다.
+<u>It is a pattern matching algorithm for sequence data. This algorithm generates pattern candidates of a certain length from given sequence data, finds the frequency of each pattern candidate. If the frequency exceeds a certain frequency, this algorithm recognizes it as a pattern. Patterns are matched by increasing the length by 1 from 2, and at this time, a candidate is created through a combination of previous patterns.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GSP 알고리즘 이외에 패턴 매칭(mining) 알고리즘을 말해보라</code></pre></div>
+<blockquote>
+<p>Sequence Pattern Matching 알고리즘은 크게 String mining과 itemset mining으로 나눌 수 있다. Itemset Minig에는 GSP와 Apriori 알고리즘이 있다. …</p>
+</blockquote>
+<ul>
+<li>TF-IDF란 무엇인가
 <ul>
 <li>다른 IR 기법은 무엇이 있는가?</li>
 </ul>
@@ -489,6 +875,7 @@ Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux�
 <li><a href="https://www.interviewbit.com/cloud-computing-interview-questions/">https://www.interviewbit.com/cloud-computing-interview-questions/</a></li>
 <li><a href="https://velog.io/@jeon3029/%EC%BB%B4%ED%93%A8%ED%84%B0-%EA%B3%B5%ED%95%99-CS-%EA%B3%B5%EB%B6%80%EB%A5%BC-%EC%9C%84%ED%95%9C-%EC%9C%A0%EC%9A%A9%ED%95%9C-%EB%A7%81%ED%81%AC%EB%8B%A8%EC%88%9C-%EB%A7%81%ED%81%AC-%EB%AA%A8%EC%9D%8C">https://velog.io/@jeon3029/컴퓨터-공학-CS-공부를-위한-유용한-링크단순-링크-모음</a></li>
 <li><a href="https://www.actualtechmedia.com/wp-content/uploads/2017/12/CUMULUS-NETWORKS-Linux101.pdf">https://www.actualtechmedia.com/wp-content/uploads/2017/12/CUMULUS-NETWORKS-Linux101.pdf</a></li>
+<li><a href="https://cloud.google.com/learn/what-are-containers">https://cloud.google.com/learn/what-are-containers</a></li>
 </ul>
 <script src="https://utteranc.es/client.js"
         repo="sominsong/sominsong.github.io"
@@ -508,6 +895,7 @@ Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux�
 <ul>
 <li><a href="#1-os">1. OS</a></li>
 <li><a href="#2-network">2. Network</a></li>
+<li><a href="#3-dsa-data-structure--algorithm">3. DSA (Data Structure &#x26; Algorithm)</a></li>
 </ul>
 </li>
 <li>
@@ -525,4 +913,4 @@ Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux�
 <p><a href="#reference">Reference</a></p>
 </li>
 </ul>
-</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/Shortest_Path/"><div class="direction">이전 글</div><div class="title">Shortest Path 알고리즘 정리</div></a></div><div class="post-navigator-card-wrapper"></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">송소민</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/CS_Interview/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>
+</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/Shortest_Path/"><div class="direction">이전 글</div><div class="title">Shortest Path 알고리즘 정리</div></a></div><div class="post-navigator-card-wrapper"><a class="post-card next" href="/Virtualization/"><div class="direction">다음 글</div><div class="title">TIL - Virtualization</div></a></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">송소민</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/CS_Interview/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>
