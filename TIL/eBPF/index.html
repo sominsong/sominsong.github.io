@@ -1,0 +1,690 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" property="og:image" content="/og-image.png"/><meta data-react-helmet="true" property="og:author" content="송소민"/><meta data-react-helmet="true" property="og:description" content="리눅스 커널에 대해 공부한다면, eBPF에 대해 한 번쯤은 들어봤을 것이다.
+필자가 주로 연구했던 분야인 Seccomp도 BPF 기술을 이용하는 리눅스 커널의 보안 모듈이다.
+따라서 석사 과정동안 공부했던 내용들을 기록하기 위해서는 가장 먼저 BPF에 대한 정리가 필요할 것 같아, 이렇게 기록하고자 한다. 0. BPF BPF란 Berkeley Packet Filter의 약자이다(였다).
+이 개념은 1992년 Steve McCane과 Van Jacobson의 Usenix Conference Winter ‘93 논문 “The BSD Packet Filter: A New Architecture for User-level Packet Capture”에서 처음으로 소개되었다.
+커널과 같은 Privileged context에서 sandboxed program을 실행할 수 있는 기술이다.
+즉, 커널 내부에 사용자가 작성한 코드를 삽입하여 안전하게 실행시킬 수 있는 도구이며, 커널 모듈이 아닌 …"/><meta data-react-helmet="true" name="description" content="리눅스 커널에 대해 공부한다면, eBPF에 대해 한 번쯤은 들어봤을 것이다.
+필자가 주로 연구했던 분야인 Seccomp도 BPF 기술을 이용하는 리눅스 커널의 보안 모듈이다.
+따라서 석사 과정동안 공부했던 내용들을 기록하기 위해서는 가장 먼저 BPF에 대한 정리가 필요할 것 같아, 이렇게 기록하고자 한다. 0. BPF BPF란 Berkeley Packet Filter의 약자이다(였다).
+이 개념은 1992년 Steve McCane과 Van Jacobson의 Usenix Conference Winter ‘93 논문 “The BSD Packet Filter: A New Architecture for User-level Packet Capture”에서 처음으로 소개되었다.
+커널과 같은 Privileged context에서 sandboxed program을 실행할 수 있는 기술이다.
+즉, 커널 내부에 사용자가 작성한 코드를 삽입하여 안전하게 실행시킬 수 있는 도구이며, 커널 모듈이 아닌 …"/><meta data-react-helmet="true" property="og:site_title" content="TIL - eBPF"/><meta data-react-helmet="true" property="og:title" content="TIL - eBPF"/><meta data-react-helmet="true" name="viewport" content="initial-scale=1, width=device-width"/><meta name="generator" content="Gatsby 4.9.3"/><style data-href="/styles.853e65090dc89bfbb4ac.css" data-identity="gatsby-global-css">@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/static/montserrat-latin-100-8d7d79679b70dbe27172b6460e7a7910.woff2) format("woff2"),url(/static/montserrat-latin-100-ec38980a9e0119a379e2a9b3dbb1901a.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/static/montserrat-latin-100italic-e279051046ba1286706adc886cf1c96b.woff2) format("woff2"),url(/static/montserrat-latin-100italic-3b325a3173c8207435cd1b76e19bf501.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/static/montserrat-latin-200-9d266fbbfa6cab7009bd56003b1eeb67.woff2) format("woff2"),url(/static/montserrat-latin-200-2d8ba08717110d27122e54c34b8a5798.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/static/montserrat-latin-200italic-6e5b3756583bb2263eb062eae992735e.woff2) format("woff2"),url(/static/montserrat-latin-200italic-a0d6f343e4b536c582926255367a57da.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/static/montserrat-latin-300-00b3e893aab5a8fd632d6342eb72551a.woff2) format("woff2"),url(/static/montserrat-latin-300-ea303695ceab35f17e7d062f30e0173b.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/static/montserrat-latin-300italic-56f34ea368f6aedf89583d444bbcb227.woff2) format("woff2"),url(/static/montserrat-latin-300italic-54b0bf2c8c4c12ffafd803be2466a790.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/static/montserrat-latin-400-b71748ae4f80ec8c014def4c5fa8688b.woff2) format("woff2"),url(/static/montserrat-latin-400-0659a9f4e90db5cf51b50d005bff1e41.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/static/montserrat-latin-400italic-6eed6b4cbb809c6efc7aa7ddad6dbe3e.woff2) format("woff2"),url(/static/montserrat-latin-400italic-7583622cfde30ae49086d18447ab28e7.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/static/montserrat-latin-500-091b209546e16313fd4f4fc36090c757.woff2) format("woff2"),url(/static/montserrat-latin-500-edd311588712a96bbf435fad264fff62.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/static/montserrat-latin-500italic-c90ced68b46050061d1a41842d6dfb43.woff2) format("woff2"),url(/static/montserrat-latin-500italic-5146cbfe02b1deea5dffea27a5f2f998.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/static/montserrat-latin-600-0480d2f8a71f38db8633b84d8722e0c2.woff2) format("woff2"),url(/static/montserrat-latin-600-b77863a375260a05dd13f86a1cee598f.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/static/montserrat-latin-600italic-cf46ffb11f3a60d7df0567f8851a1d00.woff2) format("woff2"),url(/static/montserrat-latin-600italic-c4fcfeeb057724724097167e57bd7801.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/static/montserrat-latin-700-7dbcc8a5ea2289d83f657c25b4be6193.woff2) format("woff2"),url(/static/montserrat-latin-700-99271a835e1cae8c76ef8bba99a8cc4e.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/static/montserrat-latin-700italic-c41ad6bdb4bd504a843d546d0a47958d.woff2) format("woff2"),url(/static/montserrat-latin-700italic-6779372f04095051c62ed36bc1dcc142.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/static/montserrat-latin-800-db9a3e0ba7eaea32e5f55328ace6cf23.woff2) format("woff2"),url(/static/montserrat-latin-800-4e3c615967a2360f5db87d2f0fd2456f.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/static/montserrat-latin-800italic-bf45bfa14805969eda318973947bc42b.woff2) format("woff2"),url(/static/montserrat-latin-800italic-fe82abb0bcede51bf724254878e0c374.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/static/montserrat-latin-900-e66c7edc609e24bacbb705175669d814.woff2) format("woff2"),url(/static/montserrat-latin-900-8211f418baeb8ec880b80ba3c682f957.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/static/montserrat-latin-900italic-4454c775e48152c1a72510ceed3603e2.woff2) format("woff2"),url(/static/montserrat-latin-900italic-efcaa0f6a82ee0640b83a0916e6e8d68.woff) format("woff")}.search-input-wrapper{align-items:center;display:none;margin-top:3px;width:180px}@media(min-width:768px){.search-input-wrapper{display:flex}}.search-icon{color:var(--primary-text-color);margin-right:2px}.search-input{height:100%;width:100%}.search-input .MuiAutocomplete-inputRoot{padding-right:0!important}.search-input .MuiInputBase-input{color:var(--primary-text-color)!important;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;font-weight:500;padding-bottom:2px!important}.search-input .MuiInput-underline:before{border-bottom-width:1px}.search-input .MuiInput-underline:after,.search-input .MuiInput-underline:before{border-bottom-color:var(--primary-text-color)}.page-header-wrapper{display:flex;height:60px;justify-content:center;width:100%}.page-header-wrapper .page-header{align-items:center;display:flex;justify-content:space-between;max-width:720px;width:100%}.page-header-wrapper .page-header .link{color:var(--primary-text-color);font-size:17px;font-weight:700}@media(min-width:768px){.page-header-wrapper .page-header .link{font-size:20px;font-weight:700}}.page-header-wrapper .page-header .trailing-section{align-items:center;display:flex}.page-header-wrapper .page-header .trailing-section .link{margin-right:10px}@media(min-width:768px){.page-header-wrapper .page-header .trailing-section .link{margin-right:20px}}.page-footer-wrapper{align-items:center;display:flex;height:62px;justify-content:center;margin-top:auto;width:100%}.page-footer-wrapper .page-footer{max-width:720px;text-align:center;width:100%}.page-footer-wrapper .page-footer .link{color:var(--primary-text-color);font-size:20px;font-weight:700;margin-right:20px}.page-footer-wrapper .page-footer a{color:#3a95ff}.dark-mode-button-wrapper{align-items:center;bottom:20px;display:flex;justify-content:center;position:fixed;right:20px}.dark-mode-button{-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);background-color:#363f47!important;border-radius:50px;box-shadow:0 5px 25px rgba(0,0,0,.12);cursor:pointer;height:50px;width:50px;z-index:3}.dark-mode-icon{color:#fff}a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{border:0;font-size:100%;font:inherit;margin:0;padding:0;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:"";content:none}table{border-collapse:collapse;border-spacing:0}a{outline:none;text-decoration:none}html{--background-color:#fff;--primary-text-color:#000;--secondary-text-color:#9e9e9e;--content-text-color:#37352f;--button-background-color:#f3f3f4;--button-text-color:#363f47;--tab-text-color:#6e6d7a;--tab-hover-text-color:#0d0c22;--tab-selected-background-color:rgba(13,12,34,.05);--bio-link-icon-color:rgba(0,0,0,.54);--about-link-icon-color:#a8a8a8;--chip-background-color:#f3f3f4;--link-text-color:rgba(55,53,47,.7);--post-card-border-color:rgba(0,0,0,.12);--markdown-table-even-cell-background-color:#f6f8fa;--markdown-table-border-color:#dfe2e5;--markdown-blockquote-border-color:#dfe2e5;--markdown-border-color:#e1e4e8}html[data-theme=dark]{--background-color:#232326;--primary-text-color:#e6e6e6;--secondary-text-color:#768390;--content-text-color:#e6e6e6;--button-background-color:#444c56;--button-text-color:#363f47;--tab-text-color:#768390;--tab-hover-text-color:#acbac7;--tab-selected-background-color:#373e47;--chip-background-color:#323a42;--bio-link-icon-color:#e6e6e6;--about-link-icon-color:#a8a8a8;--link-text-color:#90b0ec;--post-card-border-color:#363f47;--markdown-table-even-cell-background-color:#2d333b;--markdown-table-border-color:#444c56;--markdown-blockquote-border-color:#4f5864;--markdown-border-color:#e1e4e8}*{-webkit-appearance:none;appearance:none;box-sizing:border-box}html{font-size:14px;height:100%;overflow-y:scroll;width:100%}body{background-color:var(--background-color)!important}a{color:var(--link-text-color)}.page-wrapper{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:var(--primary-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;justify-content:center;min-height:100vh;padding-left:15px;padding-right:15px;word-break:keep-all}.page-wrapper,.page-wrapper .page-content{align-items:center;display:flex;flex-direction:column;width:100%}.page-wrapper .page-content{max-width:720px}.icon{color:var(--about-link-icon-color);font-size:20px}.social-links .icon{color:var(--bio-link-icon-color);font-size:30px}@-webkit-keyframes blinking-cursor{0%{opacity:0}50%{opacity:1}to{opacity:0}}@keyframes blinking-cursor{0%{opacity:0}50%{opacity:1}to{opacity:0}}.bio{color:var(--primary-text-color);display:flex;flex-direction:column;justify-content:space-between;margin-bottom:120px;margin-top:120px;width:100%}@media(min-width:768px){.bio{align-items:center;flex-direction:row}}.bio .introduction{display:flex;flex-direction:column;word-break:keep-all}.bio .introduction .react-rotating-text-cursor{-webkit-animation:blinking-cursor .8s cubic-bezier(.68,.01,.01,.99) 0s infinite;animation:blinking-cursor .8s cubic-bezier(.68,.01,.01,.99) 0s infinite}.bio .introduction strong{display:inline-block;font-weight:600}.bio .introduction.korean{font-size:32px;font-weight:100;line-height:1.2}.bio .introduction.korean .title .react-rotating-text-cursor{font-size:35px;line-height:35px}@media(min-width:768px){.bio .introduction.korean{font-size:40px}.bio .introduction.korean .title .react-rotating-text-cursor{font-size:45px;line-height:45px}}.bio .introduction.english{font-family:montserrat;font-size:25px;line-height:1.2}@media(min-width:768px){.bio .introduction.english{font-size:45px}}.bio .introduction.english .name{font-size:35px;font-weight:600}.bio .introduction.english .job{font-size:35px}.bio .introduction.english .description{font-size:20px;font-weight:200;margin-top:8px}.bio .introduction.english .social-links{display:flex;margin-top:20px}.bio .thumbnail-wrapper{display:none}@media(min-width:768px){.bio .thumbnail-wrapper{display:block}}.section-header-wrapper{display:flex;justify-content:center;margin-bottom:32px;width:100%}.section-header-wrapper .section-header{border-bottom:4px solid var(--primary-text-color);color:var(--primary-text-color);font-size:30px;font-weight:700;padding-bottom:5px}.timestamp-section{align-items:center;display:flex;flex-direction:column;justify-content:center;margin-bottom:50px;width:100%;word-break:keep-all}.timestamp-section .body{padding:0 10px;width:100%}.timestamp-section .body .timestamp{border-left:2px solid #bdbdbd;display:flex;font-size:18px;font-weight:400;justify-items:center;margin-left:5px;padding:10px 0;width:100%}.timestamp-section .body .timestamp:first-child{padding-top:7px}.timestamp-section .body .timestamp:last-child{padding-bottom:7px}.timestamp-section .body .timestamp:before{align-self:center;background-color:var(--background-color);border:2px solid #828282;border-radius:10px;content:"";height:10px;left:-1px;position:relative;-webkit-transform:translatex(-50%);transform:translatex(-50%);width:10px}.timestamp-section .body .timestamp .date{align-self:center;color:#828282;margin-left:5px;margin-right:5px;min-width:115px;width:115px}@media(min-width:768px){.timestamp-section .body .timestamp .date{min-width:200px;width:200px}}.timestamp-section .body .timestamp .activity{line-height:23px;width:100%}.project-section{align-items:center;justify-content:center}.project-section,.project-section .project{display:flex;flex-direction:column;width:100%}.project-section .project{margin-bottom:30px;padding:15px}.project-section .project .head{font-size:20px;font-weight:700;line-height:30px;margin-bottom:10px}.project-section .project .body{display:flex;flex-direction:column;width:100%}.project-section .project .body .thumbnail{margin-bottom:10px;width:100%}.project-section .project .body .tech-stack{display:flex;margin-bottom:10px}.project-section .project .body .tech-stack .tech{background-color:var(--chip-background-color);border-radius:10px;font-size:15px;font-weight:500;margin-right:5px;padding:5px 7px}.project-section .project .body .description{font-size:16px;font-weight:400;line-height:1.4}@media(min-width:768px){.project-section .project .body{flex-direction:column}.project-section .project .body .content{margin-top:0}}.post-header{border-bottom:1px solid var(--post-card-border-color);display:flex;flex-direction:column;justify-content:center;margin-bottom:40px;margin-top:20px;padding-bottom:10px;width:100%;word-break:keep-all}.post-header .emoji{font-size:78px;margin-bottom:20px}.post-header .categories{margin-bottom:5px}.post-header .categories .category{color:var(--primary-text-color);font-weight:600;margin-right:4px}.post-header .categories .category:hover{text-decoration:underline}.post-header .title{color:var(--primary-text-color);font-size:32px;font-weight:600;line-height:1.3;margin-bottom:6px}.post-header .info{color:var(--secondary-text-color);display:flex;flex-wrap:wrap;font-size:16px;font-weight:500;line-height:1.5;width:100%}.post-header .info .author{margin-right:4px}.post-header .info strong{color:var(--primary-text-color);font-weight:600}.post-navigator{-webkit-column-gap:1.4%;column-gap:1.4%;display:grid;grid-template-columns:49.3% 49.3%;width:100%}.post-navigator .post-card{border:1px solid var(--post-card-border-color);border-radius:6px;color:var(--primary-text-color);cursor:pointer;display:flex;flex-direction:column;padding:15px;transition:-webkit-transform .2s;transition:transform .2s;transition:transform .2s,-webkit-transform .2s;width:100%}.post-navigator .post-card:hover .title{text-decoration:underline}.post-navigator .post-card.prev{margin-right:auto}.post-navigator .post-card.next{margin-left:auto}.post-navigator .post-card .direction{color:gray;font-size:14px;font-weight:500;margin-bottom:5px}.post-navigator .post-card .title{font-size:16px;font-weight:600;line-height:1.4;margin-bottom:7px}.markdown .octicon{fill:currentColor;display:inline-block;vertical-align:text-bottom}.markdown .anchor{float:left;line-height:1;margin-left:-20px;padding-right:4px}.markdown .anchor:focus{outline:none}.markdown h1 .octicon-link,.markdown h2 .octicon-link,.markdown h3 .octicon-link,.markdown h4 .octicon-link,.markdown h5 .octicon-link,.markdown h6 .octicon-link{color:#1b1f23;vertical-align:middle;visibility:hidden}.markdown h1:hover .anchor,.markdown h2:hover .anchor,.markdown h3:hover .anchor,.markdown h4:hover .anchor,.markdown h5:hover .anchor,.markdown h6:hover .anchor{text-decoration:none}.markdown h1:hover .anchor .octicon-link,.markdown h2:hover .anchor .octicon-link,.markdown h3:hover .anchor .octicon-link,.markdown h4:hover .anchor .octicon-link,.markdown h5:hover .anchor .octicon-link,.markdown h6:hover .anchor .octicon-link{visibility:visible}.markdown h1:hover .anchor .octicon-link:before,.markdown h2:hover .anchor .octicon-link:before,.markdown h3:hover .anchor .octicon-link:before,.markdown h4:hover .anchor .octicon-link:before,.markdown h5:hover .anchor .octicon-link:before,.markdown h6:hover .anchor .octicon-link:before{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' aria-hidden='true' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'/%3E%3C/svg%3E");content:" ";display:inline-block;height:16px;width:16px}.markdown{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;word-wrap:break-word;color:var(--content-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;font-weight:500;line-height:1.5}.markdown details{display:block}.markdown summary{display:list-item}.markdown a{background-color:initial}.markdown a:active,.markdown a:hover{outline-width:0}.markdown strong{font-weight:inherit;font-weight:bolder}.markdown h1{margin:.67em 0}.markdown img{border-style:none}.markdown code,.markdown kbd,.markdown pre{font-family:monospace,monospace;font-size:1em}.markdown hr{box-sizing:initial;overflow:visible}.markdown input{font:inherit;margin:0;overflow:visible}.markdown [type=checkbox]{box-sizing:border-box;padding:0}.markdown *{box-sizing:border-box}.markdown input{font-family:inherit;font-size:inherit;line-height:inherit}.markdown a{border-bottom:.05em solid;border-color:var(--link-text-color);color:var(--link-text-color);text-decoration:none}.markdown a.anchor{border-bottom:none}.markdown strong{font-weight:700}.markdown hr{background:transparent;border-bottom:1px solid var(--markdown-blockquote-border-color);height:0;margin:15px 0;overflow:hidden}.markdown hr:after,.markdown hr:before{content:"";display:table}.markdown hr:after{clear:both}.markdown table{border-collapse:collapse;border-spacing:0}.markdown td,.markdown th{padding:0}.markdown details summary{cursor:pointer}.markdown h1,.markdown h2,.markdown h3,.markdown h4,.markdown h5,.markdown h6{margin-bottom:0;margin-top:0}.markdown h1{font-size:32px}.markdown h1,.markdown h2{font-weight:600}.markdown h2{font-size:24px}.markdown h3{font-size:20px}.markdown h3,.markdown h4{font-weight:600}.markdown h4{font-size:16px}.markdown h5{font-size:14px}.markdown h5,.markdown h6{font-weight:600}.markdown h6{font-size:12px}.markdown p{margin-bottom:10px;margin-top:0}.markdown blockquote{margin:0}.markdown ol,.markdown ul{margin-bottom:0;margin-top:0;padding-left:0}.markdown ol ol,.markdown ul ol{list-style-type:lower-roman}.markdown ol ol ol,.markdown ol ul ol,.markdown ul ol ol,.markdown ul ul ol{list-style-type:lower-alpha}.markdown dd{margin-left:0}.markdown code,.markdown pre{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px}.markdown code.language-text{border-radius:3px;font-size:85%;padding:.2em .4em}.markdown :not(pre)>code.language-text{background:hsla(44,6%,50%,.15);color:#eb5757;overflow-wrap:break-word}.markdown pre{margin-bottom:0;margin-top:0}.markdown input::-webkit-inner-spin-button,.markdown input::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}.markdown :checked+.radio-label{border-color:#0366d6;position:relative;z-index:1}.markdown .border{border:1px solid var(--markdown-border-color)!important}.markdown .border-0{border:0!important}.markdown .border-bottom{border-bottom:1px solid var(--markdown-border-color)!important}.markdown .rounded-1{border-radius:3px!important}.markdown .bg-white{background-color:transparent!important}.markdown .bg-gray-light{background-color:#fafbfc!important}.markdown .text-gray-light{color:#6a737d!important}.markdown .pl-3,.markdown .px-3{padding-left:16px!important}.markdown .px-3{padding-right:16px!important}.markdown .f6{font-size:12px!important}.markdown .lh-condensed{line-height:1.25!important}.markdown .text-bold{font-weight:600!important}.markdown .pl-c{color:#6a737d}.markdown .pl-c1,.markdown .pl-s .pl-v{color:#005cc5}.markdown .pl-e,.markdown .pl-en{color:#6f42c1}.markdown .pl-s .pl-s1,.markdown .pl-smi{color:#24292e}.markdown .pl-ent{color:#22863a}.markdown .pl-k{color:#d73a49}.markdown .pl-pds,.markdown .pl-s,.markdown .pl-s .pl-pse .pl-s1,.markdown .pl-sr,.markdown .pl-sr .pl-cce,.markdown .pl-sr .pl-sra,.markdown .pl-sr .pl-sre{color:#032f62}.markdown .pl-smw,.markdown .pl-v{color:#e36209}.markdown .pl-bu{color:#b31d28}.markdown .pl-ii{background-color:#b31d28;color:#fafbfc}.markdown .pl-c2{background-color:#d73a49;color:#fafbfc}.markdown .pl-c2:before{content:"^M"}.markdown .pl-sr .pl-cce{color:#22863a;font-weight:700}.markdown .pl-ml{color:#735c0f}.markdown .pl-mh,.markdown .pl-mh .pl-en,.markdown .pl-ms{color:#005cc5;font-weight:700}.markdown .pl-mi{color:#24292e;font-style:italic}.markdown .pl-mb{color:#24292e;font-weight:700}.markdown .pl-md{background-color:#ffeef0;color:#b31d28}.markdown .pl-mi1{background-color:#f0fff4;color:#22863a}.markdown .pl-mc{background-color:#ffebda;color:#e36209}.markdown .pl-mi2{background-color:#005cc5;color:#f6f8fa}.markdown .pl-mdr{color:#6f42c1;font-weight:700}.markdown .pl-ba{color:#586069}.markdown .pl-sg{color:#959da5}.markdown .pl-corl{color:#032f62;text-decoration:underline}.markdown .mb-0{margin-bottom:0!important}.markdown .my-2{margin-bottom:8px!important;margin-top:8px!important}.markdown .pl-0{padding-left:0!important}.markdown .py-0{padding-bottom:0!important;padding-top:0!important}.markdown .pl-1{padding-left:4px!important}.markdown .pl-2{padding-left:8px!important}.markdown .py-2{padding-bottom:8px!important;padding-top:8px!important}.markdown .pl-3{padding-left:16px!important}.markdown .pl-4{padding-left:24px!important}.markdown .pl-5{padding-left:32px!important}.markdown .pl-6{padding-left:40px!important}.markdown .pl-7{padding-left:48px!important}.markdown .pl-8{padding-left:64px!important}.markdown .pl-9{padding-left:80px!important}.markdown .pl-10{padding-left:96px!important}.markdown .pl-11{padding-left:112px!important}.markdown .pl-12{padding-left:128px!important}.markdown hr{border-bottom-color:#eee}.markdown kbd{background-color:#fafbfc;border:1px solid #d1d5da;border-radius:3px;box-shadow:inset 0 -1px 0 #d1d5da;color:#444d56;display:inline-block;font:11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;line-height:10px;padding:3px 5px;vertical-align:middle}.markdown:after,.markdown:before{content:"";display:table}.markdown:after{clear:both}.markdown>:first-child{margin-top:0!important}.markdown>:last-child{margin-bottom:0!important}.markdown a:not([href]){color:inherit;text-decoration:none}.markdown blockquote,.markdown details,.markdown dl,.markdown ol,.markdown p,.markdown pre,.markdown table,.markdown ul{margin-bottom:16px;margin-top:0}.markdown hr{background-color:var(--markdown-border-color);border:0;height:.25em;margin:24px 0;padding:0}.markdown blockquote{border-left:.25em solid var(--markdown-blockquote-border-color);color:#6a737d;padding:0 1em}.markdown blockquote>:first-child{margin-top:0}.markdown blockquote>:last-child{margin-bottom:0}.markdown h1,.markdown h2,.markdown h3,.markdown h4,.markdown h5,.markdown h6{font-weight:600;line-height:1.25;margin-bottom:16px;margin-top:24px}.markdown h1{font-size:2em}.markdown h2{font-size:1.5em}.markdown h3{font-size:1.25em}.markdown h4{font-size:1em}.markdown h5{font-size:.875em}.markdown h6{color:#6a737d;font-size:.85em}.markdown ol,.markdown ul{padding-left:2em}.markdown ol ol,.markdown ol ul,.markdown ul ol,.markdown ul ul{margin-bottom:0;margin-top:0}.markdown ol{list-style-type:decimal}.markdown ul{list-style-type:disc}.markdown li{word-wrap:break-all;display:list-item;text-align:-webkit-match-parent}.markdown li>p{margin-top:16px}.markdown li+li{margin-top:.25em}.markdown dl{padding:0}.markdown dl dt{font-size:1em;font-style:italic;font-weight:600;margin-top:16px;padding:0}.markdown dl dd{margin-bottom:16px;padding:0 16px}.markdown table{display:block;overflow:auto;width:100%}.markdown table th{font-weight:600}.markdown table td,.markdown table th{border:1px solid var(--markdown-table-border-color);padding:6px 13px}.markdown table tr{border-top:1px solid var(--markdown-table-border-color)}.markdown table tr:nth-child(2n){background-color:var(--markdown-table-even-cell-background-color)}.markdown img{background-color:transparent;box-sizing:initial;display:block;margin:0 auto;max-width:100%}.markdown img[align=right]{padding-left:20px}.markdown img[align=left]{padding-right:20px}.markdown code{background-color:rgba(27,31,35,.05);border-radius:3px;font-size:85%;margin:0;padding:.2em .4em}.markdown pre{word-wrap:normal}.markdown pre>code{background:transparent;border:0;font-size:100%;margin:0;padding:0;white-space:pre;word-break:normal}.markdown .highlight{margin-bottom:16px}.markdown .highlight pre{margin-bottom:0;word-break:normal}.markdown .highlight pre,.markdown pre{background-color:#f6f8fa;border-radius:3px;font-size:85%;line-height:1.45;overflow:auto;padding:16px}.markdown pre code{word-wrap:normal;background-color:initial;border:0;display:inline;line-height:inherit;margin:0;max-width:auto;overflow:visible;padding:0}.markdown .commit-tease-sha{color:#444d56;display:inline-block;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:90%}.markdown .full-commit .btn-outline:not(:disabled):hover{border-color:#005cc5;color:#005cc5}.markdown .blob-wrapper{overflow-x:auto;overflow-y:hidden}.markdown .blob-wrapper-embedded{max-height:240px;overflow-y:auto}.markdown .blob-num{color:rgba(27,31,35,.3);cursor:pointer;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px;line-height:20px;min-width:50px;padding-left:10px;padding-right:10px;text-align:right;-webkit-user-select:none;-ms-user-select:none;user-select:none;vertical-align:top;white-space:nowrap;width:1%}.markdown .blob-num:hover{color:rgba(27,31,35,.6)}.markdown .blob-num:before{content:attr(data-line-number)}.markdown .blob-code{line-height:20px;padding-left:10px;padding-right:10px;position:relative;vertical-align:top}.markdown .blob-code-inner{word-wrap:normal;color:#24292e;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px;overflow:visible;white-space:pre}.markdown .pl-token.active,.markdown .pl-token:hover{background:#ffea7f;cursor:pointer}.markdown .tab-size[data-tab-size="1"]{-o-tab-size:1;tab-size:1}.markdown .tab-size[data-tab-size="2"]{-o-tab-size:2;tab-size:2}.markdown .tab-size[data-tab-size="3"]{-o-tab-size:3;tab-size:3}.markdown .tab-size[data-tab-size="4"]{-o-tab-size:4;tab-size:4}.markdown .tab-size[data-tab-size="5"]{-o-tab-size:5;tab-size:5}.markdown .tab-size[data-tab-size="6"]{-o-tab-size:6;tab-size:6}.markdown .tab-size[data-tab-size="7"]{-o-tab-size:7;tab-size:7}.markdown .tab-size[data-tab-size="8"]{-o-tab-size:8;tab-size:8}.markdown .tab-size[data-tab-size="9"]{-o-tab-size:9;tab-size:9}.markdown .tab-size[data-tab-size="10"]{-o-tab-size:10;tab-size:10}.markdown .tab-size[data-tab-size="11"]{-o-tab-size:11;tab-size:11}.markdown .tab-size[data-tab-size="12"]{-o-tab-size:12;tab-size:12}.markdown .task-list-item{list-style-type:none}.markdown .task-list-item+.task-list-item{margin-top:3px}.markdown .task-list-item input{margin:0 .2em .25em -1.6em;vertical-align:middle}.markdown .table-of-contents{align-items:flex-start;display:flex;flex-direction:column;justify-content:center;position:fixed;right:0;top:75px;width:340px}@media(max-width:1300px){.markdown .table-of-contents{display:none}}.markdown .table-of-contents ul{cursor:pointer;list-style-type:none}.markdown .table-of-contents ul li a{border-bottom:none;color:var(--secondary-text-color);font-size:14px;height:30px;padding:6px 2px;width:100%}.markdown .table-of-contents ul p{margin:0}.markdown .gatsby-resp-image-wrapper{display:flex!important;justify-content:center!important;max-height:560px!important;width:100%!important}.markdown .gatsby-resp-image-wrapper img{height:auto!important;max-height:560px!important;max-width:100%!important;position:relative!important;width:auto!important}.markdown .gatsby-resp-image-wrapper+em{color:#6a737d;display:block;font-size:15px;font-style:italic;text-align:center}code[class*=language-],pre[class*=language-]{word-wrap:normal;background:none;color:#ccc;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;font-size:1em;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none;line-height:1.5;-o-tab-size:4;tab-size:4;text-align:left;white-space:pre;word-break:normal;word-spacing:normal}pre[class*=language-]{margin:.5em 0;overflow:auto;padding:1em}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{border-radius:.3em;padding:.1em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}.post-content{margin-bottom:20px;width:100%}.category-page-header-wrapper,.post-content{display:flex;flex-direction:column;justify-content:center}.category-page-header-wrapper{align-items:center;margin-bottom:30px;margin-top:30px}.category-page-header-wrapper .category-page-title{border-bottom:3px solid var(--primary-text-color);font-size:40px;font-weight:700;margin-bottom:15px;padding-bottom:7px;text-align:center;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.category-page-header-wrapper .category-page-subtitle{font-size:20px;font-weight:500;padding-bottom:10px;text-align:center}.post-card-wrapper{display:flex;justify-content:center;min-height:150px;width:100%}.post-card-wrapper .post-card{border:1px solid var(--post-card-border-color);border-radius:6px;color:var(--primary-text-color);cursor:pointer;display:flex;flex-direction:column;height:100%;margin-bottom:15px;max-width:720px;padding:15px;transition:-webkit-transform .2s;transition:transform .2s;transition:transform .2s,-webkit-transform .2s;width:100%}.post-card-wrapper .post-card:hover .title{text-decoration:underline}@media(min-width:768px){.post-card-wrapper .post-card{margin-bottom:0}}.post-card-wrapper .post-card .title{font-size:18px;font-weight:600;line-height:1.4;margin-bottom:7px}.post-card-wrapper .post-card .description{-webkit-line-clamp:3;-webkit-box-orient:vertical;color:var(--primary-text-color);display:-webkit-box;font-size:13px;line-height:20px;margin-bottom:10px;overflow:hidden;text-overflow:ellipsis}.post-card-wrapper .post-card .info{color:var(--about-link-icon-color);display:flex;font-size:14px;justify-content:space-between;margin-top:auto}.post-card-wrapper .post-card .info .categories{display:flex}.post-card-wrapper .post-card .info .categories .category{margin-left:4px}.post-card-wrapper .post-card .info .categories .category:hover{text-decoration:underline}.post-card-column-wrapper{display:flex;justify-content:center;width:100%}.post-card-column-wrapper .post-card-column{align-items:center;display:flex;flex-direction:column;width:100%}.post-card-column-wrapper .post-card-column .post-card-wrapper{margin-bottom:10px}.post-card-column-wrapper .post-card-column .more-post-card-button{background-color:var(--button-background-color);color:var(--tab-hover-text-color);font-size:15px;font-weight:500;height:40px}.post-tabs-wrapper{align-self:flex-start;display:flex;flex-direction:column;justify-content:center;top:0;width:100%}.post-tabs-wrapper .post-tabs{display:flex;height:40px;justify-content:center;margin-bottom:12px;max-width:760px;width:100%}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTab-root{color:var(--tab-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:17px;font-weight:500;height:40px;min-height:auto;min-width:auto;padding:10px 12px;transition:all .2s ease}.post-tabs-wrapper .post-tabs .mui-tabs .Mui-selected,.post-tabs-wrapper .post-tabs .mui-tabs .MuiTab-root :hover{color:var(--tab-hover-text-color);transition:all .2s ease}.post-tabs-wrapper .post-tabs .mui-tabs .Mui-selected{background-color:var(--tab-selected-background-color);border-radius:8px;font-weight:600}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabScrollButton-root{height:40px;width:20px}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabs-scrollable{height:40px}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabs-indicator{display:none}</style><style data-emotion="css-global o6gwfi">html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;box-sizing:border-box;-webkit-text-size-adjust:100%;}*,*::before,*::after{box-sizing:inherit;}strong,b{font-weight:700;}body{margin:0;color:rgba(0, 0, 0, 0.87);font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;background-color:#fff;}@media print{body{background-color:#fff;}}body::backdrop{background-color:#fff;}</style><style data-emotion="css-global 1prfaxn">@-webkit-keyframes mui-auto-fill{from{display:block;}}@keyframes mui-auto-fill{from{display:block;}}@-webkit-keyframes mui-auto-fill-cancel{from{display:block;}}@keyframes mui-auto-fill-cancel{from{display:block;}}</style><style data-emotion="css 1l6di18 feqhe6 11tfndm mnn31 vubbuv 1yxmbwk 6flbmm">.css-1l6di18.Mui-focused .MuiAutocomplete-clearIndicator{visibility:visible;}@media (pointer: fine){.css-1l6di18:hover .MuiAutocomplete-clearIndicator{visibility:visible;}}.css-1l6di18 .MuiAutocomplete-tag{margin:3px;max-width:calc(100% - 6px);}.css-1l6di18 .MuiAutocomplete-inputRoot{-webkit-box-flex-wrap:wrap;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiAutocomplete-inputRoot,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiAutocomplete-inputRoot{padding-right:30px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiAutocomplete-inputRoot{padding-right:56px;}.css-1l6di18 .MuiAutocomplete-inputRoot .MuiAutocomplete-input{width:0;min-width:30px;}.css-1l6di18 .MuiInput-root{padding-bottom:1px;}.css-1l6di18 .MuiInput-root .MuiInput-input{padding:4px 4px 4px 0px;}.css-1l6di18 .MuiInput-root.MuiInputBase-sizeSmall .MuiInput-input{padding:2px 4px 3px 0;}.css-1l6di18 .MuiOutlinedInput-root{padding:9px;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiOutlinedInput-root,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiOutlinedInput-root{padding-right:39px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiOutlinedInput-root{padding-right:65px;}.css-1l6di18 .MuiOutlinedInput-root .MuiAutocomplete-input{padding:7.5px 4px 7.5px 6px;}.css-1l6di18 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment{right:9px;}.css-1l6di18 .MuiOutlinedInput-root.MuiInputBase-sizeSmall{padding:6px;}.css-1l6di18 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input{padding:2.5px 4px 2.5px 6px;}.css-1l6di18 .MuiFilledInput-root{padding-top:19px;padding-left:8px;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiFilledInput-root,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiFilledInput-root{padding-right:39px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiFilledInput-root{padding-right:65px;}.css-1l6di18 .MuiFilledInput-root .MuiFilledInput-input{padding:7px 4px;}.css-1l6di18 .MuiFilledInput-root .MuiAutocomplete-endAdornment{right:9px;}.css-1l6di18 .MuiFilledInput-root.MuiInputBase-sizeSmall{padding-bottom:1px;}.css-1l6di18 .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input{padding:2.5px 4px;}.css-1l6di18 .MuiInputBase-hiddenLabel{padding-top:8px;}.css-1l6di18 .MuiAutocomplete-input{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;text-overflow:ellipsis;opacity:1;}.css-feqhe6{display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;position:relative;min-width:0;padding:0;margin:0;border:0;vertical-align:top;width:100%;}.css-11tfndm{font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.4375em;letter-spacing:0.00938em;color:rgba(0, 0, 0, 0.87);box-sizing:border-box;position:relative;cursor:text;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;width:100%;position:relative;}.css-11tfndm.Mui-disabled{color:rgba(0, 0, 0, 0.38);cursor:default;}label+.css-11tfndm{margin-top:16px;}.css-11tfndm:after{border-bottom:2px solid #1976d2;left:0;bottom:0;content:"";position:absolute;right:0;-webkit-transform:scaleX(0);-moz-transform:scaleX(0);-ms-transform:scaleX(0);transform:scaleX(0);-webkit-transition:-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;transition:transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;pointer-events:none;}.css-11tfndm.Mui-focused:after{-webkit-transform:scaleX(1);-moz-transform:scaleX(1);-ms-transform:scaleX(1);transform:scaleX(1);}.css-11tfndm.Mui-error:after{border-bottom-color:#d32f2f;-webkit-transform:scaleX(1);-moz-transform:scaleX(1);-ms-transform:scaleX(1);transform:scaleX(1);}.css-11tfndm:before{border-bottom:1px solid rgba(0, 0, 0, 0.42);left:0;bottom:0;content:"\00a0";position:absolute;right:0;-webkit-transition:border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;pointer-events:none;}.css-11tfndm:hover:not(.Mui-disabled):before{border-bottom:2px solid rgba(0, 0, 0, 0.87);}@media (hover: none){.css-11tfndm:hover:not(.Mui-disabled):before{border-bottom:1px solid rgba(0, 0, 0, 0.42);}}.css-11tfndm.Mui-disabled:before{border-bottom-style:dotted;}.css-mnn31{font:inherit;letter-spacing:inherit;color:currentColor;padding:4px 0 5px;border:0;box-sizing:content-box;background:none;height:1.4375em;margin:0;-webkit-tap-highlight-color:transparent;display:block;min-width:0;width:100%;-webkit-animation-name:mui-auto-fill-cancel;animation-name:mui-auto-fill-cancel;-webkit-animation-duration:10ms;animation-duration:10ms;}.css-mnn31::-webkit-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31::-moz-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31:-ms-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31::-ms-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31:focus{outline:0;}.css-mnn31:invalid{box-shadow:none;}.css-mnn31::-webkit-search-decoration{-webkit-appearance:none;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-webkit-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-moz-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:-ms-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-ms-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-webkit-input-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-moz-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus:-ms-input-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-ms-input-placeholder{opacity:0.42;}.css-mnn31.Mui-disabled{opacity:1;-webkit-text-fill-color:rgba(0, 0, 0, 0.38);}.css-mnn31:-webkit-autofill{-webkit-animation-duration:5000s;animation-duration:5000s;-webkit-animation-name:mui-auto-fill;animation-name:mui-auto-fill;}.css-vubbuv{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:1em;height:1em;display:inline-block;fill:currentColor;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;font-size:1.5rem;}.css-1yxmbwk{display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;position:relative;box-sizing:border-box;-webkit-tap-highlight-color:transparent;background-color:transparent;outline:0;border:0;margin:0;border-radius:0;padding:0;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;-moz-appearance:none;-webkit-appearance:none;-webkit-text-decoration:none;text-decoration:none;color:inherit;text-align:center;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;font-size:1.5rem;padding:8px;border-radius:50%;overflow:visible;color:rgba(0, 0, 0, 0.54);-webkit-transition:background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-1yxmbwk::-moz-focus-inner{border-style:none;}.css-1yxmbwk.Mui-disabled{pointer-events:none;cursor:default;}@media print{.css-1yxmbwk{-webkit-print-color-adjust:exact;color-adjust:exact;}}.css-1yxmbwk:hover{background-color:rgba(0, 0, 0, 0.04);}@media (hover: none){.css-1yxmbwk:hover{background-color:transparent;}}.css-1yxmbwk.Mui-disabled{background-color:transparent;color:rgba(0, 0, 0, 0.26);}.css-6flbmm{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:1em;height:1em;display:inline-block;fill:currentColor;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;font-size:2.1875rem;}</style><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><script>
+  
+  function gaOptout(){document.cookie=disableStr+'=true; expires=Thu, 31 Dec 2099 23:59:59 UTC;path=/',window[disableStr]=!0}var gaProperty='0',disableStr='ga-disable-'+gaProperty;document.cookie.indexOf(disableStr+'=true')>-1&&(window[disableStr]=!0);
+  if(true) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  }
+  if (typeof ga === "function") {
+    ga('create', '0', 'auto', {});
+      ga('set', 'anonymizeIp', true);
+      
+      
+      
+      
+      }</script><link rel="icon" href="/favicon-32x32.png?v=ad9e124e5060ab5ddbaf24744e1cfc72" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><style type="text/css">
+    .anchor.before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(-100%);
+      padding-right: 4px;
+    }
+    .anchor.after {
+      display: inline-block;
+      padding-left: 4px;
+    }
+    h1 .anchor svg,
+    h2 .anchor svg,
+    h3 .anchor svg,
+    h4 .anchor svg,
+    h5 .anchor svg,
+    h6 .anchor svg {
+      visibility: hidden;
+    }
+    h1:hover .anchor svg,
+    h2:hover .anchor svg,
+    h3:hover .anchor svg,
+    h4:hover .anchor svg,
+    h5:hover .anchor svg,
+    h6:hover .anchor svg,
+    h1 .anchor:focus svg,
+    h2 .anchor:focus svg,
+    h3 .anchor:focus svg,
+    h4 .anchor:focus svg,
+    h5 .anchor:focus svg,
+    h6 .anchor:focus svg {
+      visibility: visible;
+    }
+  </style><script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var hash = window.decodeURI(location.hash.replace('#', ''))
+      if (hash !== '') {
+        var element = document.getElementById(hash)
+        if (element) {
+          var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+          var clientTop = document.documentElement.clientTop || document.body.clientTop || 0
+          var offset = element.getBoundingClientRect().top + scrollTop - clientTop
+          // Wait for the browser to finish rendering before scrolling.
+          setTimeout((function() {
+            window.scrollTo(0, offset - 0)
+          }), 0)
+        }
+      }
+    })
+  </script><title data-react-helmet="true">TIL - eBPF</title><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"/><style>@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:300;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc4.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:url(/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:500;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:300;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc-.woff) format("woff")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:url(/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxM.woff) format("woff")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:500;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc-.woff) format("woff")}</style><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><style>.gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}</style><noscript><style>.gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}</style></noscript><script type="module">const e="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;e&&document.body.addEventListener("load",(function(e){if(void 0===e.target.dataset.mainImage)return;if(void 0===e.target.dataset.gatsbyImageSsr)return;const t=e.target;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector("[data-placeholder-image]"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition="opacity 500ms linear")}))}),!0);</script><link as="script" rel="preload" href="/webpack-runtime-11fab238ab053aae2627.js"/><link as="script" rel="preload" href="/framework-043f1197be387cb18d15.js"/><link as="script" rel="preload" href="/app-2a3abbc7799f752aeec3.js"/><link as="script" rel="preload" href="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js"/><link as="script" rel="preload" href="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"/><link as="fetch" rel="preload" href="/page-data/TIL/eBPF/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1073350324.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1956554647.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/2938748437.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="page-wrapper"><header class="page-header-wrapper"><div class="page-header"><div class="front-section"><a class="link" href="/">sominsong.github.io</a></div><div class="trailing-section"><a class="link" href="/about">about</a><a class="link" href="/posts">posts</a><div class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1l6di18" role="combobox" aria-expanded="false"><div class="search-input-wrapper"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root search-input css-feqhe6"><div class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-11tfndm"><input type="text" aria-invalid="false" autoComplete="off" value="" class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-mnn31" aria-autocomplete="list" autoCapitalize="none" spellcheck="false"/><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium search-icon css-vubbuv" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div></div></div></div></div></div></header><main class="page-content"><header class="post-header"><div class="emoji">📖</div><div class="info"><div class="categories"><a class="category" href="/posts/TIL">TIL</a><a class="category" href="/posts/Linux">Linux</a></div></div><h1 class="title">TIL - eBPF</h1><div class="info"><div class="author">posted by <strong>Mini</strong>,</div> <!-- -->October 24, 2022</div></header><div class="post-content"><div class="markdown"><p>리눅스 커널에 대해 공부한다면, eBPF에 대해 한 번쯤은 들어봤을 것이다.
+필자가 주로 연구했던 분야인 Seccomp도 BPF 기술을 이용하는 리눅스 커널의 보안 모듈이다.
+따라서 석사 과정동안 공부했던 내용들을 기록하기 위해서는 가장 먼저 BPF에 대한 정리가 필요할 것 같아, 이렇게 기록하고자 한다.</p>
+<h2 id="0-bpf" style="position:relative;"><a href="#0-bpf" aria-label="0 bpf permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0. BPF</h2>
+<p>BPF란 Berkeley Packet Filter의 약자이다(였다).
+이 개념은 1992년 Steve McCane과 Van Jacobson의 Usenix Conference Winter ‘93 논문 <a href="https://www.tcpdump.org/papers/bpf-usenix93.pdf">“The BSD Packet Filter: A New Architecture for User-level Packet Capture”</a>에서 처음으로 소개되었다.
+커널과 같은 Privileged context에서 sandboxed program을 실행할 수 있는 기술이다.
+즉, 커널 내부에 사용자가 작성한 코드를 삽입하여 안전하게 실행시킬 수 있는 도구이며, 커널 모듈이 아닌 코드를 실행하기 위한 mini-VM이라고 할 수 있다.
+커널 소스 코드를 변경하거나 커널 모듈을 로드할 필요 없이 커널의 기능을 안전하고 효율적으로 확장하는 데 사용된다.</p>
+<p>운영 체제는 커널의 Privileged 능력으로 인해 Observability, security, networking functionality를 구현하는데 최적인 장소임과 동시에, 안정성 및 보안에 대한 높은 요구 사항으로 그 바전 속도가 외부에 비해 현저히 더뎠다.
+BPF는 이러한 기존의 공식을 근본적으로 바꿨다.
+운영 체제 내에서 샌드박스 프로그램을 실행할 수 있도록 함으로써 애플리케이션 개발자는 BPF 프로그램을 실행하여 런타임에 운영 체제에 추가 기능을 구현할 수 있다.</p>
+<h2 id="1-cbpf-vs-ebpf" style="position:relative;"><a href="#1-cbpf-vs-ebpf" aria-label="1 cbpf vs ebpf permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. cBPF vs. eBPF</h2>
+<p>BPF는 cBPF와 eBPF로 나누어 명칭된다.
+cBPF는 classic BPF의 약자로 eBPF(extended BPF)가 나오지 전, 패킷 필터의 목적으로만 디자인된 초기 BPF를 의미한다.
+즉, 소켓 필터링을 위해 소켓에만 BPF 프로그램을 연결할 수 있었다.</p>
+<p>이는 BPF의 첫 번째 사용 사례인 <code class="language-text">tcpdump</code>를 살펴보면 알 수 있다.
+<code class="language-text">tcpdump</code>는 유닉스 계열에서 네트워크 상의 패킷을 캡처하여 표시해주는 도구이며, 윈도우 계열에서는 <code class="language-text">Windump</code> 또는 <code class="language-text">WireShark</code>가 있다.
+<code class="language-text">tcpdump</code>를 실행하면 사용자가 정의한 필터가 BPF 프로그램으로 컴파일되고 이 BPF 프로그램은 raw <code class="language-text">AF_PACKET</code> 소켓에 연결(attach)되어 필터에 의해 캡처된 패킷을 프린트한다.</p>
+<p>이후, 2013년 Alexei Starovoitov를 필두로 수년에 걸처 cBPF에 다양한 기능이 추가되었고, 기존의 소켓 필터링 이외에도 다양한 attach point들이 지원되는 현재의 eBPF가 탄생했다.
+eBPF는 다음과 같은 여러 가지 방법을 통해 cBPF를 확장한다:</p>
+<ul>
+<li><strong>x86-64와 비슷한 아키텍처</strong>: eBPF는 64비트 레지스터를 사용하며 사용 가능한 레지스터 수(2에서 10으로), opcode 수를 늘렸다. 이를 통해 eBPF를 native instruction에 쉽게 매핑할 수 있으므로 Just-in-Time 컴파일이 가능하여 성능이 크게 향상되었다.</li>
+<li><strong>네트워킹 subsystem에서의 분리</strong>: cBPF는 패킷 기반 데이터 모델로 제한되었으며, 패킷 필터링에 사용되었기 때문에 해당 코드는 네트워킹 하위 시스템 내(<code class="language-text">net/core/filter.c</code>)에 있었다. 이와 달리, <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=daedfb22451dd02b35c0549566cbb7cc06bdd53b">eBPF는 더이상 데이터 모델에 구속되지 않으며 모든 용도로 사용할 수 있다.</a> 그 결과, tracepoints 또는 kprobes(및 user-space의 uprobes)에 연결 가능해졌다. 이는 eBPF가 instrumentation, performance analysis 및 기타 커널 하위 시스템 내에서 더 많은 용도로 사용될 수 있는 가능성을 열어주었다. 현재 eBPF 코드는 자체 경로인 <code class="language-text">kernel/bpf</code>에 위치한다.</li>
+<li><strong>Maps</strong>: Map은 key-value 형태로 다양한 유형의 데이터를 저장하는 일반적인 데이터 구조이며, 전역 데이터 저장소(glocal data store)이다. eBPF 커널 프로그램 간의 데이터 공유 또는 커널과 user-space 어플리케이션 간의 데이터 공유에 사용된다. Map 덕분에 eBPF로 작성된 프로그램은 state를 유지할 수 있으므로 이벤트 전반에 걸쳐 정보를 집계하고 동적 동작을 수행할 수 있다.</li>
+<li><strong>Helper 함수</strong>: 커널 내부에서 실행되는 함수이며, eBPF 프로그램에서 시스템콜을 호출할 실행할 수 있도록 해준다.</li>
+<li><strong>Tail-calls</strong>: eBPF는 4096 bytes로 크기가 제한된다. 이러한 제한은 tail-call 기능으로 eBPF 프로그램이 새로운 eBPF 프로그램을 호출함으로써 극복할 수 있다.</li>
+</ul>
+<p>이외, 기존 네트워크 프로그래밍과 관련된 기능에서의 확장도 있었다:</p>
+<ul>
+<li>TC(Traffic Control)을 위한 네트워크 스케줄러와 qdiscs</li>
+<li>XDP(eXpress Data Path)</li>
+</ul>
+<p><code class="language-text">bpf()</code> 시스템콜이 추가된 v3.18 이후로는 일부에서만 cBPF가 이용되고 있으며, 이 글을 작성하는 시점인 현재는 eBPF가 cBPF를 완전히 대체하기 때문에 eBPF는 BPF로 언급되기도 한다.</p>
+<p>Packet Filter라는 이름처럼 처음 해당 기술이 만들어진 목적은 커널 내부에서 자체 코드를 실행하여 패킷을 필터링하기 위함이었지만, **정의에 의한 이벤트 구동(event-driven by definition)**이라는 강력한 기능으로 인해 현재는 기존의 네트워크 영역뿐만 아니라 커널 tracing 및 event monitoring 영역에서도 유용하게 사용되고 있다.</p>
+<p>그 뿌리는 packet filter였지만 확장성으로 인해 많은 영역에서 다양한 기능으로 사용되고 있는 현재, <strong><em>eBPF는 더 이상 어떤 것의 약어로써 설명되지 않는다.</em></strong></p>
+<h3 id="bpf의-역사" style="position:relative;"><a href="#bpf%EC%9D%98-%EC%97%AD%EC%82%AC" aria-label="bpf의 역사 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BPF의 역사</h3>
+<p>앞서 간략하게 언급했듯이, BPF는 1992년 Steve McCane과 Van Jacobson의 Usenix Conference Winter ‘93 논문 <a href="https://www.tcpdump.org/papers/bpf-usenix93.pdf">“The BSD Packet Filter: A New Architecture for User-level Packet Capture”</a>에서 처음으로 소개된 이후로도 다양한 사람들에 의한 발전을 통해 현재의 eBPF가 되었다.</p>
+<p>BPF가 CMU/CSPF(Standford Packet Filter)와 같은 이전 모델과 크게 다른 점은 well throught out memory model을 사용하며, 그것을 커널 내부의 VM을 통하여 노출한다는 것이다.
+이를 통해 BPF 필터는 필터 코드와 커널 사이의 경계를 유지하면서도 효율적인 방식으로 트래픽 필터링을 수행할 수 있었다.
+즉, McCanne과 Jacobson이 제시하는 다음 다이어그램에서처럼 BPF는 필터와 일치하는 모든 패킷에 대해 User-space와 Kernel-space 간의 값비싼 context switch를 만들지 않도록 필터와 User-space 사이에 버퍼를 사용한다.</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 93.88888888888887%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAACXBIWXMAABYlAAAWJQFJUiTwAAACh0lEQVQ4y6VUXU/iUBDt//8Zvpqw+GKigELBAgEXH2hRqyxtkfLZ8lU+1WPO6G2Kkt2HnWTSTm/vmTMz517t7e0NqyjCarXCbrdDGIYIgkDixWIh75vNBrT39/ejnlzTdtstquUybuu/sVwuUTYMGEYZvu9jPB7D87qYz2bxxn+Zxh+n06kwo/V9H71eD2ROhi8vL3h9fY2d/3ONTmN1nuvJGr9pZNXpdMQHgwGen5/Rbrfl3fM8tFqtuGy2gawZK59MJjCbJoIw/AQMJhM0Gg00m00UCgVUKhXcNe5wdXWFarWKSrmMx8dHYbPf76UtiuF6vRZP9lJjlny+AF3XUSwWcXFxgWwmi3w+j+vra6TTadzf38vPHBpZWqYJ07Sw2WwF8GAopExWZElAOmMClkolYf3w8CCbtttPALKkM0ESMGZYq9XECaYXdNyUboRxNpsRQNu245Jnsxnm87kMkk8mOQAcjUb4lUrh5OQEuVwOl5eX8qSzj4wtyzrYxAGRobKkpLThcIhUKoXT01NkMhnp29nZmfSOoOfn5zBN86BPVAGnnQSLGZIy6VNz1CJ76rquCJvJ6CyTOiMz9oylsn9HAf+meiVWJRHGSft+7OKTotQvyl+t4Ps9YRZFEbrdLlzXQxgEGI3Gwr7f78uAFBj3/mCoPrBswzAEhG24rddRrVS/TlEbRV2HbT/FcvnOWFMl0VVJ3EwwGqdJtnKW93thqMonwGa9huO4cQJNNVo5h6S0ptair+uNMStgzO+MmbjzpyNTZxIN/2nsJS8RHpCDoSQnJcPwugiDEPP5DJbVktuId6MakhrKjx4ekwHLebJtDAZDKZ0APFGO48DpOCLs3e74lD8AIDKd/49uiiwAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-1.png"
+        title="eBPF-1.png"
+        src="/static/62cb19611661e69e96e57edc37da7f35/37523/eBPF-1.png"
+        srcset="/static/62cb19611661e69e96e57edc37da7f35/e9ff0/eBPF-1.png 180w,
+/static/62cb19611661e69e96e57edc37da7f35/f21e7/eBPF-1.png 360w,
+/static/62cb19611661e69e96e57edc37da7f35/37523/eBPF-1.png 720w,
+/static/62cb19611661e69e96e57edc37da7f35/27b8e/eBPF-1.png 836w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>McCanne과 Jacobson이 구현한 BPF VM은 accumulator, index register, scratch memory store, implicit program counter로 구성되었으며, 매우 간결하고 단순했다.
+이는 논문에서 저자가 소개한 다음 예제 프로그램에서 살펴볼 수 있다.</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">    ldh [12]                    // ethertype field info를 레지스터에 로드
+    jeq #ETHERTYPE_IP, L1, L2   // IP의 ethertype과 레지스터 비교
+L1: ret #TRUE                   // 비교가 참일 경우, true 반환
+L2: ret #0                      // 비교가 거짓일 경우, 0 반환</code></pre></div>
+<p>이처럼 4개의 VM instruction만을 사용하여 BPF는 IP 패킷 필터를 제공할 수 있었으며, 이는 동일한 기능을 제공하기 위해 184개의 CPU 인스트럭션이 필요한 것과 대조된다.</p>
+<p>이후, 리눅스 커널은 v2.5 이후로 Jay Schullist가 주도하여 BPF 기능을 추가함으로써 이를 지원하기 시작했으며, <code class="language-text">net/core/filter.c</code>에서 리눅스 BPF의 구현을 찾을 수 있다.</p>
+<p>2011년, 커널 v3.15에서 Eric Dumazet이 BPF 인터프리터를 JIT(Just-In-Time) 컴파일러로 전환하였다. 이를 통해 커널은 BPF 바이트코드를 해석할 필요 없이, 대상 아키텍처(x86, ARM, MIPS 등)로 직접 변환할 수 있었다.</p>
+<p>2014년 12월, 커널 v3.18에 <code class="language-text">bpf()</code> 시스템콜이 추가되고 Alexei Starovoitov가 새로운 BPF JIT을 도입하면서부터 eBPF로 알려진 BPF 기반의 새로운 아키텍처가 사용되었다.</p>
+<p>이후 커널 개발자들에 의해 eBPF는 다양한 커널 시스템에서 빠르게 활용되었고, 사양한 use case를 다루는 eBPF 기반 프로젝트들이 탄생했다.
+아래는 리눅스에서 eBPF를 사용한 다양한 커널 tracing tool들을 보여준다.</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 60%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAIAAADtbgqsAAAACXBIWXMAAA7EAAAOxAGVKw4bAAACPUlEQVQozyWSW3eqMBSE+f9/yHMeWls9LYoFinKNEHJBESKSEIjgpZxlnef51prZe7RxHO/3++12G8fxdrvd7/efn5+6rvM8J4RkWYYxLoriMgyXXz0NT2lPJs9zjHGe57LrQgC8IMjLMi8KuttBhLrz2QsCY7UKgrBtWwhhmqZ932td1zVNQyndAlAyVhNS+C51nCZNOUxqmDAQ3cviGEVilw2Xi1KKYEwJHcfxAcdx7Ps+hBARctpsruv14Lq3IOCGcVou+MrYz2flfC4CvxZi6AfGmGmaVXXSmqZBKH3Wk23HI1d8L1XwLV1TbKxMn6f/pvH8tfjSif3FRXNkDKXpQl8QQjQIoW3bfd+P46iUgihIoINpBGJ7G88jMENIPwu/524c6lw0TSMAAIZhUEo1jJGu64SQ38tdrYhNPtOpddD93b/vv6+riZfoNTWK5B0Gn/mhTJIYIbRcLh8wY8cwDKuq6jolG/FhwT8fyWQWvyw8nyys7YflTWuyYMl7lTlcNIdDnkDoOE5GqXY8Ht/e3kzTXG82h0M+s5LJIn0x91N7a0Sz2Xpqg0+WWWkwLTJ3uFw5r13X9Xxftq3GObdtG2NclmUrpY0Pxk6sdvwD5q9+8uIl8zhzyuZrX7tZ2St1vV4ppftd9nhV3/d1XUsphRAoTRFCGGPOOWMsjEL4SLiOIgAA6JQax7Ft1bGgNJpdL2eN1/V+v3+O9Lk+KWVZlkKI0+lUFAUAgDF2qiqlVNu2UsqM4gx5Q3/+DxubgC957NvyAAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-2.png"
+        title="eBPF-2.png"
+        src="/static/b6d70998647d2f3be603ad133e253ff0/37523/eBPF-2.png"
+        srcset="/static/b6d70998647d2f3be603ad133e253ff0/e9ff0/eBPF-2.png 180w,
+/static/b6d70998647d2f3be603ad133e253ff0/f21e7/eBPF-2.png 360w,
+/static/b6d70998647d2f3be603ad133e253ff0/37523/eBPF-2.png 720w,
+/static/b6d70998647d2f3be603ad133e253ff0/302a4/eBPF-2.png 1080w,
+/static/b6d70998647d2f3be603ad133e253ff0/07a9c/eBPF-2.png 1440w,
+/static/b6d70998647d2f3be603ad133e253ff0/97a96/eBPF-2.png 2400w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>오늘날 eBPF는 다양한 영역에서 광범위하게 사용된다.
+최신 데이터 센터 및 클라우드 네이티브 환경에서 고성능 네트워킹 및 로드 밸런싱 제공하거나, 낮은 오버헤드로 세분화된 Security Observability 데이터 추출하거나, 애플리케이션 개발자가 애플리케이션을 tracing하는 것을 돕거나, Performance Troubleshooing 해결에 insight를 제공하거나, 컨테이너 런타임 보안을 강화하는 등의 Use Case에 사용되고 있다.</p>
+<h2 id="2-how-to-work" style="position:relative;"><a href="#2-how-to-work" aria-label="2 how to work permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. How to work</h2>
+<p>BPF 프로그램은 event-driven으로 커널/애플리케이션이 특정 Hook point를 통과할 때 실행된다.
+미리 정의된 hook에는 시스템콜, 함수의 entry/exit, 커널 tracepoint, 네트워크 이벤트 등이 포함된다.</p>
+<p>사용자는 작성한 BPF 프로그램을 <a href="https://man7.org/linux/man-pages/man2/bpf.2.html"><code class="language-text">bpf()</code></a> 시스템콜을 통해 로드할 수 있으며, <code class="language-text">bpf()</code> 시스템콜은 해당 코드의 안전성(루프, 코드 크기 등)을 검사하여 검증한다.
+검증이 완료된 BPF 프로그램만이 커널 개체에 연결되며, 이후 해당 개체에서 이벤트가 발생(e.g., 네트워크 인터페이스가 패킷을 내보낼 때)할 때마다 작성된 BPF 프로그램이 실행된다.</p>
+<p>BPF 프로그램은 크게 3가지의 프로세스를 거쳐 실행된다:</p>
+<ol>
+<li>
+<p>eBPF 프로그램을 바이트 코드로 생성한다: 현재 eBPF 프로그램을 만드는 표준 방법은 C 코드로 작성한 다음 LLVM이 ELF 파일에 있는 eBPF 바이트 코드로 컴파일하도록 하는 것이다.</p>
+</li>
+<li>
+<p>프로그램을 커널에 로드하고 필요한 eBPF Map을 생성한다: 이 과정은 리눅에서 <code class="language-text">bpf()</code> 시스템콜을 통해 수행된다. <code class="language-text">bpf()</code> 시스템콜은 eBPF 프로그램의 유형을 선언하고, 바이트 코드를 로드한 뒤, Map을 초기화한다.</p>
+</li>
+</ol>
+<ul>
+<li>BPF 프로그램 유형: socket filter, kprobe handler, traffic control scheduler, traffic control action, tracepoint handler, eXpress Data Path (XDP), performance monitor, cgroup restriction, light weight tunnel</li>
+</ul>
+<ol start="3">
+<li>로드된 프로그램을 시스템에 연결한다: eBPF 프로그램의 유형에 따라 해당 시스템에 연결되는 방식이 다르다. 프로그램이 연결되면 프로그램이 활성화되면서 정의된 작업을 수행한다. 여기에서 User-space 프로그램은 eBPF Map에서 state를 읽을 수 있으며, eBPF 프로그램을 관리할 수 있다.</li>
+</ol>
+<h2 id="3-ebpf를-이루는-구성-요소들" style="position:relative;"><a href="#3-ebpf%EB%A5%BC-%EC%9D%B4%EB%A3%A8%EB%8A%94-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C%EB%93%A4" aria-label="3 ebpf를 이루는 구성 요소들 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. eBPF를 이루는 구성 요소들</h2>
+<p>eBPF가 사용되기 위해서는 앞서 기술한 것처럼 프로그램 작성 및 컴파일, 커널 로드 및 시스템 연결 등과 같이 여러 단계가 동반된다.
+사실 이러한 단계들은 모두 eBPF의 안정성에 기여한다.
+여러 단계에서 사용되는 다양한 기술들은 eBPF의 안전성을 여러 계층에서 보장한다.
+다음에서는 각각의 기술들에 대한 세부 사항을 정리한다.</p>
+<h3 id="31-ebpf-프로그램" style="position:relative;"><a href="#31-ebpf-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8" aria-label="31 ebpf 프로그램 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.1. eBPF 프로그램</h3>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 16.666666666666664%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAADCAYAAACTWi8uAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAhUlEQVQI132M3QqCQBgFff+Hie58gfAiwUoQRBNcKyFT3MBdb/SbYLHoBxo4zM1hPL4QmZ0vWrEK1uzzEJkFO1qsMQTpBj/0qbvT8he3J95nTJDFdhxJjwpVVvS9ZhgM8zTR6Tt5UXG7Nq/Q36Az0LUtZVGTxAXxLiPaJhyijLNqfv7vPAA7xeZ5QDBytgAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-3.png"
+        title="eBPF-3.png"
+        src="/static/a7160cd231b062b321f2a479a4d0848f/37523/eBPF-3.png"
+        srcset="/static/a7160cd231b062b321f2a479a4d0848f/e9ff0/eBPF-3.png 180w,
+/static/a7160cd231b062b321f2a479a4d0848f/f21e7/eBPF-3.png 360w,
+/static/a7160cd231b062b321f2a479a4d0848f/37523/eBPF-3.png 720w,
+/static/a7160cd231b062b321f2a479a4d0848f/302a4/eBPF-3.png 1080w,
+/static/a7160cd231b062b321f2a479a4d0848f/1d553/eBPF-3.png 1159w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>리눅스 커널은 eBPF 프로그램이 바이트코드 형태로 로드될 것으로 예상한다.
+따라서 LLVM/Clang같은 컴파일러를 이용하여 C로 작성한 eBPF 프로그램 소스 코드를 바이트 코드로 컴파일한다.
+LLVM은 컴파일을 통해 프로그램 코드, Map 정의, relocation 정보, BTF meta data와 같은 정보가 포함된 eBPF ELF 파일을 생성한다.</p>
+<p>LLVM은 C와 같은 구문으로 작성된 프로그램을 eBPF 인스트럭션으로 변환하는데 필요한 eBPF 백앤드를 지원하는 유일한 컴파일러였다.
+그러나 GCC 10부터는 GCC 컴파일러에서도 eBPF를 지원하고 있다. 다만, 현재는 일부 기능이 누락되어 있다.</p>
+<p>BPF 프로그램은 여러 가지 Type이 존재하는데,
+BPF 프로그램 Type에 따라, 프로그램이 attach될 수 있는 위치(Hook), verifier가 호출할 수 있는 커널 내의 helper 함수, 네트워크 패킷 데이터에 직접 액세스할 수 있는지 여부, BPF 프로그램으로 전달되는 첫 번째 인자의 object type과 같이 4가지 사항이 결정된다.</p>
+<p>아래는 커널에서 지원하는 eBPF 프로그램 Type이다:</p>
+<ul>
+<li><code class="language-text">BPF_PROG_TYPE_SOCKET_FILTER</code>: 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_TYPE_KPROBE</code>: kprobe</li>
+<li><code class="language-text">BPF_PROG_TYPE_SCHED_CLS</code>: 네트워크 트래픽 제어 분류기</li>
+<li><code class="language-text">BPF_PROG_TYPE_SCHED_ACT</code>: 네트워크 트래픽 제어 작업</li>
+<li><code class="language-text">BPF_PROG_TYPE_TRACEPOINT</code>: tracepoints</li>
+<li><code class="language-text">BPF_PROG_TYPE_XDP</code>: device-driver 수신 경로에서 실행되는 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_TYPE_PERF_EVENT</code>: perf</li>
+<li><code class="language-text">BPF_PROG_TYPE_CGROUP_SKB</code>: cgroup에 대한 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_TYPE_CGROUP_SOCK</code>: 소켓 옵션이 수정 가능한 cgroup에 대한 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_TYPE_LWT_*</code>: lightweight tunnels용 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_TYPE_SOCK_OPS</code>: 소켓의 인자를 설정하는 프로그램</li>
+<li><code class="language-text">BPF_PROG_TYPE_SK_SKB</code>: 소켓 간에 packet을 전달하기 위한 네트워크 packet 필터</li>
+<li><code class="language-text">BPF_PROG_CGROUP_DEVICE</code>: cgroup에 대한 device</li>
+</ul>
+<h3 id="32-loader--verification" style="position:relative;"><a href="#32-loader--verification" aria-label="32 loader  verification permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.2. Loader &#x26; Verification</h3>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 52.77777777777778%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAAsTAAALEwEAmpwYAAACVElEQVQoz22SW2sTQRSA90f7HxS8IohULQULSn0oWNSiD9oaTN1cTTeb6zbZTZrNJrvZ+0xupp9kW+uLBz7OYRi+M5wzSs2s8lE9whwZRFGMP5tRNcp8Kn7AsntIuSROUtJUkGxJUlarFf+Lq6srlG6/R7FyjtkzGY8dQj/kwrIoVWvYoxEi8Uljjzia3WSP5XLJZrNhvV7f5q1sG8rQuqTTNKkU6xR/1igVNDrNAb4fMvOmDPRDhvU3SK/C8HyfYPiN1XqN7/sYXYOG3sAe2Ugpr4X1eh1d13EcJzuM44gkcomCKXHo4k0s7GEnyxPbIPAuWcxFNgLXdel2u3jev1crW8FfUiFJghFa7jHa6QMGlWcY6lNiY4+0v4cwXyN6r5hdqvTNS4YDC8cZY5pmRpqmKNcDl5ksjNKso/rjM21dxZ/2CD0zwx40if0BkdcnDFz8IKbRbJM/U2m1u0RRki1MWUQ9hFslciqsowYTS0Urf8GxSqyTDhthIGcaRu0I4daIpxqBXcYdqBRyB3z99JJJP8fvuIFMXJR4UkVX39DX3tMu7tLKP6F99hSv+ZK4/xaSCmJ0zPmXOzitdwgnx6h9RKuwy1h7gf79Pn5rh7h/gEwclHBczoTdX4c0fj5HO7lLJ/+I+sk9bG2XpZdHOKcE1jFycpoJ0/Ep4cU+XnOHRu4hYWeH1LoRyqBLOi3jjwosZlXmXhnplUmnJRZ+ld+xnnGVtm7rTdJgFZ5nrCPttpbJFGW7hCAIsrVvv42czzPm8wVSzhFC/JfsrpQIIW/rLX8A4zsjIsyA0J8AAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-4.png"
+        title="eBPF-4.png"
+        src="/static/1a1bb6f1e64b1ad5597f57dc17cf1350/37523/eBPF-4.png"
+        srcset="/static/1a1bb6f1e64b1ad5597f57dc17cf1350/e9ff0/eBPF-4.png 180w,
+/static/1a1bb6f1e64b1ad5597f57dc17cf1350/f21e7/eBPF-4.png 360w,
+/static/1a1bb6f1e64b1ad5597f57dc17cf1350/37523/eBPF-4.png 720w,
+/static/1a1bb6f1e64b1ad5597f57dc17cf1350/302a4/eBPF-4.png 1080w,
+/static/1a1bb6f1e64b1ad5597f57dc17cf1350/32ac3/eBPF-4.png 1249w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>컴파일된 eBPF 프로그램은 User-space에서 <code class="language-text">bpf()</code> 시스템콜을 통해 커널로 전달되고, eBPF 프로그램을 커널에 로드하기 위한 작업을 시작한다.
+이를 위해 먼저, eBPF 프로그램을 로드하는 프로세스가 필요한 capabilities(privileges)를 보유하고 있는지 확인한다. unprivileged eBPF를 따로 활성화시키지 않을 경우에는 권한 있는 프로세스(root이거나 <code class="language-text">CAP_BPF</code> capability 필요)만이 eBPF 프로그램을 로드할 수 있다. 즉, 신뢰할 수 없는 프로그램은 eBPF 프로그램을 로드할 수 없다. 만약 unprivileged eBPF가 활성화된 경우에는, 커널에 대한 제한된 액세스와 제한된 기능을 가진 eBPF 프로그램을 로드할 수 있다.</p>
+<p>이후 커널에서는 두 단계를 거쳐 커널에 eBPF 프로그램을 로드하게 되는데, 첫 번쨰 단계로는 전달된 eBPF 프로그램이 안전한 프로그램인지 in-kernel Verifier가 해당 프로그램을 체크하고, 두 번째 단계에서는 JIT(Just-in-Time) 컴파일러를 통해 바이트코드를 kernel native 코드로 컴파일한다.</p>
+<h4 id="verification" style="position:relative;"><a href="#verification" aria-label="verification permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Verification</h4>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 42.77777777777778%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB/UlEQVQoz02O60/aYBjF+++7S5boptu+7MvMpsvijeiiizIuIi1eQJBC7QUsWEAo0HIR2ve3WGXZSU7Ok5yT8xxJCMETnvRSb3Gk3BK/MMmod8zmwT9vgcXt+z4Nu4FW1ajX6nQ6nciTngOCMAwwmy7xQoH1PztktAuCMIi8KCOeVYgwKnRdNyrSqlWqlQotx2E2e0Ra/A5DcO4darbJUTqJqpYJgpf1L/wf3Z6Lbpi02w/ouoVl1fC8ERKBR0QxpmmbnKaT5OQznGYNxAgxHyLmz5ngccDE7zIZdQlmHsbtDYcHmyRPdnEfGsAEKXSzBK7MsPGbrrHHXfEHPSOG6Bwz76YQwxwMcuCdM2mnmfXOCPoy01acQT1GVfmCo24ydY6Yd9NI2tUW1cstrOvvlFLLaMoqSuoVhfxr/PtfMC4gvCzBUGbaOSXsy4jhBQNzA09b4zq+hJ59R7+yim/HkIrZDdTznzC+gscirpMglvhGJrMerSkZO+wkPmPpuwQ9mbmbjQpdfYNmfpnCyRJq6g1OYQXf3kdytANqpT3M/FeKibcY8gpqahlLeY93t4dtHZNXtmmqMXwngehnEQMFr76NoXxAV9Ywch+x85+Ytg6RGJdhrOK3FVw7yaidYXifxnNOmfWvYFSGqRqp8Erg30QUfhkmFRgvqCL8G/4CItmOcN4rDV0AAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-5.png"
+        title="eBPF-5.png"
+        src="/static/7eec5ccd8f6fbaf055256da4910acd5a/37523/eBPF-5.png"
+        srcset="/static/7eec5ccd8f6fbaf055256da4910acd5a/e9ff0/eBPF-5.png 180w,
+/static/7eec5ccd8f6fbaf055256da4910acd5a/f21e7/eBPF-5.png 360w,
+/static/7eec5ccd8f6fbaf055256da4910acd5a/37523/eBPF-5.png 720w,
+/static/7eec5ccd8f6fbaf055256da4910acd5a/302a4/eBPF-5.png 1080w,
+/static/7eec5ccd8f6fbaf055256da4910acd5a/dc61a/eBPF-5.png 1147w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>Verification 단계에서는 eBPF 프로그램이 커널에서 실행되기에 충분히 안전한지를 확인한다.
+즉, 프로그램 자체의 안전성을 체크하는 과정이다.
+이를 위해 eBPF in-kernel verfier는 eBPF 프로그램이 다음과 같은 조건을 충족하는지 확인한다:</p>
+<ul>
+<li>프로그램이 충돌하거나 시스템에 손상을 주지 않는지: 초기화되지 않은 변수를 사용하거나 범위를 벗어나 허용되지 않은 메모리 영역을 액세스하는지 확인, 시스템이 요구하는 eBPF 프로그램의 크기를 만족하는지 확인</li>
+<li>프로그램이 완전히 완료되는지 (i.e. 무한루프): 프로그램의 CFG를 DFS하여 검사</li>
+<li>프로그램이 유한한 복잡성을 가지는지: verifier는 가능한 모든 실행 경로를 평가하며, 설정된 upper complexity limit 내에 분석이 완료되어야 한다.</li>
+</ul>
+<h4 id="jit-complication" style="position:relative;"><a href="#jit-complication" aria-label="jit complication permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JIT Complication</h4>
+<p>JIT(Just-in-Time) 컴파일러는 프로그램의 바이트코드를 machine-specific 인스트럭션 세트(x86, ARM, MIPS, etc)로 변환하여 프로그램의 실행 속도를 최적화시킨다.
+이 과정은 eBPF 프로그램이 native kernel code나 커널 모듈로 로드된 코드만큼 효율적으로 실행될 수 있도록 하는 단계로써 성능 최적화를 위한 과정이라고 볼 수 있다.</p>
+<h4 id="hardening" style="position:relative;"><a href="#hardening" aria-label="hardening permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Hardening</h4>
+<p>verfication에 대한 과정이 성공적으로 완료될 경우, eBPF 프로그램은 강화 프로세스를 통해 실행된다.
+이 단계에는 다음이 포함된다:</p>
+<ul>
+<li>프로그램 실행 보호: eBPF 프로그램을 보유하고 있는 커널 메모리가 보호되고 읽기 전용이 된다. 커널 버그든 악의적인 조작이든 어떤 이유에서든 eBPF 프로그램을 수정하려고 하면 커널이 corrupted/manipulated 프로그램을 계속 실행하지 않고 crash가 난다.</li>
+<li>Spectre에 대한 완화: 추측에 따르면, CPU는 분기를 잘못 예측하고 side channel을 통해 추출될 수 있는 관측 가능한(observable) side effect를 남기 수 있다. 예를 들어, eBPF 프로그램은 일시적인 명령에 따른 액세스를 제어 영역으로 redirection하기 위해 메모리 액세스를 마스킹한다. verifier는 추측 실행에서만 액세스할 수 있는 프로그램 경로를 따르고 JIT 컴파일러는 tail calls를 직접 호출로 변환할 수 없는 경우 Retpolines를 방출한다.</li>
+<li>상수(constant) 블라인드: 코드의 모든 상수는 JIT spraying attack을 방지하기 위해 블라인드된다. 이렇게 하면 공경자가 상수에 실행 코드를 주입하고, 해당 코드를 실행하기 위하여 커널 버그를 이용해 eBPF 프로그램의 메모리 섹션으로 점프하는 것을 방지할 수 있다.</li>
+</ul>
+<h3 id="33-ebpf-maps" style="position:relative;"><a href="#33-ebpf-maps" aria-label="33 ebpf maps permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.3. eBPF Maps</h3>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 720px; "
+    >
+      <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 38.888888888888886%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsTAAALEwEAmpwYAAABsUlEQVQoz22Q3WvTcBSG82d77Y3sSgQZ6I3eTRSHDoZU2s65mnXt1pa6fth2SfqRrvlqu7T5apLfI4kUJ3jggfc9B15ejgSQJCktxeSsMeJbS6GhWHhBmJ0QQrCfTO/9arVCUzX6vT66ruN7fr6XQJAkCVPL5VaZc9NVmFguYbT7J+RvmCCOY6bTCWNNYzQaoSoKtmUhRIq0LxCGEaZhslgYuc7D9s0ekU2agm0vUdUxijqm/2uI46xIUoFEbIJwMPUe8sUXqpUCxqwLOxMRGZCxMyG2IbZyH/tzws09zXqJcuGIu16VNDQg3SLdD06ZdE5gew0PNWJHhk0dsa7mZLvAKLNUT3D1EvFSxp2V8GfH6D/f0Dx7gat9wJ9+JPVUpPblO4atz7C5IVnV2C4qBKZMYF7imzKRU0dpvKVZeILe+4Q7/4GhFFAbr5i3D2mVn2F1DnH6r0k9DUlpH9O/fg9uDfGQNbp6RBXcOsGiiDU4QqxlxPoKWz2lU3lO9/sBzeJThvIBxu1LhK8i4Q2I1l3whwhv8F8IRhCpf7Q/BH+Ab1xg3H3F1kpYapHN/Dz/+W8Fq04jfFw5lwAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="eBPF-6.png"
+        title="eBPF-6.png"
+        src="/static/e7909dc59d2b139b77f901fce04f60a1/37523/eBPF-6.png"
+        srcset="/static/e7909dc59d2b139b77f901fce04f60a1/e9ff0/eBPF-6.png 180w,
+/static/e7909dc59d2b139b77f901fce04f60a1/f21e7/eBPF-6.png 360w,
+/static/e7909dc59d2b139b77f901fce04f60a1/37523/eBPF-6.png 720w,
+/static/e7909dc59d2b139b77f901fce04f60a1/302a4/eBPF-6.png 1080w,
+/static/e7909dc59d2b139b77f901fce04f60a1/e6c84/eBPF-6.png 1148w"
+        sizes="(max-width: 720px) 100vw, 720px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+        decoding="async"
+      />
+    </span></p>
+<p>eBPF 프로그램의 중요한 기능은 수집된 정보를 공유하고 state를 저장하는 것이라고 할 수 있다.
+이를 위해 사용되는 eBPF Map 개념은 eBPF 프로그램이 광범위한 자료 구조에 데이터를 저장하고 검색할 수 있도록 해준다.
+“Map”이라는 이름처럼 데이터는 key를 사용해서 저장되고 검색된다.</p>
+<p>Map은 4가지 값으로 정의된다: type, 최대 element 수, value size (bytes), key size (byte)
+다음은 커널에서 지원하는 Map types이다:</p>
+<ul>
+<li><code class="language-text">BPF_MAP_TYPE_HASH</code>: 해시 테이블</li>
+<li><code class="language-text">BPF_MAP_TYPE_ARRAY</code>: 빠른 속도에 최적화된 array map으로 counter에 자주 사용됨</li>
+<li><code class="language-text">BPF_MAP_TYPE_PROG_ARRAY</code>: eBPF 프로그램에 대한 fd의 array; 특정 packet 프로토콜을 처리하기 위해 jump 테이블 및 sub-program을 구현하는데 사용됨</li>
+<li><code class="language-text">BPF_MAP_TYPE_PERCPU_ARRAY</code>: per-CPU array, latency 히스토그램을 구현하는데 사용됨</li>
+<li><code class="language-text">BPF_MAP_TYPE_PERF_EVENT_ARRAY</code>: perf_event 구조체에 대한 포인터를 저장, perf_event counter를 읽고 저장하는데 사용됨</li>
+<li><code class="language-text">BPF_MAP_TYPE_CGROUP_ARRAY</code>: cgroup에 대한 포인터 저장</li>
+<li><code class="language-text">BPF_MAP_TYPE_PERCPU_HASH</code>: per-CPU 해시 테이블</li>
+<li><code class="language-text">BPF_MAP_TYPE_LRU_HASH</code>: MRU(Most Recently Used) 항목을 유지하는 해시 테이블</li>
+<li><code class="language-text">BPF_MAP_TYPE_LRU_PERCPU_HASH</code>: MRU per-CPU 해시 테이블</li>
+<li><code class="language-text">BPF_MAP_TYPE_LPM_TRIE</code>: LPM(Longest-Prefix Match) 시도, IP 주소를 범위에 매칭시키는 데 적합</li>
+<li><code class="language-text">BPF_MAP_TYPE_STACK_TRACE</code>: stack trace 저장</li>
+<li><code class="language-text">BPF_MAP_TYPE_ARRAY_OF_MAPS</code>: map-in-map data structure</li>
+<li><code class="language-text">BPF_MAP_TYPE_HASH_OF_MAPS</code>: map-in-map data structure</li>
+<li><code class="language-text">BPF_MAP_TYPE_DEVICE_MAP</code>: 네트워크 device 참조를 조회 및 저장</li>
+<li><code class="language-text">BPF_MAP_TYPE_SOCKET_MAP</code>: 소켓을 조횜 치 저장. BPF helper 함수로 소켓 리디렉션 허용</li>
+</ul>
+<p>Map은 <code class="language-text">bpf()</code> 시스템콜을 사용해서 생성되고 조작된다.
+Map이 성공적으로 생성되면, 해당 Map과 관련된 fd가 반환된다.</p>
+<p><code class="language-text">bpf()</code> 시스템콜은 eBPF 바이트 코드를 커널에 로드할 뿐만 아니라 User-space의 App이 eBPF가 이용하는 Map에 접근할 수 있게 만들어준다.
+모든 map은 <code class="language-text">bpf_map_lookup_elem()</code> 및 <code class="language-text">bpf_map_update_elem()</code> 함수를 사용하여 eBPF와 user-space 프로그램에서 액세스할 수 있다. (socket map과 같은 일부 map type의 경우에는, eBPF helper 람수를 추가로 사용해야 한다.)
+이를 통해 user-space App과 eBPF 프로그램은 Map을 이용하여 state를 공유하고 통신할 수 있다.</p>
+<p>Map은 일반적으로 연결된 fd를 close함과 동시에 없어진다.</p>
+<h3 id="34-bpf-system-call" style="position:relative;"><a href="#34-bpf-system-call" aria-label="34 bpf system call permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4. bpf() system call</h3>
+<p>프로그램은 <code class="language-text">BPF_PROG_LOAD</code> 명령과 함께, <code class="language-text">bpf()</code> 시스템콜을 사용하여 로드된다.
+시스템콜의 프로토타입은 다음과 같다:</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">bpf</span><span class="token punctuation">(</span><span class="token keyword">int</span> cmd<span class="token punctuation">,</span> <span class="token keyword">union</span> bpf_attr <span class="token operator">*</span>attr<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> size<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></div>
+<p><code class="language-text">bpf_attr</code> union을 사용하면 커널과 사용자 공간 간에 데이터를 전달할 수 있다.
+정확한 형식은 <code class="language-text">cmd</code> 인자에 따라 달라진다.
+<code class="language-text">size</code> 인자는 <code class="language-text">bpf_attr</code> union 개체의 크기를 byte 단위로 제공한다.</p>
+<p>eBPF <code class="language-text">cmd</code>는 eBPF 프로그램을 작업하기 위한 명령, eBPF Map을 작업하기 위한 명령, eBPF 프로그램과 Map 모두(object)를 다루기 위한 명령, 이렇게 세 가지 카테고리가 있다.</p>
+<h3 id="34-helper-function" style="position:relative;"><a href="#34-helper-function" aria-label="34 helper function permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4. Helper function</h3>
+<p>eBPF 프로그램은 임의의 커널 함수를 직접 호출할 수 없다.
+즉, 임의의 커널 메모리에 직접 액세스할 수 없으며, 앞선 eBPF verifier가 이를 검사한다.
+이렇게 임의의 커널 함수를 호출할 경우, eBPF 프로그램은 특정 커널 버전에 바인딩되며 프로그램의 호환성이 상당히 복잡해지기 때문이다.
+따라서 eBPF 프로그램은 커널에서 제공하는 비교적 안정적인 API인 helper function을 통해서 일부 커널 함수를 사용한다.
+이것은 일관된 데이터 액세스를 보장하고 eBPF 프로그램이 커널의 데이터 구조를 무작위로 수정하지 못하도록 한다.</p>
+<p>사용할 수 있는 helper function 집합은 계속해서 확장되고 있으며, 다음과 같은 helper function 예시들이 있다:</p>
+<ul>
+<li>난수 생성</li>
+<li>현재 시간 및 날짜 가져오기</li>
+<li>eBPF Map 접근</li>
+<li>프로세스/cgroup context 가져오기</li>
+<li>네트워크 패킷 및 forwarding logic 조작</li>
+</ul>
+<h2 id="4-ebpf-an-example" style="position:relative;"><a href="#4-ebpf-an-example" aria-label="4 ebpf an example permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. eBPF: An Example</h2>
+<p>리눅스 커널 소스에는 여러 eBPF 예제가 포함되어 있다.
+예제를 컴파일하기 위해서는 다음 명령어를 입력해야 한다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">make</span> sample/bpf/</code></pre></div>
+<p><code class="language-text">sample/bpf</code>에서 사용 가능한 샘플 코드 중 하나인 <code class="language-text">tracex4</code> 프로그램을 살펴본다.</p>
+<p>일반적으로 <code class="language-text">sample/bpf/</code>의 모든 예제는 2개의 파일로 구성되어 있으며, 이 파일의 경우 다음과 같이 구성된다.</p>
+<ul>
+<li><a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/tracex4_kern.c"><code class="language-text">tracex4_kern.c</code></a>: eBPF 바이트 코드로 커널에서 실행될 소스 코드이다.</li>
+<li><a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/tracex4_user.c"><code class="language-text">tracex4_user.c</code></a>: user-space 프로그램을 포함한다.</li>
+</ul>
+<p><code class="language-text">sample/bpf/</code> 하위의 다른 모든 프로그램도 이와 유사한 구조를 따르며, 항상 두 개의 파일이 쌍으로 존재한다.</p>
+<ul>
+<li><code class="language-text">XXX_kern.c</code>: eBPF 프로그램</li>
+<li><code class="language-text">XXX_user.c</code>: main 프로그램</li>
+</ul>
+<p>eBPF 프로그램은 binary 섹션에 hooking 시킬 Map과 함수를 정의한다. 커널이 특정 event를 발생시키면, hook이 실행된다. Map은 커널 프로그램과 user-space 프로그램 간에 데이터를 교환하는 데 사용된다.</p>
+<p>다음에서 두 파일에 대해 자세히 살펴본다.</p>
+<h3 id="tracex4_kernc" style="position:relative;"><a href="#tracex4_kernc" aria-label="tracex4_kernc permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>tracex4_kern.c</h3>
+<p><code class="language-text">tracex4_kern.c</code>는 c로 작성된 파일이며, eBPF 바이트코드로 컴파일해야 한다.
+<a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/Makefile#L266">Makefile</a>에서는 clang을 사용하여 <code class="language-text">tracex4_kern.c</code>를 object 파일로 컴파일한다.</p>
+<p><code class="language-text">tracex4_kern.c</code> 파일 코드를 자세히 살펴보자.
+먼저, 헤더 파일을 먼저 살펴보면 다음과 같다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;linux/ptrace.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;linux/version.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;uapi/linux/bpf.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">"bpf_helpers.h"</span></span></code></pre></div>
+<ul>
+<li><code class="language-text">uapi/linux/bpf.h</code>: eBPF instruction이 정의된 파일이다.</li>
+<li><code class="language-text">bpf_helpers.h</code>: helper 함수들이 정의되어 있는 헤더 파일이며, 해당 함수들은 모두 대문자이다.</li>
+</ul>
+<p>다음으로 BPF 프로그램이 사용한 Map이 정의되어 있다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">pair</span> <span class="token punctuation">{</span>
+    u64 val<span class="token punctuation">;</span>
+    u64 ip<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">struct</span> <span class="token class-name">bpf_map_def</span> <span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"maps"</span><span class="token punctuation">)</span> my_map <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span>type <span class="token operator">=</span> BPF_MAP_TYPE_HASH<span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>key_size <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>value_size <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pair</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">.</span>max_entries <span class="token operator">=</span> <span class="token number">1000000</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></div>
+<p><code class="language-text">BPF_MAP_TYPE_HASH</code>는 eBPF에서 제공하는 많은 Map 유형 중 하나이며, 이 경우 hash 타입의 자료구조를 의미한다.</p>
+<p><code class="language-text">SEC("maps")</code> 선언에서 사용되는 <code class="language-text">SEC</code>은 바이너리에서 새로운 섹션을 만드는 데 사용되는 매크로이다.
+<code class="language-text">tracex4_kern</code> 예제에서는 아래와 같이 두 개의 섹션을 더 정의한다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"kprobe/kmem_cache_free"</span><span class="token punctuation">)</span>
+<span class="token keyword">int</span> <span class="token function">bpf_prog1</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pt_regs</span> <span class="token operator">*</span>ctx<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">long</span> ptr <span class="token operator">=</span> <span class="token function">PT_REGS_PARM2</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">bpf_map_deleted_elem</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>my_map<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">SEC</span><span class="token punctuation">(</span><span class="token string">"kretprobe/kmem_cache_alloc_node"</span><span class="token punctuation">)</span>
+<span class="token keyword">int</span> <span class="token function">bpf_prog2</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">pt_regs</span> <span class="token operator">*</span>ctx<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">long</span> ptr <span class="token operator">=</span> <span class="token function">PT_REGS_RC</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">long</span> ip <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// get ip address of kmem_cache_alloc_node() caller</span>
+    <span class="token function">BPF_KRETPROBE_READ_RET_IP</span><span class="token punctuation">(</span>ip<span class="token punctuation">,</span> ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">struct</span> <span class="token class-name">pair</span> v <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span>val <span class="token operator">=</span> <span class="token function">bpf_ktime_get_ns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">.</span>ip <span class="token operator">=</span> ip<span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// update bpf map</span>
+    <span class="token function">bpf_map_update_elem</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>my_map<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ptr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>v<span class="token punctuation">,</span> BPF_ANY<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>이 두 가지 함수를 사용하면 Map애서 entry를 삭제(<code class="language-text">kprobe/kmem_cach_free</code>)허거나 Map에 새 entry를 추가(<code class="language-text">kretprobe/kmem_cache_alloc_node</code>)할 수 있다.
+대문자로 된 모든 함수 호출은 <a href="https://raw.githubusercontent.com/torvalds/linux/v4.19/tools/testing/selftests/bpf/bpf_helpers.h"><code class="language-text">bpf_helpers.h</code></a>에 정의된 매크로이다.</p>
+<p>object 파일을 dump하면 다음과 같이 정의된 섹션을 확인할 수 있다.</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ objdump -h tracex4_kern.o
+
+tracex4_kern.o:     file format elf64-little
+
+Sections:
+Idx Name          Size      VMA               LMA               File off  Algn
+  0 .text         00000000  0000000000000000  0000000000000000  00000040  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 kprobe/kmem_cache_free 00000048  0000000000000000  0000000000000000  00000040  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 kretprobe/kmem_cache_alloc_node 000000c0  0000000000000000  0000000000000000  00000088  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 maps          0000001c  0000000000000000  0000000000000000  00000148  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 license       00000004  0000000000000000  0000000000000000  00000164  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 version       00000004  0000000000000000  0000000000000000  00000168  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .eh_frame     00000050  0000000000000000  0000000000000000  00000170  2**3
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA</code></pre></div>
+<h3 id="tracex4_userc" style="position:relative;"><a href="#tracex4_userc" aria-label="tracex4_userc permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>tracex4_user.c</h3>
+<p>이 프로그램은 메인 프로그램이며, <code class="language-text">kmem_cache_alloc_node</code> 이벤트를 수신하는 역할을 한다.
+해당 이벤트가 발생하면 해당 eBPF 코드가 실행된다.
+이 코드는 object의 IP 속성을 Map에 저장하고 메인 프로그램에서 loop로 프린트한다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> ./tracex4
+obj 0xffff8d6430f60a00 is  2sec old was allocated at <span class="token function">ip</span> ffffffff9891ad90
+obj 0xffff8d6062ca5e00 is 23sec old was allocated at <span class="token function">ip</span> ffffffff98090e8f
+obj 0xffff8d5f80161780 is  6sec old was allocated at <span class="token function">ip</span> ffffffff98090e8f</code></pre></div>
+<p>user-space 프로그램과 eBPF 프로그램은 연결되는 방법은 아래와 같다.
+먼저, 초기화 시에 <code class="language-text">tracex4_user.c</code>는 <code class="language-text">load_bpf_file</code> 함수를 사용하여 <code class="language-text">tracex4_kern.o</code> object 파일을 로드한다.</p>
+<div class="gatsby-highlight" data-language="c"><pre class="language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> ac<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> <span class="token class-name">rlimit</span> r <span class="token operator">=</span> <span class="token punctuation">{</span>RLIM_INFINITY<span class="token punctuation">,</span> RLIM_INFINITY<span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">char</span> filename<span class="token punctuation">[</span><span class="token number">256</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+
+    <span class="token function">snprintf</span><span class="token punctuation">(</span>filename<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"%s_kern.o"</span><span class="token punctuation">,</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">setrlimit</span><span class="token punctuation">(</span>RLIMIT_MEMLOCK<span class="token punctuation">,</span> <span class="token operator">&amp;</span>r<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"setlimit(RLIMIT_MEMLOCK, RLIM_INFINITY)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// load bpf object file</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">load_bpf_file</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s"</span><span class="token punctuation">,</span> bpf_log_buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">print_old_objects</span><span class="token punctuation">(</span>map_fd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></div>
+<p>이후 <a href="https://github.com/torvalds/linux/blob/v4.19/samples/bpf/bpf_load.c#L492"><code class="language-text">load_bpf_file</code></a> 함수가 실행되면, eBPF 파일에 정의된 probe가 <code class="language-text">/sys/kernel/debug/tracing/kprobe_events</code>에 추가된다.
+추가된 이후에는 등록된 event를 listen하며, event가 트리거되면 eBPF 프로그램이 실행된다.</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">cat</span> /sys/kernel/debug/tracing/kprobe_events
+p:kprobes/kmem_cache_free kmem_cache_free
+r:kprobes/kmem_cache_alloc_node kmem_cache_alloc_node</code></pre></div>
+<h2 id="5-why-ebpf" style="position:relative;"><a href="#5-why-ebpf" aria-label="5 why ebpf permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Why eBPF?</h2>
+<p>eBPF의 강력한 기능으로 인해, 인텔의 Brendan Gregg는 BPF 기술을 <a href="http://www.brendangregg.com/blog/2016-03-05/linux-bpf-superpowers.html">Linux superpower</a>라고 언급한바 있다.</p>
+<p>왜 이렇게 많은 사람들은 eBPF 기술을 극찬하고, 또 커널 개발자들은 eBPF 기술에 주목할까</p>
+<h3 id="programmability의-힘" style="position:relative;"><a href="#programmability%EC%9D%98-%ED%9E%98" aria-label="programmability의 힘 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Programmability의 힘</h3>
+<p>20년 전, 웹 페이지는 주로 HTML(Static Markup Language)만을 사용하여 작성되었다.
+웹 페이지는 기본적으로 문서를 표시할 수 있는 application(browser)였다.</p>
+<p>하지만 오늘날의 웹 페이지는 어떠한가.
+오늘날의 웹 페에지는 완전한 application이 되었으며(e.g., facebook, gmail, twitter), 웹 기반 기술들은 컴파일이 필요한 언어로 작성된 application의 대다수를 대체해왔다.</p>
+<p>무엇이 이러한 진화를 가능하게 했는가?</p>
+<p>바로, JavaScript와 함께 도입된 programmability이다.
+이는 브라우저가 거의 독립적인 운영 체제로 진화하는 거대한 혁명을 일으켰다.</p>
+<p>이러한 진화는 왜 일어났는가?
+프로그래머는 더 이상 특정 브라우저 버전을 실행하는 사용자에게 종속되지 않았다.
+새로운 HTML 태그가 필요하다고 표준 기관을 설득하는 대신, 필요한 building block의 가용성을 기본 브라우저의 혁신 속도 위에서 실행되는 application과 분리했다.
+이것은 물론 HTML이 시간이 지남에 따라 진화했다는 점도 일조했지만, HTML의 진화 자체로는 그것을 설명하기에 충분하지 않았다.</p>
+<p>이러한 예제를 사용하여 eBPF에 적용하기 전에 JavaScript의 도입에 있어 중요한 몇 가지 측면들을 살펴보자면 다음과 같다:</p>
+<ul>
+<li>Safety: 신뢰할 수 없는 코드가 사용자의 브라우저에서 실행되는 문제는 JavaScript 프로그램을 sandboxing하고 브라우저 데이터에 대한 액세스를 추상화하여 해결하였다.</li>
+<li>Continuous Delivery: 새로운 브라우저 버전을 지속적으로 출시하지 않고도 프로그램 로직의 진화하는 문제는 임의의 논리를 빌드하기에 충분한 적절한 low-level building block을 제공함으로써 해결되었다.</li>
+<li>Performance: Programmability는 최소한의 오버헤드로 제공되어야 한다. 이 문제는 JIT(Just-in-Time) 컴파일러의 도입으로 해결되었다.</li>
+</ul>
+<p>위의 모든 경우에서 동일한 이류로 eBPF에서 정확히 대응되는 여러 부분들을 찾을 수 있다.</p>
+<p>리눅스 커널의 주요 목적은 하드웨어 또는 가상 하드웨어를 추상화하고 application이 리소스를 사용하고 공유할 수 있도록 일관된 API(system call)을 제공하는 것이다.
+이를 달성하기 위해서, 커널의 광범위한 하위 시스템 및 계층들이 이러한 책임들을 분산하여 유지 관리한다.
+각 하위 시스템은 일반적으로 사용자의 다양한 요구를 충족하기 위해 일정 수준의 구성을 허용한다.
+만약 원하는 동작을 구성할 수 없는 경우에는 커널을 변경해야 하며, 아래와 같은 두 가지 옵션이 존재한다:</p>
+<ul>
+<li>Native Support
+<ol>
+<li>커널 소스 코드를 변경하고 리눅스 커널 커뮤니티에 변경이 필요하다고 설득한다.</li>
+<li>새 커널 버전이 릴리즈될 때까지 몇 년을 기다려야한다.</li>
+</ol>
+</li>
+<li>Kernel Module
+<ol>
+<li>커널 모듈을 작성한다.</li>
+<li>모든 커널 릴리스에 맞춰 정기적으로 수정해야 한다.</li>
+<li>보안 경계가 없기 때문에 리눅스 커널이 손상될 위험이 있다.</li>
+</ol>
+</li>
+</ul>
+<p>그러나, eBPF에서는 커널 소스 코드를 변경하거나 커널 모듈을 로드하는 위의 두 가지 옵션을 사용하지 않고도, 리눅스 커널의 동작을 다시 프로그래밍할 수 있는 새로운 옵션을 사용할 수 있다.
+여러 면에서 이러한 점들이 JavaScript 및 기타 스크립팅 언어가 변경하기 어렵거나 변경에 비용이 많이 드는 시스템의 진화를 어떻게 풀어내었는지와 매우 유사하다.</p>
+<h2 id="6-bpf-code-in-kernel" style="position:relative;"><a href="#6-bpf-code-in-kernel" aria-label="6 bpf code in kernel permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. BPF code in kernel</h2>
+<ul>
+<li><code class="language-text">linux/include/linux/bpf.h</code> 파일과 이에 관련된 <code class="language-text">linux/include/uapi/bpf.h</code> 파일에는 커널에서 사용하거나 userspace 프로그램과 인터페이스하기 위한 eBPF 관련 정의가 포함되어 있다.</li>
+<li><code class="language-text">linux/include/linux/filter.h</code> 및 <code class="language-text">linux/include/uapi/filter.h</code> 파일에는 BPF 프로그램을 실행하는 데 사용되는 정보가 포함되어 있다.</li>
+<li>eBPF와 괄년된 주요 코드는 <code class="language-text">linux/kernel/bpf/</code> 디렉토리에 있다. 프로그램 로딩이나 map 관리와 같은 시스템콜에 의해 실행되는 작업들은 <code class="language-text">syscall.c</code> 파일에서 구현된다. 반면, <code class="language-text">core.c</code>는 인터프리터를 포함한다. <code class="language-text">verifier.c</code> 파일에는 in-kernel verifier가 포함되어 있고, <code class="language-text">arrarymap.c</code>는 array-type의 map과 상호 작용하는 데 사용되는 코드들이 있다.</li>
+<li>네트워킹과 관련된 helper (e.g., tc, XDP) 및 사용자가 사용할 수 있는 여러 함수는 <code class="language-text">linux/net/core/filter.c</code>에 구현되어 있다. 이 코드는 cBPF 바이트코드를 eBPF로 마이그레이션하는 코드도 초함한다. (모든 cBPF 프로그램은 실행되기 전에 커널에서 eBPF로 변환된다.)</li>
+<li>event tracing과 관련된 helper 및 함수들은 <code class="language-text">linux/kernel/trace/bpf_trace.c</code>에 구현되어 있다.</li>
+<li>JIT 컴파일러는 각 아키텍처 디렉토리에 위치하며 x86의 경우, <code class="language-text">linux/arch/x86/net/bpf_jit_comp.c</code> 파일에 있다. HW offload로 사용되는 JIT 컴파일러의 경우 예외적으로 드라이버에 위치한다. 예를 들어, Netronome NFP 카드의 경우, <code class="language-text">linux/drivers/net.ethernet/netronome/nfp/bpf/jit.c</code>에 위치한다.</li>
+<li>eBPF의 tc와 관련된 구성 요스들은 <code class="language-text">linux/net/sched/</code> 디렉터리에서 찾을 수 있으며, 주로 <code class="language-text">act_bpf.c</code>(action)과 <code class="language-text">cls_bpf.c</code>(filter)에 있다.</li>
+<li>seccomp-BPF의 코드는 <code class="language-text">linux/kernel/seccomp.c</code>에서 찾을 수 있으며, 이를 사용한 예제 코드는 <code class="language-text">linux/tools/testing/selftests/seccomp/seccomp_bpf.c</code>에서 찾을 수 있다.</li>
+</ul>
+<h2 id="7-development-toolchains" style="position:relative;"><a href="#7-development-toolchains" aria-label="7 development toolchains permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. Development Toolchains</h2>
+<p>eBPF 프로그램의 개발 및 관리를 지원하기 위하여 여러 개발 도구들이 존재하며, 이러한 다양한 도구들에 대해서는 아래에서 설명한다.</p>
+<h3 id="bcc-ebpf-compile-collection" style="position:relative;"><a href="#bcc-ebpf-compile-collection" aria-label="bcc ebpf compile collection permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>BCC (eBPF Compile Collection)</h3>
+<p>BCC는 사용자가 eBPF 프로그램 작성, 컴파일 및 로드를 위한 프레임워크이다.</p>
+<h3 id="bpftrace" style="position:relative;"><a href="#bpftrace" aria-label="bpftrace permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>bpftrace</h3>
+<p>bpftrace는 리눅스 eBPF용 고급 tracing 언어이며, 리눅스 커널 v4.x에서 사용할 수 있다.
+bpftrace는 LLVM을 백엔드로 사용하여 스크립트를 eBPF 바이트코드로 컴파일하고, 리눅스 eBPF 서브시스템 및 기존 리눅스 tracing capabiltieis(kprobes(커널 동적 tracing), uprobes(user-level 동적 tracing), tracepoints)와 BCC를 사용하여 상호 작용한다.
+bpftrace 언어는 awk, C 및 이전 tracer인 DTrace, SystemTap에서 영감을 받았다.</p>
+<h3 id="ebpf-go-library" style="position:relative;"><a href="#ebpf-go-library" aria-label="ebpf go library permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>eBPF Go Library</h3>
+<p>eBPF Go 라이브러리는 eBPF 바이트코드를 전달받는 프로세스와 eBPF 프로그램을 로드하고 관리하는 프로세스를 서로 분리하여 일반적인 eBPF 라비으러리를 제공한다.
+eBPF 프로그램은 일반적으로 더 높은 수준의 언어를 작성한 다음, clang/LLCM 컴파일러를 사용하여 eBPF 바이트 코드로 컴파일하여 만든다.</p>
+<h3 id="libbpf-cc-library" style="position:relative;"><a href="#libbpf-cc-library" aria-label="libbpf cc library permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>libbpf C/C++ Library</h3>
+<p>libbpf 라이브러리는 C/C++ 기반의 일반 eBPF 라이브러리로, clang/LLVM 컴파일러에서 생성된 eBPF object 파일을 로드하는 과정을 커널에서 분리하는 데에 도움이 된다.
+일반적으로 애플리케이션에서 사용하기 쉬운 라이브러리 API를 제공함으로써 BPF 시스템콜과의 추상화된 상호 작용 방법을 제공한다.</p>
+<h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
+<ul>
+<li><a href="https://kubernetes.io/blog/2017/12/using-ebpf-in-kubernetes/">https://kubernetes.io/blog/2017/12/using-ebpf-in-kubernetes/</a></li>
+<li><a href="https://qmonnet.github.io/whirl-offload/2016/09/01/dive-into-bpf/">https://qmonnet.github.io/whirl-offload/2016/09/01/dive-into-bpf/</a></li>
+<li><a href="https://www.ferrisellis.com/content/ebpf_past_present_future/">https://www.ferrisellis.com/content/ebpf_past_present_future/</a></li>
+<li><a href="https://blogs.igalia.com/dpino/2019/01/07/introduction-to-xdp-and-ebpf/">https://blogs.igalia.com/dpino/2019/01/07/introduction-to-xdp-and-ebpf/</a></li>
+<li><a href="https://www.youtube.com/watch?v=4SiWL5tULnQ">https://www.youtube.com/watch?v=4SiWL5tULnQ</a></li>
+<li><a href="https://ebpf.io/what-is-ebpf/#what-is-ebpf">https://ebpf.io/what-is-ebpf/#what-is-ebpf</a></li>
+<li><a href="https://lwn.net/Articles/740157/">https://lwn.net/Articles/740157/</a></li>
+</ul>
+<script src="https://utteranc.es/client.js"
+        repo="sominsong/sominsong.github.io"
+        issue-term="pathname"
+        label="Comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<div class="table-of-contents">
+<ul>
+<li>
+<p><a href="#0-bpf">0. BPF</a></p>
+</li>
+<li>
+<p><a href="#1-cbpf-vs-ebpf">1. cBPF vs. eBPF</a></p>
+<ul>
+<li><a href="#bpf%EC%9D%98-%EC%97%AD%EC%82%AC">BPF의 역사</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#2-how-to-work">2. How to work</a></p>
+</li>
+<li>
+<p><a href="#3-ebpf%EB%A5%BC-%EC%9D%B4%EB%A3%A8%EB%8A%94-%EA%B5%AC%EC%84%B1-%EC%9A%94%EC%86%8C%EB%93%A4">3. eBPF를 이루는 구성 요소들</a></p>
+<ul>
+<li>
+<p><a href="#31-ebpf-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8">3.1. eBPF 프로그램</a></p>
+</li>
+<li>
+<p><a href="#32-loader--verification">3.2. Loader &#x26; Verification</a></p>
+<ul>
+<li><a href="#verification">Verification</a></li>
+<li><a href="#jit-complication">JIT Complication</a></li>
+<li><a href="#hardening">Hardening</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#33-ebpf-maps">3.3. eBPF Maps</a></p>
+</li>
+<li>
+<p><a href="#34-bpf-system-call">3.4. bpf() system call</a></p>
+</li>
+<li>
+<p><a href="#34-helper-function">3.4. Helper function</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="#4-ebpf-an-example">4. eBPF: An Example</a></p>
+<ul>
+<li><a href="#tracex4_kernc">tracex4_kern.c</a></li>
+<li><a href="#tracex4_userc">tracex4_user.c</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#5-why-ebpf">5. Why eBPF?</a></p>
+<ul>
+<li><a href="#programmability%EC%9D%98-%ED%9E%98">Programmability의 힘</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#6-bpf-code-in-kernel">6. BPF code in kernel</a></p>
+</li>
+<li>
+<p><a href="#7-development-toolchains">7. Development Toolchains</a></p>
+<ul>
+<li><a href="#bcc-ebpf-compile-collection">BCC (eBPF Compile Collection)</a></li>
+<li><a href="#bpftrace">bpftrace</a></li>
+<li><a href="#ebpf-go-library">eBPF Go Library</a></li>
+<li><a href="#libbpf-cc-library">libbpf C/C++ Library</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#reference">Reference</a></p>
+</li>
+</ul>
+</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/Interview/AWS-interview/"><div class="direction">이전 글</div><div class="title">AWS Korea Interview - Associate Solutions Architect</div></a></div><div class="post-navigator-card-wrapper"><a class="post-card next" href="/Error/xcrun_error/"><div class="direction">다음 글</div><div class="title">Error - Mac 업그레이드 후 xcrun error 해결</div></a></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">송소민</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/TIL/eBPF/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>

@@ -1,0 +1,1098 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" property="og:image" content="/og-image.png"/><meta data-react-helmet="true" property="og:author" content="송소민"/><meta data-react-helmet="true" property="og:description" content="0. 들어가기 전에 아직 면접 경험이 별로 없지만, 면접 기회가 생길 때마다 질문으로 나올 만한 CS 개념들을 정리해두면
+앞으로의 면접에서도 많은 도움을 받을 수 있지 않을까해서 정리해둔다. 참고로, 아래에는 일반적인 CS 개념들도 포함되어 있지만
+일부는 내가 석사 과정동안 진행했던 연구들에 대한 개념들도 함께 들어있다. 석사 과정동안 진행했던 연구의 키워드들은 조금 깊게,
+그리고 그 이외의 CS 키워드들은 좀 더 얕게 정리할 계획이다. 참고로 면접에서는 장황하게 말하는 것보다, 키워드를 담은 한 문장으로 설명하는 것이 중요하더라.
+그래서 최대한 키워드를 담은 한 문장을 통해 개념을 설명하고, 추가 질문에 대비한 답변들도 정리해 둘 계획이다. 지금 당장은 외국 기업 면접을 앞두고 있는터라, 영어로도 함께 정리해 둘 계획이다. 큰 카테고리로 나누어서 개념들을 정리해두었다. Common CS Interview 1. OS ‘Operating System’이라는 용어를 일반인에게 설명 짧…"/><meta data-react-helmet="true" name="description" content="0. 들어가기 전에 아직 면접 경험이 별로 없지만, 면접 기회가 생길 때마다 질문으로 나올 만한 CS 개념들을 정리해두면
+앞으로의 면접에서도 많은 도움을 받을 수 있지 않을까해서 정리해둔다. 참고로, 아래에는 일반적인 CS 개념들도 포함되어 있지만
+일부는 내가 석사 과정동안 진행했던 연구들에 대한 개념들도 함께 들어있다. 석사 과정동안 진행했던 연구의 키워드들은 조금 깊게,
+그리고 그 이외의 CS 키워드들은 좀 더 얕게 정리할 계획이다. 참고로 면접에서는 장황하게 말하는 것보다, 키워드를 담은 한 문장으로 설명하는 것이 중요하더라.
+그래서 최대한 키워드를 담은 한 문장을 통해 개념을 설명하고, 추가 질문에 대비한 답변들도 정리해 둘 계획이다. 지금 당장은 외국 기업 면접을 앞두고 있는터라, 영어로도 함께 정리해 둘 계획이다. 큰 카테고리로 나누어서 개념들을 정리해두었다. Common CS Interview 1. OS ‘Operating System’이라는 용어를 일반인에게 설명 짧…"/><meta data-react-helmet="true" property="og:site_title" content="CS 면접 대비"/><meta data-react-helmet="true" property="og:title" content="CS 면접 대비"/><meta data-react-helmet="true" name="viewport" content="initial-scale=1, width=device-width"/><meta name="generator" content="Gatsby 4.9.3"/><style data-href="/styles.853e65090dc89bfbb4ac.css" data-identity="gatsby-global-css">@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/static/montserrat-latin-100-8d7d79679b70dbe27172b6460e7a7910.woff2) format("woff2"),url(/static/montserrat-latin-100-ec38980a9e0119a379e2a9b3dbb1901a.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/static/montserrat-latin-100italic-e279051046ba1286706adc886cf1c96b.woff2) format("woff2"),url(/static/montserrat-latin-100italic-3b325a3173c8207435cd1b76e19bf501.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/static/montserrat-latin-200-9d266fbbfa6cab7009bd56003b1eeb67.woff2) format("woff2"),url(/static/montserrat-latin-200-2d8ba08717110d27122e54c34b8a5798.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/static/montserrat-latin-200italic-6e5b3756583bb2263eb062eae992735e.woff2) format("woff2"),url(/static/montserrat-latin-200italic-a0d6f343e4b536c582926255367a57da.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/static/montserrat-latin-300-00b3e893aab5a8fd632d6342eb72551a.woff2) format("woff2"),url(/static/montserrat-latin-300-ea303695ceab35f17e7d062f30e0173b.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/static/montserrat-latin-300italic-56f34ea368f6aedf89583d444bbcb227.woff2) format("woff2"),url(/static/montserrat-latin-300italic-54b0bf2c8c4c12ffafd803be2466a790.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/static/montserrat-latin-400-b71748ae4f80ec8c014def4c5fa8688b.woff2) format("woff2"),url(/static/montserrat-latin-400-0659a9f4e90db5cf51b50d005bff1e41.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/static/montserrat-latin-400italic-6eed6b4cbb809c6efc7aa7ddad6dbe3e.woff2) format("woff2"),url(/static/montserrat-latin-400italic-7583622cfde30ae49086d18447ab28e7.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/static/montserrat-latin-500-091b209546e16313fd4f4fc36090c757.woff2) format("woff2"),url(/static/montserrat-latin-500-edd311588712a96bbf435fad264fff62.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/static/montserrat-latin-500italic-c90ced68b46050061d1a41842d6dfb43.woff2) format("woff2"),url(/static/montserrat-latin-500italic-5146cbfe02b1deea5dffea27a5f2f998.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/static/montserrat-latin-600-0480d2f8a71f38db8633b84d8722e0c2.woff2) format("woff2"),url(/static/montserrat-latin-600-b77863a375260a05dd13f86a1cee598f.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/static/montserrat-latin-600italic-cf46ffb11f3a60d7df0567f8851a1d00.woff2) format("woff2"),url(/static/montserrat-latin-600italic-c4fcfeeb057724724097167e57bd7801.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/static/montserrat-latin-700-7dbcc8a5ea2289d83f657c25b4be6193.woff2) format("woff2"),url(/static/montserrat-latin-700-99271a835e1cae8c76ef8bba99a8cc4e.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/static/montserrat-latin-700italic-c41ad6bdb4bd504a843d546d0a47958d.woff2) format("woff2"),url(/static/montserrat-latin-700italic-6779372f04095051c62ed36bc1dcc142.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/static/montserrat-latin-800-db9a3e0ba7eaea32e5f55328ace6cf23.woff2) format("woff2"),url(/static/montserrat-latin-800-4e3c615967a2360f5db87d2f0fd2456f.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/static/montserrat-latin-800italic-bf45bfa14805969eda318973947bc42b.woff2) format("woff2"),url(/static/montserrat-latin-800italic-fe82abb0bcede51bf724254878e0c374.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:normal;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/static/montserrat-latin-900-e66c7edc609e24bacbb705175669d814.woff2) format("woff2"),url(/static/montserrat-latin-900-8211f418baeb8ec880b80ba3c682f957.woff) format("woff")}@font-face{font-display:swap;font-family:Montserrat;font-style:italic;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/static/montserrat-latin-900italic-4454c775e48152c1a72510ceed3603e2.woff2) format("woff2"),url(/static/montserrat-latin-900italic-efcaa0f6a82ee0640b83a0916e6e8d68.woff) format("woff")}.search-input-wrapper{align-items:center;display:none;margin-top:3px;width:180px}@media(min-width:768px){.search-input-wrapper{display:flex}}.search-icon{color:var(--primary-text-color);margin-right:2px}.search-input{height:100%;width:100%}.search-input .MuiAutocomplete-inputRoot{padding-right:0!important}.search-input .MuiInputBase-input{color:var(--primary-text-color)!important;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;font-weight:500;padding-bottom:2px!important}.search-input .MuiInput-underline:before{border-bottom-width:1px}.search-input .MuiInput-underline:after,.search-input .MuiInput-underline:before{border-bottom-color:var(--primary-text-color)}.page-header-wrapper{display:flex;height:60px;justify-content:center;width:100%}.page-header-wrapper .page-header{align-items:center;display:flex;justify-content:space-between;max-width:720px;width:100%}.page-header-wrapper .page-header .link{color:var(--primary-text-color);font-size:17px;font-weight:700}@media(min-width:768px){.page-header-wrapper .page-header .link{font-size:20px;font-weight:700}}.page-header-wrapper .page-header .trailing-section{align-items:center;display:flex}.page-header-wrapper .page-header .trailing-section .link{margin-right:10px}@media(min-width:768px){.page-header-wrapper .page-header .trailing-section .link{margin-right:20px}}.page-footer-wrapper{align-items:center;display:flex;height:62px;justify-content:center;margin-top:auto;width:100%}.page-footer-wrapper .page-footer{max-width:720px;text-align:center;width:100%}.page-footer-wrapper .page-footer .link{color:var(--primary-text-color);font-size:20px;font-weight:700;margin-right:20px}.page-footer-wrapper .page-footer a{color:#3a95ff}.dark-mode-button-wrapper{align-items:center;bottom:20px;display:flex;justify-content:center;position:fixed;right:20px}.dark-mode-button{-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);background-color:#363f47!important;border-radius:50px;box-shadow:0 5px 25px rgba(0,0,0,.12);cursor:pointer;height:50px;width:50px;z-index:3}.dark-mode-icon{color:#fff}a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{border:0;font-size:100%;font:inherit;margin:0;padding:0;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:"";content:none}table{border-collapse:collapse;border-spacing:0}a{outline:none;text-decoration:none}html{--background-color:#fff;--primary-text-color:#000;--secondary-text-color:#9e9e9e;--content-text-color:#37352f;--button-background-color:#f3f3f4;--button-text-color:#363f47;--tab-text-color:#6e6d7a;--tab-hover-text-color:#0d0c22;--tab-selected-background-color:rgba(13,12,34,.05);--bio-link-icon-color:rgba(0,0,0,.54);--about-link-icon-color:#a8a8a8;--chip-background-color:#f3f3f4;--link-text-color:rgba(55,53,47,.7);--post-card-border-color:rgba(0,0,0,.12);--markdown-table-even-cell-background-color:#f6f8fa;--markdown-table-border-color:#dfe2e5;--markdown-blockquote-border-color:#dfe2e5;--markdown-border-color:#e1e4e8}html[data-theme=dark]{--background-color:#232326;--primary-text-color:#e6e6e6;--secondary-text-color:#768390;--content-text-color:#e6e6e6;--button-background-color:#444c56;--button-text-color:#363f47;--tab-text-color:#768390;--tab-hover-text-color:#acbac7;--tab-selected-background-color:#373e47;--chip-background-color:#323a42;--bio-link-icon-color:#e6e6e6;--about-link-icon-color:#a8a8a8;--link-text-color:#90b0ec;--post-card-border-color:#363f47;--markdown-table-even-cell-background-color:#2d333b;--markdown-table-border-color:#444c56;--markdown-blockquote-border-color:#4f5864;--markdown-border-color:#e1e4e8}*{-webkit-appearance:none;appearance:none;box-sizing:border-box}html{font-size:14px;height:100%;overflow-y:scroll;width:100%}body{background-color:var(--background-color)!important}a{color:var(--link-text-color)}.page-wrapper{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:var(--primary-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;justify-content:center;min-height:100vh;padding-left:15px;padding-right:15px;word-break:keep-all}.page-wrapper,.page-wrapper .page-content{align-items:center;display:flex;flex-direction:column;width:100%}.page-wrapper .page-content{max-width:720px}.icon{color:var(--about-link-icon-color);font-size:20px}.social-links .icon{color:var(--bio-link-icon-color);font-size:30px}@-webkit-keyframes blinking-cursor{0%{opacity:0}50%{opacity:1}to{opacity:0}}@keyframes blinking-cursor{0%{opacity:0}50%{opacity:1}to{opacity:0}}.bio{color:var(--primary-text-color);display:flex;flex-direction:column;justify-content:space-between;margin-bottom:120px;margin-top:120px;width:100%}@media(min-width:768px){.bio{align-items:center;flex-direction:row}}.bio .introduction{display:flex;flex-direction:column;word-break:keep-all}.bio .introduction .react-rotating-text-cursor{-webkit-animation:blinking-cursor .8s cubic-bezier(.68,.01,.01,.99) 0s infinite;animation:blinking-cursor .8s cubic-bezier(.68,.01,.01,.99) 0s infinite}.bio .introduction strong{display:inline-block;font-weight:600}.bio .introduction.korean{font-size:32px;font-weight:100;line-height:1.2}.bio .introduction.korean .title .react-rotating-text-cursor{font-size:35px;line-height:35px}@media(min-width:768px){.bio .introduction.korean{font-size:40px}.bio .introduction.korean .title .react-rotating-text-cursor{font-size:45px;line-height:45px}}.bio .introduction.english{font-family:montserrat;font-size:25px;line-height:1.2}@media(min-width:768px){.bio .introduction.english{font-size:45px}}.bio .introduction.english .name{font-size:35px;font-weight:600}.bio .introduction.english .job{font-size:35px}.bio .introduction.english .description{font-size:20px;font-weight:200;margin-top:8px}.bio .introduction.english .social-links{display:flex;margin-top:20px}.bio .thumbnail-wrapper{display:none}@media(min-width:768px){.bio .thumbnail-wrapper{display:block}}.section-header-wrapper{display:flex;justify-content:center;margin-bottom:32px;width:100%}.section-header-wrapper .section-header{border-bottom:4px solid var(--primary-text-color);color:var(--primary-text-color);font-size:30px;font-weight:700;padding-bottom:5px}.timestamp-section{align-items:center;display:flex;flex-direction:column;justify-content:center;margin-bottom:50px;width:100%;word-break:keep-all}.timestamp-section .body{padding:0 10px;width:100%}.timestamp-section .body .timestamp{border-left:2px solid #bdbdbd;display:flex;font-size:18px;font-weight:400;justify-items:center;margin-left:5px;padding:10px 0;width:100%}.timestamp-section .body .timestamp:first-child{padding-top:7px}.timestamp-section .body .timestamp:last-child{padding-bottom:7px}.timestamp-section .body .timestamp:before{align-self:center;background-color:var(--background-color);border:2px solid #828282;border-radius:10px;content:"";height:10px;left:-1px;position:relative;-webkit-transform:translatex(-50%);transform:translatex(-50%);width:10px}.timestamp-section .body .timestamp .date{align-self:center;color:#828282;margin-left:5px;margin-right:5px;min-width:115px;width:115px}@media(min-width:768px){.timestamp-section .body .timestamp .date{min-width:200px;width:200px}}.timestamp-section .body .timestamp .activity{line-height:23px;width:100%}.project-section{align-items:center;justify-content:center}.project-section,.project-section .project{display:flex;flex-direction:column;width:100%}.project-section .project{margin-bottom:30px;padding:15px}.project-section .project .head{font-size:20px;font-weight:700;line-height:30px;margin-bottom:10px}.project-section .project .body{display:flex;flex-direction:column;width:100%}.project-section .project .body .thumbnail{margin-bottom:10px;width:100%}.project-section .project .body .tech-stack{display:flex;margin-bottom:10px}.project-section .project .body .tech-stack .tech{background-color:var(--chip-background-color);border-radius:10px;font-size:15px;font-weight:500;margin-right:5px;padding:5px 7px}.project-section .project .body .description{font-size:16px;font-weight:400;line-height:1.4}@media(min-width:768px){.project-section .project .body{flex-direction:column}.project-section .project .body .content{margin-top:0}}.post-header{border-bottom:1px solid var(--post-card-border-color);display:flex;flex-direction:column;justify-content:center;margin-bottom:40px;margin-top:20px;padding-bottom:10px;width:100%;word-break:keep-all}.post-header .emoji{font-size:78px;margin-bottom:20px}.post-header .categories{margin-bottom:5px}.post-header .categories .category{color:var(--primary-text-color);font-weight:600;margin-right:4px}.post-header .categories .category:hover{text-decoration:underline}.post-header .title{color:var(--primary-text-color);font-size:32px;font-weight:600;line-height:1.3;margin-bottom:6px}.post-header .info{color:var(--secondary-text-color);display:flex;flex-wrap:wrap;font-size:16px;font-weight:500;line-height:1.5;width:100%}.post-header .info .author{margin-right:4px}.post-header .info strong{color:var(--primary-text-color);font-weight:600}.post-navigator{-webkit-column-gap:1.4%;column-gap:1.4%;display:grid;grid-template-columns:49.3% 49.3%;width:100%}.post-navigator .post-card{border:1px solid var(--post-card-border-color);border-radius:6px;color:var(--primary-text-color);cursor:pointer;display:flex;flex-direction:column;padding:15px;transition:-webkit-transform .2s;transition:transform .2s;transition:transform .2s,-webkit-transform .2s;width:100%}.post-navigator .post-card:hover .title{text-decoration:underline}.post-navigator .post-card.prev{margin-right:auto}.post-navigator .post-card.next{margin-left:auto}.post-navigator .post-card .direction{color:gray;font-size:14px;font-weight:500;margin-bottom:5px}.post-navigator .post-card .title{font-size:16px;font-weight:600;line-height:1.4;margin-bottom:7px}.markdown .octicon{fill:currentColor;display:inline-block;vertical-align:text-bottom}.markdown .anchor{float:left;line-height:1;margin-left:-20px;padding-right:4px}.markdown .anchor:focus{outline:none}.markdown h1 .octicon-link,.markdown h2 .octicon-link,.markdown h3 .octicon-link,.markdown h4 .octicon-link,.markdown h5 .octicon-link,.markdown h6 .octicon-link{color:#1b1f23;vertical-align:middle;visibility:hidden}.markdown h1:hover .anchor,.markdown h2:hover .anchor,.markdown h3:hover .anchor,.markdown h4:hover .anchor,.markdown h5:hover .anchor,.markdown h6:hover .anchor{text-decoration:none}.markdown h1:hover .anchor .octicon-link,.markdown h2:hover .anchor .octicon-link,.markdown h3:hover .anchor .octicon-link,.markdown h4:hover .anchor .octicon-link,.markdown h5:hover .anchor .octicon-link,.markdown h6:hover .anchor .octicon-link{visibility:visible}.markdown h1:hover .anchor .octicon-link:before,.markdown h2:hover .anchor .octicon-link:before,.markdown h3:hover .anchor .octicon-link:before,.markdown h4:hover .anchor .octicon-link:before,.markdown h5:hover .anchor .octicon-link:before,.markdown h6:hover .anchor .octicon-link:before{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' aria-hidden='true' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z'/%3E%3C/svg%3E");content:" ";display:inline-block;height:16px;width:16px}.markdown{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;word-wrap:break-word;color:var(--content-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;font-weight:500;line-height:1.5}.markdown details{display:block}.markdown summary{display:list-item}.markdown a{background-color:initial}.markdown a:active,.markdown a:hover{outline-width:0}.markdown strong{font-weight:inherit;font-weight:bolder}.markdown h1{margin:.67em 0}.markdown img{border-style:none}.markdown code,.markdown kbd,.markdown pre{font-family:monospace,monospace;font-size:1em}.markdown hr{box-sizing:initial;overflow:visible}.markdown input{font:inherit;margin:0;overflow:visible}.markdown [type=checkbox]{box-sizing:border-box;padding:0}.markdown *{box-sizing:border-box}.markdown input{font-family:inherit;font-size:inherit;line-height:inherit}.markdown a{border-bottom:.05em solid;border-color:var(--link-text-color);color:var(--link-text-color);text-decoration:none}.markdown a.anchor{border-bottom:none}.markdown strong{font-weight:700}.markdown hr{background:transparent;border-bottom:1px solid var(--markdown-blockquote-border-color);height:0;margin:15px 0;overflow:hidden}.markdown hr:after,.markdown hr:before{content:"";display:table}.markdown hr:after{clear:both}.markdown table{border-collapse:collapse;border-spacing:0}.markdown td,.markdown th{padding:0}.markdown details summary{cursor:pointer}.markdown h1,.markdown h2,.markdown h3,.markdown h4,.markdown h5,.markdown h6{margin-bottom:0;margin-top:0}.markdown h1{font-size:32px}.markdown h1,.markdown h2{font-weight:600}.markdown h2{font-size:24px}.markdown h3{font-size:20px}.markdown h3,.markdown h4{font-weight:600}.markdown h4{font-size:16px}.markdown h5{font-size:14px}.markdown h5,.markdown h6{font-weight:600}.markdown h6{font-size:12px}.markdown p{margin-bottom:10px;margin-top:0}.markdown blockquote{margin:0}.markdown ol,.markdown ul{margin-bottom:0;margin-top:0;padding-left:0}.markdown ol ol,.markdown ul ol{list-style-type:lower-roman}.markdown ol ol ol,.markdown ol ul ol,.markdown ul ol ol,.markdown ul ul ol{list-style-type:lower-alpha}.markdown dd{margin-left:0}.markdown code,.markdown pre{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px}.markdown code.language-text{border-radius:3px;font-size:85%;padding:.2em .4em}.markdown :not(pre)>code.language-text{background:hsla(44,6%,50%,.15);color:#eb5757;overflow-wrap:break-word}.markdown pre{margin-bottom:0;margin-top:0}.markdown input::-webkit-inner-spin-button,.markdown input::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}.markdown :checked+.radio-label{border-color:#0366d6;position:relative;z-index:1}.markdown .border{border:1px solid var(--markdown-border-color)!important}.markdown .border-0{border:0!important}.markdown .border-bottom{border-bottom:1px solid var(--markdown-border-color)!important}.markdown .rounded-1{border-radius:3px!important}.markdown .bg-white{background-color:transparent!important}.markdown .bg-gray-light{background-color:#fafbfc!important}.markdown .text-gray-light{color:#6a737d!important}.markdown .pl-3,.markdown .px-3{padding-left:16px!important}.markdown .px-3{padding-right:16px!important}.markdown .f6{font-size:12px!important}.markdown .lh-condensed{line-height:1.25!important}.markdown .text-bold{font-weight:600!important}.markdown .pl-c{color:#6a737d}.markdown .pl-c1,.markdown .pl-s .pl-v{color:#005cc5}.markdown .pl-e,.markdown .pl-en{color:#6f42c1}.markdown .pl-s .pl-s1,.markdown .pl-smi{color:#24292e}.markdown .pl-ent{color:#22863a}.markdown .pl-k{color:#d73a49}.markdown .pl-pds,.markdown .pl-s,.markdown .pl-s .pl-pse .pl-s1,.markdown .pl-sr,.markdown .pl-sr .pl-cce,.markdown .pl-sr .pl-sra,.markdown .pl-sr .pl-sre{color:#032f62}.markdown .pl-smw,.markdown .pl-v{color:#e36209}.markdown .pl-bu{color:#b31d28}.markdown .pl-ii{background-color:#b31d28;color:#fafbfc}.markdown .pl-c2{background-color:#d73a49;color:#fafbfc}.markdown .pl-c2:before{content:"^M"}.markdown .pl-sr .pl-cce{color:#22863a;font-weight:700}.markdown .pl-ml{color:#735c0f}.markdown .pl-mh,.markdown .pl-mh .pl-en,.markdown .pl-ms{color:#005cc5;font-weight:700}.markdown .pl-mi{color:#24292e;font-style:italic}.markdown .pl-mb{color:#24292e;font-weight:700}.markdown .pl-md{background-color:#ffeef0;color:#b31d28}.markdown .pl-mi1{background-color:#f0fff4;color:#22863a}.markdown .pl-mc{background-color:#ffebda;color:#e36209}.markdown .pl-mi2{background-color:#005cc5;color:#f6f8fa}.markdown .pl-mdr{color:#6f42c1;font-weight:700}.markdown .pl-ba{color:#586069}.markdown .pl-sg{color:#959da5}.markdown .pl-corl{color:#032f62;text-decoration:underline}.markdown .mb-0{margin-bottom:0!important}.markdown .my-2{margin-bottom:8px!important;margin-top:8px!important}.markdown .pl-0{padding-left:0!important}.markdown .py-0{padding-bottom:0!important;padding-top:0!important}.markdown .pl-1{padding-left:4px!important}.markdown .pl-2{padding-left:8px!important}.markdown .py-2{padding-bottom:8px!important;padding-top:8px!important}.markdown .pl-3{padding-left:16px!important}.markdown .pl-4{padding-left:24px!important}.markdown .pl-5{padding-left:32px!important}.markdown .pl-6{padding-left:40px!important}.markdown .pl-7{padding-left:48px!important}.markdown .pl-8{padding-left:64px!important}.markdown .pl-9{padding-left:80px!important}.markdown .pl-10{padding-left:96px!important}.markdown .pl-11{padding-left:112px!important}.markdown .pl-12{padding-left:128px!important}.markdown hr{border-bottom-color:#eee}.markdown kbd{background-color:#fafbfc;border:1px solid #d1d5da;border-radius:3px;box-shadow:inset 0 -1px 0 #d1d5da;color:#444d56;display:inline-block;font:11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;line-height:10px;padding:3px 5px;vertical-align:middle}.markdown:after,.markdown:before{content:"";display:table}.markdown:after{clear:both}.markdown>:first-child{margin-top:0!important}.markdown>:last-child{margin-bottom:0!important}.markdown a:not([href]){color:inherit;text-decoration:none}.markdown blockquote,.markdown details,.markdown dl,.markdown ol,.markdown p,.markdown pre,.markdown table,.markdown ul{margin-bottom:16px;margin-top:0}.markdown hr{background-color:var(--markdown-border-color);border:0;height:.25em;margin:24px 0;padding:0}.markdown blockquote{border-left:.25em solid var(--markdown-blockquote-border-color);color:#6a737d;padding:0 1em}.markdown blockquote>:first-child{margin-top:0}.markdown blockquote>:last-child{margin-bottom:0}.markdown h1,.markdown h2,.markdown h3,.markdown h4,.markdown h5,.markdown h6{font-weight:600;line-height:1.25;margin-bottom:16px;margin-top:24px}.markdown h1{font-size:2em}.markdown h2{font-size:1.5em}.markdown h3{font-size:1.25em}.markdown h4{font-size:1em}.markdown h5{font-size:.875em}.markdown h6{color:#6a737d;font-size:.85em}.markdown ol,.markdown ul{padding-left:2em}.markdown ol ol,.markdown ol ul,.markdown ul ol,.markdown ul ul{margin-bottom:0;margin-top:0}.markdown ol{list-style-type:decimal}.markdown ul{list-style-type:disc}.markdown li{word-wrap:break-all;display:list-item;text-align:-webkit-match-parent}.markdown li>p{margin-top:16px}.markdown li+li{margin-top:.25em}.markdown dl{padding:0}.markdown dl dt{font-size:1em;font-style:italic;font-weight:600;margin-top:16px;padding:0}.markdown dl dd{margin-bottom:16px;padding:0 16px}.markdown table{display:block;overflow:auto;width:100%}.markdown table th{font-weight:600}.markdown table td,.markdown table th{border:1px solid var(--markdown-table-border-color);padding:6px 13px}.markdown table tr{border-top:1px solid var(--markdown-table-border-color)}.markdown table tr:nth-child(2n){background-color:var(--markdown-table-even-cell-background-color)}.markdown img{background-color:transparent;box-sizing:initial;display:block;margin:0 auto;max-width:100%}.markdown img[align=right]{padding-left:20px}.markdown img[align=left]{padding-right:20px}.markdown code{background-color:rgba(27,31,35,.05);border-radius:3px;font-size:85%;margin:0;padding:.2em .4em}.markdown pre{word-wrap:normal}.markdown pre>code{background:transparent;border:0;font-size:100%;margin:0;padding:0;white-space:pre;word-break:normal}.markdown .highlight{margin-bottom:16px}.markdown .highlight pre{margin-bottom:0;word-break:normal}.markdown .highlight pre,.markdown pre{background-color:#f6f8fa;border-radius:3px;font-size:85%;line-height:1.45;overflow:auto;padding:16px}.markdown pre code{word-wrap:normal;background-color:initial;border:0;display:inline;line-height:inherit;margin:0;max-width:auto;overflow:visible;padding:0}.markdown .commit-tease-sha{color:#444d56;display:inline-block;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:90%}.markdown .full-commit .btn-outline:not(:disabled):hover{border-color:#005cc5;color:#005cc5}.markdown .blob-wrapper{overflow-x:auto;overflow-y:hidden}.markdown .blob-wrapper-embedded{max-height:240px;overflow-y:auto}.markdown .blob-num{color:rgba(27,31,35,.3);cursor:pointer;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px;line-height:20px;min-width:50px;padding-left:10px;padding-right:10px;text-align:right;-webkit-user-select:none;-ms-user-select:none;user-select:none;vertical-align:top;white-space:nowrap;width:1%}.markdown .blob-num:hover{color:rgba(27,31,35,.6)}.markdown .blob-num:before{content:attr(data-line-number)}.markdown .blob-code{line-height:20px;padding-left:10px;padding-right:10px;position:relative;vertical-align:top}.markdown .blob-code-inner{word-wrap:normal;color:#24292e;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:12px;overflow:visible;white-space:pre}.markdown .pl-token.active,.markdown .pl-token:hover{background:#ffea7f;cursor:pointer}.markdown .tab-size[data-tab-size="1"]{-o-tab-size:1;tab-size:1}.markdown .tab-size[data-tab-size="2"]{-o-tab-size:2;tab-size:2}.markdown .tab-size[data-tab-size="3"]{-o-tab-size:3;tab-size:3}.markdown .tab-size[data-tab-size="4"]{-o-tab-size:4;tab-size:4}.markdown .tab-size[data-tab-size="5"]{-o-tab-size:5;tab-size:5}.markdown .tab-size[data-tab-size="6"]{-o-tab-size:6;tab-size:6}.markdown .tab-size[data-tab-size="7"]{-o-tab-size:7;tab-size:7}.markdown .tab-size[data-tab-size="8"]{-o-tab-size:8;tab-size:8}.markdown .tab-size[data-tab-size="9"]{-o-tab-size:9;tab-size:9}.markdown .tab-size[data-tab-size="10"]{-o-tab-size:10;tab-size:10}.markdown .tab-size[data-tab-size="11"]{-o-tab-size:11;tab-size:11}.markdown .tab-size[data-tab-size="12"]{-o-tab-size:12;tab-size:12}.markdown .task-list-item{list-style-type:none}.markdown .task-list-item+.task-list-item{margin-top:3px}.markdown .task-list-item input{margin:0 .2em .25em -1.6em;vertical-align:middle}.markdown .table-of-contents{align-items:flex-start;display:flex;flex-direction:column;justify-content:center;position:fixed;right:0;top:75px;width:340px}@media(max-width:1300px){.markdown .table-of-contents{display:none}}.markdown .table-of-contents ul{cursor:pointer;list-style-type:none}.markdown .table-of-contents ul li a{border-bottom:none;color:var(--secondary-text-color);font-size:14px;height:30px;padding:6px 2px;width:100%}.markdown .table-of-contents ul p{margin:0}.markdown .gatsby-resp-image-wrapper{display:flex!important;justify-content:center!important;max-height:560px!important;width:100%!important}.markdown .gatsby-resp-image-wrapper img{height:auto!important;max-height:560px!important;max-width:100%!important;position:relative!important;width:auto!important}.markdown .gatsby-resp-image-wrapper+em{color:#6a737d;display:block;font-size:15px;font-style:italic;text-align:center}code[class*=language-],pre[class*=language-]{word-wrap:normal;background:none;color:#ccc;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;font-size:1em;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none;line-height:1.5;-o-tab-size:4;tab-size:4;text-align:left;white-space:pre;word-break:normal;word-spacing:normal}pre[class*=language-]{margin:.5em 0;overflow:auto;padding:1em}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{border-radius:.3em;padding:.1em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}.post-content{margin-bottom:20px;width:100%}.category-page-header-wrapper,.post-content{display:flex;flex-direction:column;justify-content:center}.category-page-header-wrapper{align-items:center;margin-bottom:30px;margin-top:30px}.category-page-header-wrapper .category-page-title{border-bottom:3px solid var(--primary-text-color);font-size:40px;font-weight:700;margin-bottom:15px;padding-bottom:7px;text-align:center;width:-webkit-fit-content;width:-moz-fit-content;width:fit-content}.category-page-header-wrapper .category-page-subtitle{font-size:20px;font-weight:500;padding-bottom:10px;text-align:center}.post-card-wrapper{display:flex;justify-content:center;min-height:150px;width:100%}.post-card-wrapper .post-card{border:1px solid var(--post-card-border-color);border-radius:6px;color:var(--primary-text-color);cursor:pointer;display:flex;flex-direction:column;height:100%;margin-bottom:15px;max-width:720px;padding:15px;transition:-webkit-transform .2s;transition:transform .2s;transition:transform .2s,-webkit-transform .2s;width:100%}.post-card-wrapper .post-card:hover .title{text-decoration:underline}@media(min-width:768px){.post-card-wrapper .post-card{margin-bottom:0}}.post-card-wrapper .post-card .title{font-size:18px;font-weight:600;line-height:1.4;margin-bottom:7px}.post-card-wrapper .post-card .description{-webkit-line-clamp:3;-webkit-box-orient:vertical;color:var(--primary-text-color);display:-webkit-box;font-size:13px;line-height:20px;margin-bottom:10px;overflow:hidden;text-overflow:ellipsis}.post-card-wrapper .post-card .info{color:var(--about-link-icon-color);display:flex;font-size:14px;justify-content:space-between;margin-top:auto}.post-card-wrapper .post-card .info .categories{display:flex}.post-card-wrapper .post-card .info .categories .category{margin-left:4px}.post-card-wrapper .post-card .info .categories .category:hover{text-decoration:underline}.post-card-column-wrapper{display:flex;justify-content:center;width:100%}.post-card-column-wrapper .post-card-column{align-items:center;display:flex;flex-direction:column;width:100%}.post-card-column-wrapper .post-card-column .post-card-wrapper{margin-bottom:10px}.post-card-column-wrapper .post-card-column .more-post-card-button{background-color:var(--button-background-color);color:var(--tab-hover-text-color);font-size:15px;font-weight:500;height:40px}.post-tabs-wrapper{align-self:flex-start;display:flex;flex-direction:column;justify-content:center;top:0;width:100%}.post-tabs-wrapper .post-tabs{display:flex;height:40px;justify-content:center;margin-bottom:12px;max-width:760px;width:100%}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTab-root{color:var(--tab-text-color);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:17px;font-weight:500;height:40px;min-height:auto;min-width:auto;padding:10px 12px;transition:all .2s ease}.post-tabs-wrapper .post-tabs .mui-tabs .Mui-selected,.post-tabs-wrapper .post-tabs .mui-tabs .MuiTab-root :hover{color:var(--tab-hover-text-color);transition:all .2s ease}.post-tabs-wrapper .post-tabs .mui-tabs .Mui-selected{background-color:var(--tab-selected-background-color);border-radius:8px;font-weight:600}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabScrollButton-root{height:40px;width:20px}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabs-scrollable{height:40px}.post-tabs-wrapper .post-tabs .mui-tabs .MuiTabs-indicator{display:none}</style><style data-emotion="css-global o6gwfi">html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;box-sizing:border-box;-webkit-text-size-adjust:100%;}*,*::before,*::after{box-sizing:inherit;}strong,b{font-weight:700;}body{margin:0;color:rgba(0, 0, 0, 0.87);font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.5;letter-spacing:0.00938em;background-color:#fff;}@media print{body{background-color:#fff;}}body::backdrop{background-color:#fff;}</style><style data-emotion="css-global 1prfaxn">@-webkit-keyframes mui-auto-fill{from{display:block;}}@keyframes mui-auto-fill{from{display:block;}}@-webkit-keyframes mui-auto-fill-cancel{from{display:block;}}@keyframes mui-auto-fill-cancel{from{display:block;}}</style><style data-emotion="css 1l6di18 feqhe6 11tfndm mnn31 vubbuv 1yxmbwk 6flbmm">.css-1l6di18.Mui-focused .MuiAutocomplete-clearIndicator{visibility:visible;}@media (pointer: fine){.css-1l6di18:hover .MuiAutocomplete-clearIndicator{visibility:visible;}}.css-1l6di18 .MuiAutocomplete-tag{margin:3px;max-width:calc(100% - 6px);}.css-1l6di18 .MuiAutocomplete-inputRoot{-webkit-box-flex-wrap:wrap;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiAutocomplete-inputRoot,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiAutocomplete-inputRoot{padding-right:30px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiAutocomplete-inputRoot{padding-right:56px;}.css-1l6di18 .MuiAutocomplete-inputRoot .MuiAutocomplete-input{width:0;min-width:30px;}.css-1l6di18 .MuiInput-root{padding-bottom:1px;}.css-1l6di18 .MuiInput-root .MuiInput-input{padding:4px 4px 4px 0px;}.css-1l6di18 .MuiInput-root.MuiInputBase-sizeSmall .MuiInput-input{padding:2px 4px 3px 0;}.css-1l6di18 .MuiOutlinedInput-root{padding:9px;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiOutlinedInput-root,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiOutlinedInput-root{padding-right:39px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiOutlinedInput-root{padding-right:65px;}.css-1l6di18 .MuiOutlinedInput-root .MuiAutocomplete-input{padding:7.5px 4px 7.5px 6px;}.css-1l6di18 .MuiOutlinedInput-root .MuiAutocomplete-endAdornment{right:9px;}.css-1l6di18 .MuiOutlinedInput-root.MuiInputBase-sizeSmall{padding:6px;}.css-1l6di18 .MuiOutlinedInput-root.MuiInputBase-sizeSmall .MuiAutocomplete-input{padding:2.5px 4px 2.5px 6px;}.css-1l6di18 .MuiFilledInput-root{padding-top:19px;padding-left:8px;}.MuiAutocomplete-hasPopupIcon.css-1l6di18 .MuiFilledInput-root,.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiFilledInput-root{padding-right:39px;}.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1l6di18 .MuiFilledInput-root{padding-right:65px;}.css-1l6di18 .MuiFilledInput-root .MuiFilledInput-input{padding:7px 4px;}.css-1l6di18 .MuiFilledInput-root .MuiAutocomplete-endAdornment{right:9px;}.css-1l6di18 .MuiFilledInput-root.MuiInputBase-sizeSmall{padding-bottom:1px;}.css-1l6di18 .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input{padding:2.5px 4px;}.css-1l6di18 .MuiInputBase-hiddenLabel{padding-top:8px;}.css-1l6di18 .MuiAutocomplete-input{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;text-overflow:ellipsis;opacity:1;}.css-feqhe6{display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;position:relative;min-width:0;padding:0;margin:0;border:0;vertical-align:top;width:100%;}.css-11tfndm{font-family:"Roboto","Helvetica","Arial",sans-serif;font-weight:400;font-size:1rem;line-height:1.4375em;letter-spacing:0.00938em;color:rgba(0, 0, 0, 0.87);box-sizing:border-box;position:relative;cursor:text;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;width:100%;position:relative;}.css-11tfndm.Mui-disabled{color:rgba(0, 0, 0, 0.38);cursor:default;}label+.css-11tfndm{margin-top:16px;}.css-11tfndm:after{border-bottom:2px solid #1976d2;left:0;bottom:0;content:"";position:absolute;right:0;-webkit-transform:scaleX(0);-moz-transform:scaleX(0);-ms-transform:scaleX(0);transform:scaleX(0);-webkit-transition:-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;transition:transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;pointer-events:none;}.css-11tfndm.Mui-focused:after{-webkit-transform:scaleX(1);-moz-transform:scaleX(1);-ms-transform:scaleX(1);transform:scaleX(1);}.css-11tfndm.Mui-error:after{border-bottom-color:#d32f2f;-webkit-transform:scaleX(1);-moz-transform:scaleX(1);-ms-transform:scaleX(1);transform:scaleX(1);}.css-11tfndm:before{border-bottom:1px solid rgba(0, 0, 0, 0.42);left:0;bottom:0;content:"\00a0";position:absolute;right:0;-webkit-transition:border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;pointer-events:none;}.css-11tfndm:hover:not(.Mui-disabled):before{border-bottom:2px solid rgba(0, 0, 0, 0.87);}@media (hover: none){.css-11tfndm:hover:not(.Mui-disabled):before{border-bottom:1px solid rgba(0, 0, 0, 0.42);}}.css-11tfndm.Mui-disabled:before{border-bottom-style:dotted;}.css-mnn31{font:inherit;letter-spacing:inherit;color:currentColor;padding:4px 0 5px;border:0;box-sizing:content-box;background:none;height:1.4375em;margin:0;-webkit-tap-highlight-color:transparent;display:block;min-width:0;width:100%;-webkit-animation-name:mui-auto-fill-cancel;animation-name:mui-auto-fill-cancel;-webkit-animation-duration:10ms;animation-duration:10ms;}.css-mnn31::-webkit-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31::-moz-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31:-ms-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31::-ms-input-placeholder{color:currentColor;opacity:0.42;-webkit-transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-mnn31:focus{outline:0;}.css-mnn31:invalid{box-shadow:none;}.css-mnn31::-webkit-search-decoration{-webkit-appearance:none;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-webkit-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-moz-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:-ms-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31::-ms-input-placeholder{opacity:0!important;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-webkit-input-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-moz-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus:-ms-input-placeholder{opacity:0.42;}label[data-shrink=false]+.MuiInputBase-formControl .css-mnn31:focus::-ms-input-placeholder{opacity:0.42;}.css-mnn31.Mui-disabled{opacity:1;-webkit-text-fill-color:rgba(0, 0, 0, 0.38);}.css-mnn31:-webkit-autofill{-webkit-animation-duration:5000s;animation-duration:5000s;-webkit-animation-name:mui-auto-fill;animation-name:mui-auto-fill;}.css-vubbuv{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:1em;height:1em;display:inline-block;fill:currentColor;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;font-size:1.5rem;}.css-1yxmbwk{display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;position:relative;box-sizing:border-box;-webkit-tap-highlight-color:transparent;background-color:transparent;outline:0;border:0;margin:0;border-radius:0;padding:0;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;-moz-appearance:none;-webkit-appearance:none;-webkit-text-decoration:none;text-decoration:none;color:inherit;text-align:center;-webkit-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;font-size:1.5rem;padding:8px;border-radius:50%;overflow:visible;color:rgba(0, 0, 0, 0.54);-webkit-transition:background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;}.css-1yxmbwk::-moz-focus-inner{border-style:none;}.css-1yxmbwk.Mui-disabled{pointer-events:none;cursor:default;}@media print{.css-1yxmbwk{-webkit-print-color-adjust:exact;color-adjust:exact;}}.css-1yxmbwk:hover{background-color:rgba(0, 0, 0, 0.04);}@media (hover: none){.css-1yxmbwk:hover{background-color:transparent;}}.css-1yxmbwk.Mui-disabled{background-color:transparent;color:rgba(0, 0, 0, 0.26);}.css-6flbmm{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:1em;height:1em;display:inline-block;fill:currentColor;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;-webkit-transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;font-size:2.1875rem;}</style><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><script>
+  
+  function gaOptout(){document.cookie=disableStr+'=true; expires=Thu, 31 Dec 2099 23:59:59 UTC;path=/',window[disableStr]=!0}var gaProperty='0',disableStr='ga-disable-'+gaProperty;document.cookie.indexOf(disableStr+'=true')>-1&&(window[disableStr]=!0);
+  if(true) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  }
+  if (typeof ga === "function") {
+    ga('create', '0', 'auto', {});
+      ga('set', 'anonymizeIp', true);
+      
+      
+      
+      
+      }</script><link rel="icon" href="/favicon-32x32.png?v=ad9e124e5060ab5ddbaf24744e1cfc72" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=ad9e124e5060ab5ddbaf24744e1cfc72"/><style type="text/css">
+    .anchor.before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translateX(-100%);
+      padding-right: 4px;
+    }
+    .anchor.after {
+      display: inline-block;
+      padding-left: 4px;
+    }
+    h1 .anchor svg,
+    h2 .anchor svg,
+    h3 .anchor svg,
+    h4 .anchor svg,
+    h5 .anchor svg,
+    h6 .anchor svg {
+      visibility: hidden;
+    }
+    h1:hover .anchor svg,
+    h2:hover .anchor svg,
+    h3:hover .anchor svg,
+    h4:hover .anchor svg,
+    h5:hover .anchor svg,
+    h6:hover .anchor svg,
+    h1 .anchor:focus svg,
+    h2 .anchor:focus svg,
+    h3 .anchor:focus svg,
+    h4 .anchor:focus svg,
+    h5 .anchor:focus svg,
+    h6 .anchor:focus svg {
+      visibility: visible;
+    }
+  </style><script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var hash = window.decodeURI(location.hash.replace('#', ''))
+      if (hash !== '') {
+        var element = document.getElementById(hash)
+        if (element) {
+          var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+          var clientTop = document.documentElement.clientTop || document.body.clientTop || 0
+          var offset = element.getBoundingClientRect().top + scrollTop - clientTop
+          // Wait for the browser to finish rendering before scrolling.
+          setTimeout((function() {
+            window.scrollTo(0, offset - 0)
+          }), 0)
+        }
+      }
+    })
+  </script><title data-react-helmet="true">CS 면접 대비</title><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc4.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2"/><link rel="preload" as="font" type="font/woff2" crossorigin="anonymous" href="/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2"/><style>@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:300;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc4.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:url(/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:500;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2) format("woff2")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:300;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc-.woff) format("woff")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:url(/static/webfonts/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxM.woff) format("woff")}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:500;src:url(/static/webfonts/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc-.woff) format("woff")}</style><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><style>.gatsby-image-wrapper{position:relative;overflow:hidden}.gatsby-image-wrapper picture.object-fit-polyfill{position:static!important}.gatsby-image-wrapper img{bottom:0;height:100%;left:0;margin:0;max-width:none;padding:0;position:absolute;right:0;top:0;width:100%;object-fit:cover}.gatsby-image-wrapper [data-main-image]{opacity:0;transform:translateZ(0);transition:opacity .25s linear;will-change:opacity}.gatsby-image-wrapper-constrained{display:inline-block;vertical-align:top}</style><noscript><style>.gatsby-image-wrapper noscript [data-main-image]{opacity:1!important}.gatsby-image-wrapper [data-placeholder-image]{opacity:0!important}</style></noscript><script type="module">const e="undefined"!=typeof HTMLImageElement&&"loading"in HTMLImageElement.prototype;e&&document.body.addEventListener("load",(function(e){if(void 0===e.target.dataset.mainImage)return;if(void 0===e.target.dataset.gatsbyImageSsr)return;const t=e.target;let a=null,n=t;for(;null===a&&n;)void 0!==n.parentNode.dataset.gatsbyImageWrapper&&(a=n.parentNode),n=n.parentNode;const o=a.querySelector("[data-placeholder-image]"),r=new Image;r.src=t.currentSrc,r.decode().catch((()=>{})).then((()=>{t.style.opacity=1,o&&(o.style.opacity=0,o.style.transition="opacity 500ms linear")}))}),!0);</script><link as="script" rel="preload" href="/webpack-runtime-11fab238ab053aae2627.js"/><link as="script" rel="preload" href="/framework-043f1197be387cb18d15.js"/><link as="script" rel="preload" href="/app-2a3abbc7799f752aeec3.js"/><link as="script" rel="preload" href="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js"/><link as="script" rel="preload" href="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"/><link as="fetch" rel="preload" href="/page-data/Interview/CS_Interview/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1073350324.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/1956554647.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/2938748437.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="page-wrapper"><header class="page-header-wrapper"><div class="page-header"><div class="front-section"><a class="link" href="/">sominsong.github.io</a></div><div class="trailing-section"><a class="link" href="/about">about</a><a class="link" href="/posts">posts</a><div class="MuiAutocomplete-root MuiAutocomplete-hasPopupIcon css-1l6di18" role="combobox" aria-expanded="false"><div class="search-input-wrapper"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root search-input css-feqhe6"><div class="MuiInput-root MuiInput-underline MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiAutocomplete-inputRoot css-11tfndm"><input type="text" aria-invalid="false" autoComplete="off" value="" class="MuiInput-input MuiInputBase-input MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused css-mnn31" aria-autocomplete="list" autoCapitalize="none" spellcheck="false"/><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium search-icon css-vubbuv" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="SearchOutlinedIcon"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div></div></div></div></div></div></header><main class="page-content"><header class="post-header"><div class="emoji">📚</div><div class="info"><div class="categories"><a class="category" href="/posts/Interview">Interview</a></div></div><h1 class="title">CS 면접 대비</h1><div class="info"><div class="author">posted by <strong>Mini</strong>,</div> <!-- -->November 16, 2022</div></header><div class="post-content"><div class="markdown"><h2 id="0-들어가기-전에" style="position:relative;"><a href="#0-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90" aria-label="0 들어가기 전에 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>0. 들어가기 전에</h2>
+<p>아직 면접 경험이 별로 없지만, 면접 기회가 생길 때마다 질문으로 나올 만한 CS 개념들을 정리해두면
+앞으로의 면접에서도 많은 도움을 받을 수 있지 않을까해서 정리해둔다.</p>
+<p>참고로, 아래에는 일반적인 CS 개념들도 포함되어 있지만
+일부는 내가 석사 과정동안 진행했던 연구들에 대한 개념들도 함께 들어있다.</p>
+<p>석사 과정동안 진행했던 연구의 키워드들은 조금 깊게,
+그리고 그 이외의 CS 키워드들은 좀 더 얕게 정리할 계획이다.</p>
+<p>참고로 면접에서는 장황하게 말하는 것보다, 키워드를 담은 한 문장으로 설명하는 것이 중요하더라.
+그래서 최대한 키워드를 담은 한 문장을 통해 개념을 설명하고, 추가 질문에 대비한 답변들도 정리해 둘 계획이다.</p>
+<p>지금 당장은 외국 기업 면접을 앞두고 있는터라, 영어로도 함께 정리해 둘 계획이다.</p>
+<p>큰 카테고리로 나누어서 개념들을 정리해두었다.</p>
+<h2 id="common-cs-interview" style="position:relative;"><a href="#common-cs-interview" aria-label="common cs interview permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Common CS Interview</h2>
+<h3 id="1-os" style="position:relative;"><a href="#1-os" aria-label="1 os permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. OS</h3>
+<ul>
+<li>‘Operating System’이라는 용어를 일반인에게 설명</li>
+</ul>
+<blockquote>
+<p>짧게 말하자면, ‘무엇인가를 수행’하기 위해서 하드웨어에 로드하는 소프트웨어를 말한다.
+예를 들어, 당신의 아이폰이라는 하드웨어에서 실행되는 iOS 운영 체제가 있다.
+<u>The short answer is that an operatin system is software that you load on your hardware to make it ‘do things’.</u>
+<u>The example is iOS operating system which runs on your iPhone hordware.</u></p>
+</blockquote>
+<ul>
+<li>Linux의 네트워크 인터페이스</li>
+</ul>
+<blockquote>
+<p>Loopback과 Ethernet이 있습니다. Loopback(lo)는 127.0.0.1 IP 주소를 가지며, Ethernet(eth0) 인터페이스는 DHCP에 의해 dynamic address를 부여받으며,</p>
+</blockquote>
+<ul>
+<li>Linux에서 네트워킹 도구 사례</li>
+</ul>
+<blockquote>
+<p>네트워크 도달 가능성을 테스트하기 위한 가장 기본적인 네트워크 테스트 도구인 Ping이 있으며, 네트워크를 통해 ICMP(Internet Control Message Protocol) 패킷을 보내고 응답이 있는지 알려준다. 호스트가 작동 중이고 네트워크에서 통신할 수 있는 경우, ICMP 응답이 반환된다.
+<u>Ping is the most basic network test tool around for testing network reachabiltiy, and it sends out an Internet Control Message Protocol (ICMP) patcket across the network and norifies you whether there is a reponse. If a host is up and able to communicate on the network, an ICMP response will be returned.</u>
+또 다른 도구는 네트워크 trouble shooting 도구인 traceroute이며, 로컬 시스템에서 출발하여 destination으로 도달하기까지 경로를 따라 라우팅되는 각 IP 라우터에 대한 정보를 수집한다. 이를 통해 어떤 노드가 문제를 일으키는지 확인할 수 있습니다.
+<u>Another Linux network trouble shooting tool is traceroute, and it proves the network between the local system and a destination, gathering information about each IP router in the path. It is usefuls when you want to find out which node is creating the problem.</u></p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Linux의 Inter-Process Communication 기술</strong></p>
+</li>
+<li>
+<p>System Daemon 설명</p>
+</li>
+</ul>
+<blockquote>
+<p>시스템 데몬은 일반적으로 작업을 시작하기 전에 특정 조건 집합을 기다리는 백그라운드 시스템 프로세스이며, 일반적으로는 사용자가 직접 제어하지 않고 시스템 자체에사 제어한다.
+<u>A system daemon is typically a background system process that awaits a specific set of conditions before jumping into action, and it is not typically under the direct control of users, but rather of the system itself.</u></p>
+</blockquote>
+<ul>
+<li>
+<p>Message Queue의 작업 설명</p>
+</li>
+<li>
+<p>Semaphore와 Busy Waiting 설명</p>
+<ul>
+<li>실제 사례를 사용하여 Busy Waiting 설명</li>
+</ul>
+</li>
+<li>
+<p><strong>Semaphore와 Mutex</strong></p>
+</li>
+<li>
+<p><strong>Multi-threading 설명</strong></p>
+<ul>
+<li>Multi-threading의 장점은 무엇인가?</li>
+</ul>
+</li>
+<li>
+<p>리눅스에서 실행 중인 프로세스의 PID를 가져오는 프로그램</p>
+</li>
+<li>
+<p><strong>스케줄링의 종류</strong></p>
+</li>
+<li>
+<p>한가지 프로세스 스케줄링 방법을 다른 스케줄링 방법으로 변환하는 방법</p>
+</li>
+<li>
+<p>Queue를 구현하지 위해서 몇 개의 Stack이 필요한가? 구현을 위한 Pseudo-code</p>
+</li>
+<li>
+<p>메모리의 유형</p>
+</li>
+<li>
+<p>Virtual Memory</p>
+</li>
+<li>
+<p>Cache memory와 Main Memory의 차이점</p>
+</li>
+<li>
+<p>System Call 설명</p>
+</li>
+<li>
+<p>Printf()는 어떻게 작동하는가?</p>
+</li>
+<li>
+<p>Deadlock</p>
+</li>
+<li>
+<p>Context Switching</p>
+</li>
+<li>
+<p>Paging과 Segmentation</p>
+</li>
+<li>
+<p>Process 상태와 속성</p>
+</li>
+<li>
+<p><strong>Thread</strong></p>
+<ul>
+<li>Thread 관련 프로그래밍</li>
+</ul>
+</li>
+<li>
+<p>라이브러리의 유형</p>
+<ul>
+<li>동적 라이브러리를 driver test 프로그램과 연결하는 방법</li>
+</ul>
+</li>
+<li>
+<p>시스템 간의 Synchronous &#x26; Asynchronous communication 방법</p>
+</li>
+<li>
+<p>Recycle bin(휴지통)의 내부 구현</p>
+</li>
+<li>
+<p>Atomic Transaction(원자적 트랜잭션) 설명</p>
+<ul>
+<li>트랜잭션이 atomic한지 어떻게 확인할 수 있는가?</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-network" style="position:relative;"><a href="#2-network" aria-label="2 network permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. Network</h3>
+<ul>
+<li>MAC 주소란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>MAC(Media Access Control) 주소는 OSI 모델의 데이터 링크 계층인 2계층에서 네트워크 인터페이스에 할당된 고유 식별자이며, 네트워크 인터페이스에는 IP 주소는 없더라도 하드웨어 주소라고도 하는 MAC 주소가 항상 존재한다.</p>
+</blockquote>
+<ul>
+<li><strong>Networking 용어 설명</strong></li>
+</ul>
+<blockquote>
+<p>디바이스가 네트워크에 연결되어 서로 통신하는 것을 의미한다.
+It means that devices are connected to the network and communicate with each other.</p>
+</blockquote>
+<ul>
+<li><strong>Network 유형</strong></li>
+</ul>
+<blockquote>
+<p>“거리”에 따라 5m 전후의 인접 통신인 PAN(Personal Area Network), 소규모 공간 내의 고속 통신 회선인 LAN(Local Area Network), LAN과 WAN의 중간 형태인 MAN(Metropolitan Area Network), 광대역 네트워크 망으로 관련된 LAN을 서로 연결한 WAN(Wide Area Network)기 있다.
+“데이터 전송 방식”에 따라 단방향 통신(Simplex), 서로 데이터를 전송할 수 있지만, 하나의 회선을 사용하기 때문에 동시에 전송을 불가능한 반이중 통신(Half Duplex), 서로 언제나 필요한 데이터를 동시에 송수신할 수 있는 Full Duplex가 있다.
+“네트워크 토폴로지”에 따라 Tree형, Bus형, Star형, Ring현, Mesh형이 있다.</p>
+</blockquote>
+<ul>
+<li>P2P 및 Client-Server 네트워크 설명 및 장단점</li>
+</ul>
+<blockquote>
+<p>Client-Servier 네트워크는 정보를 가지고 있고, 이를 처리하는 서버 컴퓨터와 서버에 정보를 요청하여 응답을 받는 클라이언트로 구성된 네트워크이다.
+반면에 P2P 네트워크는 서버를 거치지 않고 클라이언트끼리 직접 통신하는 방식이다. 각 노드들은 요청과 응답 모두 가능하다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 실생활에서 P2P의 예</code></pre></div>
+<blockquote>
+<p>대표적으로는 암호 화페와 같은 블록체인 기술이 있습니다. 탈중앙화를 위해 P2P 네트워크를 채택하여 사용합니다.
+A representative example is blockchain technology such as cryptocurrency. It adopts P2P network decentralization.</p>
+</blockquote>
+<ul>
+<li><strong>Bridge와 Switch의 차이점</strong></li>
+</ul>
+<blockquote>
+<p>Bridge는 Switch와 비슷한 역할을 한다. 하지만 Switch는 처리 방식이 하드웨어이고, Bridge는 소프트웨어이기 때문에 속도가 Switch가 훨씬 빠르다. 또한 포트 10개도 채 지원되지 않는 Bridge에 비해 Switch의 포트 수가 훨씬 많다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __Router의 동작 과정을 간략하게 설명__</code></pre></div>
+<blockquote>
+<ol>
+<li>패킷은 목적지의 IP 주고와 데이터로 구성된다. 라우터는 패킷의 목적지가 같은 네트워크에 있는지 아니면 다른 네트워크에 있는지 확인하기 위해 LAN 테이블을 검사한다.</li>
+<li>네트워크 테이블을 검사하여 패킷을 전달할 네트워크 주소를 찾아낸다</li>
+<li>라우팅 테이블을 검색하여 가장 적합한 경로를 찾아내서 패킷을 보낸다.</li>
+</ol>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 경로에 오류가 있는 경우, dynamic routing protocol은 어떻게 경로를 전환하는가?</code></pre></div>
+<ul>
+<li><strong>OSI Reference Model에서 계층들</strong></li>
+</ul>
+<blockquote>
+<p>1 Physical Layer (cable, hub), 2 Data Link Layer (bridge, switch), 3 Network Layer (router), 4 Transport Layer (TCP, UDP), 5 Session Layer, 6 Presentation Layer (SSL), 7 Application Layer (HTTP, SMTP)</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __Router와 Switch는 어느 Layer에 위치해 있는지? 이 둘의 차이점은 무엇인지?__</code></pre></div>
+<blockquote>
+<p>Switch는 여러 디바이스를 서로 연결함으로써 하나의 네트워크(IntraNet)를 구축한다. Switch는 같은 네트워크 안에서 목적지에 맞게 데이터를 중간에 적합한 경로로 스위칭해주는 역할을 한다. Layer 2(데이터 링크 계층)에 해당하며, 데이터 링크 계층이기 때문에 MAC 주소 기반으로 동작한다.
+Router는 여러 스위치, 즉 각각의 서로 다른 네트워크들을 연결하여 더 큰 네트워크(인터넷)를 형성한다. Router 또한 서로 다른 네트워크 목적지로 가는 적합한 경로를 찾아주는 라우팅 기능을 한다. 라우터는 Layer 3(네트워크 계층)의 IP 주소를 기반으로 작동한다.
+둘의 차이점은 우선 서로 다른 계층에서 작동한다는 점이다. 또한, Switch의 경우 목적지가 없을 경우 모든 포트에 패킷을 전송하지만, 라우터의 경우 분명한 도착지 정보가 있을 때만 통신을 허락하ㅗ 없으면 패킷을 바로 버린다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- Networking에서 왜 이렇게 다른 Layer가 필요한지?</code></pre></div>
+<blockquote>
+<p>if is because of the fact that it will be easy for troubleshooting the network problems.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 물리적 계층에서는 어떤 일이 발생하는지?</code></pre></div>
+<blockquote>
+<p>물리적 계층에서는 이진수로된 신호를 전기 신호로 바꾸어 케이블을 통해 목적지로 전달함
+At the physical layer, the binary signal is converted into a electrical siganl and transmitted to the destination through the cables.</p>
+</blockquote>
+<ul>
+<li><strong>TCP/IP 설명</strong></li>
+</ul>
+<blockquote>
+<p>TCP는 애플리케이션이 네트워크에서 신뢰성 있는 통신 채널을 만들고, IP는 올바른 대상에 도달하도록 각 패킷의 주소를 지정하고 라우팅하는 방법을 정의한다.
+1 Network Access Layer (MAC), 2 Internet Layer (IP), 3 Transport Layer (TCP), 4 Application Layer (HTTP)로 구성되어 있다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TCP의 message에는 어떤 내용이 있는지?</code></pre></div>
+<blockquote>
+<p>Source port, destination port, sequence number, acknowledgment number, data offset, reserved, control bits, window, checksum, urgent pointer, options, padding, data</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TCP/IP는 어떻게 작동하는가?</code></pre></div>
+<blockquote>
+<p>Data -(Application)-> Message -(Transfer)-> Segment -(Internet)-> Packet -(Network Interface)-> Frame</p>
+</blockquote>
+<ul>
+<li>IPv4 address에서 클래스 설명</li>
+</ul>
+<blockquote>
+<p>IP 주소는 네트워크 주소 부분과 호스트 주소 부분으로 나뉘다. 클래스에 따라 네트워크 주소 부분과 호스트 주소 부분의 크기가 변한다.
+네트워크 클래스는 A, B, C, D, E로 나누어져 있으며, Class A는 0.0.0.0<del>127.255.255.255 범위이며, 네트워크 개수가 126개 &#x26; 호스트 개수가 (256<em>256</em>256 - 2)개이다.
+Class B는 128.0.0.0</del>191.255.255.255 범위이며, 네트워크 주소 개수가 64<em>256개, 호스트 주소 개수가 (256</em>256 - 2)개이다.
+Class C는 192.0.0.0<del>223.255.255.255 범위이며, 네트워크 주소 개수가 32<em>256</em>256개이며, 호스트 주소가 (256-2)개
+Class D는 224.0.0.0</del>239.255.255.255 범위로 네트워크 주소 16개, 호스트 주소 (256-2)개이다.
+Class E는 240.0.0.0~255.255.255.255 범위로 네트워크 주소 16개 호스트 주소 (256-2)개이다.
+(-2는 모두 0은 자기 자신, 모두 1은 브로드캐스트 주소를 의미하기 때문이다.)</p>
+</blockquote>
+<ul>
+<li>IPv4와 IPv6의 차이점은?</li>
+</ul>
+<blockquote>
+<p>IPv4는 주소 길이가 8bit씩 4부분으로 10진수(Decimal)로 표시된 32bit 인데 반면, IPv6는 16비트가 8부분으로 16진수(Hexadecimal)로 표시된 128bit 주소이다. IPv6은 IPv4의 주소 부족 문제를 해결하였다.</p>
+</blockquote>
+<ul>
+<li>Ethernet Cable은 무엇이고, 어떻게 작동하는가?</li>
+</ul>
+<blockquote>
+<p>Ethernet Cable은 디바이스와 네트워크 장치(Switch, Router)를 연결하는 케이블로, 로컬 네트워크 또는 인터넷에 대한 장치 액세스를 제공한다.</p>
+</blockquote>
+<ul>
+<li><strong>DNS 작동 방식</strong></li>
+</ul>
+<blockquote>
+<p>Domain Name System 호스트의 도메인 이름을 호스트의 IP 주소로 바꾸거나 그 반대를 수행하는 시스템이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- __웹 브라우저에 www.google.com을 입력할 경우 어떻게 되는지?__</code></pre></div>
+<blockquote>
+<ol>
+<li>local DNS에게 <a href="http://www.google.com%EC%9D%B4%EB%9D%BC%EB%8A%94">www.google.com이라는</a> hostname에 대한 IP 주소를 request, local DNS에 없으면 Root DNS 정보 전달받음</li>
+<li>Root DNS 서버에 <a href="http://www.google.com">www.google.com</a> Request</li>
+<li>Root DNS 서버로부터 .com 도메인을 관리하는 TLD(Top-Level Domain) DNS 정보 전달 받음</li>
+<li>TLD에게 <a href="http://www.google.com">www.google.com</a> request</li>
+<li>TLD에서 google.com 관리하는 DNS 정보 전달</li>
+<li>google.com 도메인을 관리하는 DNS 서버에 <a href="http://www.google.com">www.google.com</a> 호스트네임에 대한 IP 주소 request</li>
+<li>해당 서버가 <a href="http://www.google.com">www.google.com</a> IP 주소 response</li>
+<li>Local DNS는 <a href="http://www.google.com%EC%97%90">www.google.com에</a> 대한 IP 주소를 caching하고 IP 주소 전달</li>
+</ol>
+</blockquote>
+<ul>
+<li>ARP(Address Resolution Protocol) 설명</li>
+</ul>
+<blockquote>
+<p>Address Resolution Protocol, IP 주소를 해당 IP 주소에 맞는 MAC 주소로 변환시켜주는 프로토콜
+송신자는 목적지 MAC 주소가 필요하므로, MAC 주소 요청을 위한 ARP request packet을 boadcast로 전송 -> 모든 호스트와 라우터는 송신자가 보낸 ARP 요청 패킷을 수신함 -> 해당되는 수신자만 자신의 IP 주소와 MAC 주소를 넣어 response 패킷을 Unicast로 전송</p>
+</blockquote>
+<ul>
+<li><strong>TCP와 UDP의 차이</strong></li>
+</ul>
+<blockquote>
+<p>둘 다 4계층, 전송 계층에 해당한다.
+TCP 프로토콜은 양종단 호스트 내 프로세스 상호 간에 신뢰적인 연결 지향적 서비스를 제공한다. 3-way handshaking(SYN->SYN/ACK->ACK) 과정을 통해 연결 설정 및 4-way handshaking(FIN->ACK->FIN->ACK)을 통해 연결 해제
+UDP 프로토콜은 비연결성이고, 신뢰성이 없으며, 순서화되지 않은 Datagram 서비스를 제공하지만, 빠른 요청과 응답이 가능하다.
+They are corresponds to the Layer 4, Transport Layer.
+TCP protocol provides reliable connection-oriented services between processes in both end to end. 3-way handshaking to connect and 4-way handshaking to disconnect.
+UDP protocol provides a connectionless, unreliable, unordered datagram service, but allows fast requests and responses.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- 사용되는 실제 사례</code></pre></div>
+<blockquote>
+<ul>
+<li>TCP: email, HTTP, file transfer</li>
+<li>UDP: real-time video player, game</li>
+</ul>
+</blockquote>
+<ul>
+<li>HTTP란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>텍스트 기반의 통신 규약으로 인터넷에서 데이터를 주고받을 수 있는 프로토콜이다.</p>
+</blockquote>
+<ul>
+<li><strong>Super-Netting과 Sub-Netting이 무엇인가?</strong></li>
+</ul>
+<blockquote>
+<p>Subnetting은 Subnet을 만드는 것으로, Network를 나누는 개념이다. 즉, IP address에서 Network 범위는 늘이고, Host 범위는 줄이는 것이다.
+Supternetting은 Network를 합치는 것이다. 즉, IP address에서 Netowrk 범위는 줄이고, Host 범위는 늘이는 것이다.</p>
+</blockquote>
+<ul>
+<li>TraceRoute 설명</li>
+</ul>
+<blockquote>
+<p>패킷이 목적지까지 도달하는 동안 거치는 라우터의 IP를 확인할 수 있는 Tool 이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- ICMP 설명</code></pre></div>
+<blockquote>
+<p>Internet Control Message Protocol, TCP/IC에서 IP 패킷을 처리할 때 발생되는 문제를 알려주는 프로토콜이다. 이는 패킷이 오로지 목적지 도달만을 위한 내용으로 구성되어 있기 때문에 에러가 발생한 경우 출발지에게 이를 알릴 방법이 없어 이를 보완하기 위해 나왔다.</p>
+</blockquote>
+<ul>
+<li>
+<p>IP header</p>
+</li>
+<li>
+<p>Sliding Window Protocol 설명</p>
+</li>
+</ul>
+<blockquote>
+<p>두 호스트 간 데이터 전송 시 오류 제어와 흐름 제어를 지원하는 통신 프로토콜이다.
+즉, 수신 호스트가 연속적으로 수신할 수 있는 정보 프레임의 개수를 윈도우의 크기로 지정함으로써, 송신 호스트의 프레임 전송 속도를 제어한다.</p>
+</blockquote>
+<ul>
+<li>TTL이란</li>
+</ul>
+<blockquote>
+<p>Time To Live의 약자고 패킷의 생존 시간을 의미한다. 즉, 인터넷에서 IP 패킷이 거쳐갈 수 있는 라우터의 개수를 표현하는 수이다.</p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- TTL의 기본값은?</code></pre></div>
+<blockquote>
+<p>TTL의 default 값은 OS마다 다르며, Linux는 64, Window는 128, Cisco는 256이다.</p>
+</blockquote>
+<ul>
+<li>SDN이란</li>
+</ul>
+<blockquote>
+<p>Software-Defined Networking으로 소프트웨어 애플리케이션과 API를 이용하여 네트워크를 프로그래밍하고, 중앙에서 전체 네트워크를 제어하고 관리하는 접근 방식이다.
+기존 Router에서는 Path를 결정하는 Control Plane과 전송을 담당하는 Data Plane이 함께 있었지만, SDN을 적용하면 이를 분리하여 Control Plane을 별도의 컴퓨팅 서버로 분리하고, Router는 전송만 담당하는 Data Plane 역할만 하도록 만들 수 있다.</p>
+</blockquote>
+<h3 id="3-dsa-data-structure--algorithm" style="position:relative;"><a href="#3-dsa-data-structure--algorithm" aria-label="3 dsa data structure  algorithm permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. DSA (Data Structure &#x26; Algorithm)</h3>
+<ul>
+<li>
+<p>공간 복잡도 O(1)로 하나의 숫자를 search할 확률</p>
+</li>
+<li>
+<p>Linked List 구현 (insertion, deletion, traversing)</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>Insertion:
+1. 메모리 공간 할당 받고 삽입할 내요응ㄹ 저장하여 삽입할 노드 생성
+2. 삽입할 노드의 next가 후행 노드가 될 노드를 가리키게 함
+3. 삽입할 노드의 선행 노드가 될 노드의 next가 삽입할 노드의 주소를 가리키게 함</li>
+<li>Deletion:
+1. 삭제할 노드의 선행 노드의 next를 삭제할 노드의 next를 가리키게 함
+2. 삭제할 노드를 메모리에 반환</li>
+<li>Traversing:
+1. head 노드부터 시작해서 next 노드로 계속 이동
+2. next가 NULl이면 linked list의 끝에 도달</li>
+</ul>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/reverse-a-doubly-linked-list/"><strong>Reverse Doubly Linke List</strong></a></li>
+</ul>
+<blockquote>
+<p>Key Point: Stack을 사용한다.
+첫 번째 Linked List Traversal에는 Stack에 data를 push
+두 번째 Linked List Traversal에는 Stack에서 Pop한 data를 차례로 Update</p>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/reverse-a-linked-list/">Reverse Linked List</a></li>
+</ul>
+<blockquote>
+<p>Linked List를 첫 번째 노드와 나머지 노드들, 두 부분으로 나눔.
+연결된 목록의 나머지 부분에 대해 reverse 수행
+나머지를 첫 번째 노드한테 연결
+Head를 마지막 노드로 바꾸기</p>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/write-a-function-to-get-the-intersection-point-of-two-linked-lists/">2개의 Linked List가 교차하는 지점(intersection)을 얻는 방법</a></li>
+</ul>
+<blockquote>
+<ol>
+<li>두 Linked List의 길이를 잰다</li>
+<li>길이 차이가 있다먄 둘 중 더 긴 리스트의 포인터를 스킵한다.</li>
+<li>같은 출발 지점부터 포인터를 같은 속도로 이동시키며 비교한다.</li>
+</ol>
+<p>Time Complexity: O(A+B)
+Space Complexity: O(1)</p>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/"><strong>Linked List에서 Loop를 감지하고 제거하는 방법</strong></a></li>
+</ul>
+<blockquote>
+<p>Key Point: Fast Pointer(i+2씩 증가) Slow Pointer(i+1씩 증가)</p>
+<ol>
+<li>Fast Pointer와 Slow Pointer가 Loop 안에서 만남 (Loop Detection)</li>
+<li>Slow Pointer를 제일 처음으로 다시 이동</li>
+<li>Slow와 Fast가 만날 때까지 다시 반복. 이번에는 둘 다 한 칸씩 이동</li>
+<li>Loop의 시작 노드에서 만나게 됨.</li>
+<li>Loop의 마지막 노드의 next를 NULL로 수정</li>
+</ol>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/write-a-c-function-to-print-the-middle-of-the-linked-list/">Linked List에서 중간 지점 요소 찾는 방법</a></li>
+</ul>
+<blockquote>
+<p>Key Point: Fast Pointer(i+2씩 증가) Slow Pointer(i+1씩 증가)</p>
+<ol>
+<li>Slow Pointer와 Fast Pointer 각각 이동</li>
+<li>Slow Pointer가 traversal이 끝났을 때, Fast Pointer의 위치 반환</li>
+</ol>
+</blockquote>
+<ul>
+<li>단 한 번의 traversal만을 사용하여 Linked List에서 끝에서부터 n번째 노드 찾기</li>
+</ul>
+<blockquote>
+<p>Key Point: n만큼 간격을 유지하는 두 개의 포인터 사용</p>
+<ol>
+<li>첫 번째 포인터를 n만큼 먼저 이동</li>
+<li>두 번째 포인터와 함께 첫 번째 포인터를 한 칸씩 이동</li>
+<li>첫 번째 포인터가 linked list 끝에 도달 할 경우, 두 번째 포인터의 위치가 끝에서부터 n번째 노드</li>
+</ol>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/in-a-linked-list-given-only-a-pointer-to-a-node-to-be-deleted-in-a-singly-linked-list-how-do-you-delete-it/">Single Pointer를 사용하여 Linked List에서 노드를 삭제하는 방법</a></li>
+</ul>
+<blockquote>
+<ol>
+<li>tmp pointer를 다음 노드를 가리키게 함</li>
+<li>tmp의 데이터를 현재 노드로 복사</li>
+<li>tmp 노드의 next를 현재 노드의 next가 가리키게 함</li>
+<li>tmp 노드 free</li>
+</ol>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/xor-linked-list-a-memory-efficient-doubly-linked-list-set-1/">Linked List에서 동일한 메모리 위치에 다음 주소와 이전 주소를 모두 저장하는 방법 (XOR Linked List)</a></li>
+</ul>
+<blockquote>
+<p>pre와 next 주소를 XOR bitwise 하여 저장</p>
+</blockquote>
+<ul>
+<li>Stack 구현</li>
+</ul>
+<blockquote>
+<p>Stack은 LIFO(Last In First Out) 방식 자료구조이다.
+top 변수를 통해 최상단의 데이터 위치를 추적함. (default -1)
+push일 때마다 1씩 증가, pop일 때마다 1씩 감소</p>
+</blockquote>
+<ul>
+<li>Queue를 사용해서 Stack을 구현하는 방법</li>
+</ul>
+<blockquote>
+<p>Main Queue와 Sub Queue 2개를 사용한다.
+Push가 일어날 때, Main Queue에 데이터가 있다면 모두 Dequeue해서 Sub Queue로 넣는다.
+이후 Main Queue에 data를 push한 후, Sub Queue에 있는 data들을 모두 deQueue해서 Main Queue로 다시 넣어준다.
+Pop이 일어날 때, Main Queue에 있는 것을 deQueue해준다.</p>
+</blockquote>
+<ul>
+<li>Stack을 사용해서 Queue를 구현하는 방법</li>
+</ul>
+<blockquote>
+<p>In-Queue Stack과 Out-Queue Stack을 2개 사용한다.
+Push이 일어나면 In-Queue Stack에 data를 push한다.
+Pop이 일어나면 In-Queue Stack의 모든 data를 Out-Queue Stack으로 옮긴다.
+이후 Out-Queue Stack을 pop</p>
+</blockquote>
+<ul>
+<li>
+<p><a href="https://www.techiedelight.com/find-diagonal-sum-given-binary-tree/">Binary Tree의 대각선 합 코딩</a></p>
+</li>
+<li>
+<p>Tree Traversal의 모든 유형</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>In-order(Infix): left - root - right</li>
+<li>Pre-order(Prefix): root - left - right</li>
+<li>Post-order(Postfix): left - right- root</li>
+</ul>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/search-in-row-wise-and-column-wise-sorted-matrix/">row-wise와 column-wise로 정렬된 행렬에서 검색하는 방법</a></li>
+</ul>
+<blockquote>
+<p>Key idea : 요소를 찾을 때까지 각 비교에서 행이나 열을 제거하는 것. top-right 모서리부터 시작.
+가능한 케이스는 다음 3가지:</p>
+<ol>
+<li>주어진 숫자가 현재 숫자보다 클 경우: 현재 column의 왼쪽 column 모두 제거</li>
+<li>주어진 숫자가 현재 숫자보다 작을 경우: 헌재 row의 아래쪽 row 모두 제거</li>
+<li>똑같을 경우: search 종료</li>
+</ol>
+</blockquote>
+<ul>
+<li>Heap의 내부 작업</li>
+</ul>
+<blockquote>
+<p>Push 일 때:</p>
+<ol>
+<li>가장 마치막 위치에 data 삽입</li>
+<li>부모 노드와 비교해서 작을 경우 부모와 자리 바꿈, 같은 경우 Stop</li>
+</ol>
+<p>Pop 일 때:</p>
+<ol>
+<li>Root 노드에 저장된 값을 제거</li>
+<li>마지막 노드에 저장된 값을 root 노드로 옮기고 마지막 노드 제거</li>
+<li>root 노드부터 Top-down으로 자식 노드와 비교, left->right 순으로 자신보다 작은 자식노드가 잇을 경우 자리 바꿈, 아닌 경우 Stop</li>
+</ol>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/swap-two-numbers-without-using-temporary-variable/">temp 변수 없이 int a와 b를 reverse하는 방법</a></li>
+</ul>
+<blockquote>
+<p>Key Idea: 합계 이용하기</p>
+<ol>
+<li>x = x + y</li>
+<li>y = x - y</li>
+<li>x = x - y</li>
+</ol>
+</blockquote>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/third-largest-element-array-distinct-elements/"><strong>배열에서 3번째로 큰 수 찾기</strong></a></li>
+<li>Array에서 첫 번째 최대값과 두 번째 최대값을 찾는 코딩</li>
+</ul>
+<blockquote>
+<p>Key Idea: First, Second, Third 변수를 선언해서 추적</p>
+<ol>
+<li>배열을 순회하며, first보다 큰지 확인 -> 더 큰 경우 first를 update &#x26; first를 second에 &#x26; second를 third에</li>
+<li>first보다 작지만 second보다 크다면, second update &#x26; second를 third에</li>
+<li>first보다 작고 seconde보다 작지만 third보다 크다면, third update</li>
+<li>배열 순회가 끝난 뒤, 세 번째 값 출력</li>
+</ol>
+</blockquote>
+<ul>
+<li>
+<p><strong>Array에서 중복을 찾을 수 있는 최적화된 코드 (QuickSort)</strong></p>
+</li>
+<li>
+<p>Longest Palindromic Substring(가장 긴 회문 부분 문자열)</p>
+</li>
+<li>
+<p>Longest Bitonic Subsequece(가장 긴 bItonic 부분 시퀀스) 코딩</p>
+</li>
+<li>
+<p>0-1 sorting하는 모든 방법</p>
+</li>
+<li>
+<p>Sorting 알고리즘의 유형</p>
+</li>
+<li>
+<p>피보나치 수열을 생성하는 모든 방법</p>
+</li>
+</ul>
+<blockquote>
+<p>피보나치: f[i] = f[i-1] + f[i-2]
+Recursive, Iteration, Dynamic Programming, using Fibonachi Matrix</p>
+</blockquote>
+<ul>
+<li>
+<p>IP 주소를 유효성을 확인하는 python 프로그램 코딩</p>
+</li>
+<li>
+<p>특정 알고리즘의 Complexity 분석</p>
+</li>
+<li>
+<p>2개의 정렬된 array을 교집합/합집합</p>
+</li>
+<li>
+<p>backspace 문자 처리 후 두 문자 비교</p>
+</li>
+<li>
+<p>이진수와 정수 N이 주어질 때, if-else 문 없이 bitwise AND와 OR만을 사용해서 N번째 비트를 뒤집는 함수 작성</p>
+</li>
+<li>
+<p><a href="https://www.geeksforgeeks.org/count-set-bits-in-an-integer/">정수에서 2진수 bit의 수를 세는 코드</a></p>
+</li>
+</ul>
+<blockquote>
+</blockquote>
+<ul>
+<li>
+<p>숫자의 마지막 bit 반환</p>
+</li>
+<li>
+<p>숫자가 주어지면 m 위치에서 n 위치로 비트를 추출하여 10진수로 변환</p>
+</li>
+</ul>
+<h2 id="research-interview" style="position:relative;"><a href="#research-interview" aria-label="research interview permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Research Interview</h2>
+<h3 id="1-cloud-computing" style="position:relative;"><a href="#1-cloud-computing" aria-label="1 cloud computing permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. Cloud Computing</h3>
+<!-- - Cloud 기술은 무엇인가?
+
+- Cloud Computing의 Key 특징은 무엇인가?
+
+- Cloud Delivery Model에는 무엇이 있는가?
+
+- Cloud Deployment Model에는 무엇이 있는가?
+
+- Cloud Computing Architecture에 대해 설명하라
+
+- Cloud의 Storage Level에는 무엇이 있는가?
+
+- Microservice란 무엇인가?
+
+- Cloud-Native Application이란 무엇인가? -->
+<h3 id="2-container" style="position:relative;"><a href="#2-container" aria-label="2 container permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. Container</h3>
+<ul>
+<li>Container란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>컨테이너란 어떤 환경에서나 소프트웨어 서비스를 실행하기 위해 필요한 모든 요소, 즉 라이브러리와 같은 종속 항목과 애플리케이션 코드를 포함하는 소프트웨어 패키지이다.
+<u>Containers are lightweight software package of application code with dependencies such as libraries required to run in any environment.</u>
+컨테이너는 3가지 커널의 기본 요소로 구성된다. 볼 수 있는 것을 제한하는 Namespace, 사용할 수 있는 리소스 양을 제한하는 Cgroup, 사용자의 행동을 제한하는 LSM Module이 그것들이다.
+<u>Container is made up of three kernel basic elements: Namespaces limit what can be seen, Cgroups limit the amount of resources that can be used, and LSM modules limit user behavior.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- Virtual Machine(VM)과의 차이점은 무엇인가?
+> 컨테이너와 VM은 모두 사용자에게 격리된 환경을 제공한다는 점에서 동일하다. 그러나 컨테이너는 OS 수준에서 가상화되며, VM은 하드웨어 수준에서 가상화됩니다. 따라서 컨테이너는 VM보다 훨씬 더 경량이며, OS 커널을 공유하기 때문에 VM에 필요한 것보다 훨씬 더 적은 메모리를 사용한다.
+> &lt;u>Containers and VMs both provide an isolated environment for users. However, containers are virtualized at the OS level, and VMs are virtualized at the hardware level. Containers are therefore much more lightweight than VMs, and because they share the OS kernel, they use much less memory than the VM needs.&lt;/u>
+
+- 가상화는 어떤 종류가 있는가?
+> 가상화는 3종류가 있다.
+> 첫 번째는 호스트 OS 가상화이며, 물리적 하드웨어 위에 호스트 OS가 존재하며 그 위에 가상화 소프트웨어를 통해 게스트 OS를 제공하는 방식이다. (e.g., VMWare, Virtual Box)
+> 두 번째는 하이퍼바이저 가상화이며, Host OS 없이 하드웨어 위에 하이퍼바이저를 직접 작동시켜, 이 하이퍼바이저 위에 게스트 OS를 제공하는 방식이다.
+    > 참고로 하이퍼바이저는 전가상화(Full Virtualization)과 반가상화(Para Virtualization)으로 나뉜다. 전가상화는 하이퍼바이저가 게스트 OS에서 요청하는 특권 명령을 Trap&amp;Emulate 한거나 Binary Translation하여 호스트 OS에게 전달하는 방식이며, 반가상화는 게스트 OS가 Hyper-call을 통해 하이퍼바이저에게 요청하는 방식이다. 
+> 세 번째는 컨테이너 형으로, 하드웨어 레벨에서 OS를 가상화하는 것이 아닌, OS 레벨에서 프로게스를 격리시킴으로써 소프트웨어를 가상화한다.
+> &lt;u>There are 3 types of Virtualization.&lt;/u>
+> &lt;u>The first is host OS virtualizationn, in which a host OS exists on physical HW and a guest OS is provided through virtualization software on top of host OS.&lt;/u>
+> &lt;u>The second is Hypervisor vitualization, which operates a hypervisor directly on HW without a host OS and provides a guest OS on this hypervisor.&lt;/u>
+&lt;u>The third is a container type, which virtualizes software by isolating processes at the OS level rather than virtualizing the OS at the HW level.&lt;/u></code></pre></div>
+<ul>
+<li>하이퍼바이저란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>가상 머신 모니터(VMM)이라고도 불리는 하이퍼바이저란 VM을 생성하고 구동하는 소프트웨어를 말하며, Linux에는 KVM이 포함되어 있다.
+<u>Hypervisor, also called a Virtual Machine Monitor(VMM), is a software that creates and executes VMs, and Linux includes an excellent hypervisor called KVM</u></p>
+</blockquote>
+<ul>
+<li>Container Image란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>컨테이너가 애플리케이션 실행에 필요한 것들을 패키징한 상태를 포착하여 데이터로 남긴 것
+<u>The container captures the packaged the things needed to run the application and leaves it as file.</u></p>
+</blockquote>
+<ul>
+<li>
+<p>Container가 실행되는 단계를 설명하라</p>
+</li>
+<li>
+<p>Container Runtime이란 무엇인가?</p>
+</li>
+</ul>
+<blockquote>
+<p>컨테이너 런타임이란 컨테이너를 실행하는 데 필요한 구성 요소를 실행하고 관리하는 소프트웨어이다.
+<u>The container runtime is the software that runs and manages the components needed to run containers.</u></p>
+</blockquote>
+<ul>
+<li>OCI란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Open Container Initiative 런타임으로, 컨테이너를 생성하고 실행, 삭제하는 컨테이너의 lifecycle 관리에 중점을 두고 있다.
+<u>As an Open Container Initiative runtimes, they focus on managing the lifecycle of containers like creating, running, deleting containers.</u>
+runC, crun과 같은 Native runtime과 gVisor, Nabla와 같은 Sandboxed runtime, Kata와 같은 virtualized runtime이 있다.
+<u>There are native runtimes such as runC and crun, sandboxed runtimes such as gVisor and Nabla, and virtualized runtimes such as Kata.</u></p>
+</blockquote>
+<ul>
+<li>CRI란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Container Runtime Interface 런타임으로, 컨테이너 오케스트레이션을 위한 컨테이너 런타임으로써, 이미지 관리 및 배포, 저장, 스냅샷, 네트워킹과 같이 컨테이너를 생성하는데 집중하는 OCI 런타임과 달리 컨테이너를 활용하는데 필요한 기능을 가지고 있으며, 실제로 CRI는 컨테이너 실행을 위한 부분은 OCI 런타임에게 위임한다. containerd와 cri-o가 있다.
+<u>As a Container Runtime Interface runtime, they are container runtimes for container ochestration. Unlike the OCI runtimes, which focuses on creating containers, they have funtions necessary to utilize containers such as image management and distribution, storage, snapshots, and networking. In fact, CRI delegate the part for container execution to the OCI runtimes. There are container-d and cri-o.</u></p>
+</blockquote>
+<ul>
+<li>Docker란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>도커는 컨테이너를 만들고 사용할 수 있도록 도와주는 도구 모음인 컨테이너 엔진이다.
+<u>Docker is a container engine which is a tool set that allows people to create and use container.</u>
+도커는 CRI와 OCI를 둘 다 (containerd + runC) 사용하며, CRI 또는 OCI 사양의 범위를 벗어나는 이미지 building 및 signing과 같은 추가 기능을 제공한다.
+<u>Docker uses both CRI and OCI (containerd+runC) and provides additional features such as image building and signing that are outside the scope of the CRI or OCI specifications.</u></p>
+</blockquote>
+<ul>
+<li>Kubenetes란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>다중 서버에서 컨테이너 운영 자동화와 오케스트레이션을 제공하는 툴이다.
+<u>It is a tool that provides automation and orchestration of container operations across multiple servers.</u></p>
+</blockquote>
+<ul>
+<li>gVisor에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>gVisor는 Sanboxed 컨테이너 런타임으로, Senty와 Gofer라는 애플리케이션을 통해 유저 공간에서 호출하는 시스템콜을 호스트 커널 대신 처리하여 Host OS의 Attack Surface를 줄이는 기술이다.
+<u>gVisor is a sanboxed container runtime, a technology that reduces the attacks surface of the host OS by processing system calls called from user space through applications called Sentry and Gofer instead of the host kernel.</u></p>
+</blockquote>
+<ul>
+<li>Kata Container에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>Kata Container는 virtualized 컨테이너 런타임으로, 컨테이너 전용 경량 ㄹ가상 머신을 사용하여 컨테이너 환경을 구현하는 기술이다.
+<u>Kata Container is a virtualized container runtime, a technology that implements a container environment using a lightweight virtual machine dedicated to container.</u></p>
+</blockquote>
+<h3 id="3-program-analysis" style="position:relative;"><a href="#3-program-analysis" aria-label="3 program analysis permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. Program Analysis</h3>
+<ul>
+<li>컴파일러란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>특정 프로그래밍 언어로 쓰여 있는 문서를 다른 프로그래밍 언어 혹은 컴퓨터 언어로 옮기는, 일종의 번역 프로그램이다.
+<u>It is a kind of translation program that transfers a file written in a specific high-level programming language to another programming language or low-level computer language.</u></p>
+</blockquote>
+<ul>
+<li>GCC란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>GNU Compiler Collection으로 GNU 프로젝트의 일환으로 개발된 컴파일 드라이버로써, 전처리기, 컴파일러, 어셈블러, 링커를 각각 호출해 주는 역할을 한다.
+<u>GNU Compiler Collection is a compilation driver developed as part of the GNU Project, and it plays a role of calling the preprocessor, compiler, assembler, and linker respectively.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GCC IR은 무엇인가?</code></pre></div>
+<blockquote>
+<p>전처리가 끝난 <code class="language-text">.i</code> 화장자 파일은 컴파일러를 통해 어셈블리어로 변환되는데, 그 과정에서 Front-end, Middle-end, Back-end로 단계를 나누어 동작하게된다. 이 중간 단계에서 생성되는 결과물들이 바로 IR(Intermediate Representation)이다. 순서대로 GIMPLE IR, SSA IR, RTL IR이 만들어진다.
+<u>The preprocessed <code class="language-text">.i</code> extension file is converted into assembly through the compiler. In this process, it operates by dividing the steps into Front-end, Middle-end, and Back-end. The outputs produced in this intermediate steps are IR(Intermediate Representation). GIMPLE IR, SSA IR, and RTL IR are created in order.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GCC의 컴파일 단계에 대해 설명하라</code></pre></div>
+<blockquote>
+<p>Front-end 부분에서는 전처리가 끝난 소스코드를 token으로 나누는 어휘 분석 단계, token으로 parse tree를 만들어 문법 오류를 검출하는 구문 분석 단계, parse tree를 문석하여 의미상 오류(e.g., 변수 자료형 불일치)를 검출하는 의미 분석 단계를 거친 후에 프로그래밍 언어 독립적인 GIMPLE Tree를 생성한다.
+<u>In the front-end part, after going thorugh the lexical analysis step of dividing the preprocessed source code into tokens, the syntax analysis step of detecting grammatical errors by creating a parse tree with tokens, and the semantic analysis step of detecting semantic errors(e.g., variable data type mismatch) by analyzing the parse tree, GIMPLE Tree which is independent from programming language is created.</u>
+Middle-end 부분에서는 GIMPLE 트리를 SSA(Static Single Assignment) 형태로 변환할 후 아키텍처 비종속적인 최적화를 수행한다. 그 후 고급 언어와 어셈블리 언어의 중간 형태인 RTL(Register Transfer Lanugage)를 생성한다.
+<u>In the middle-end part, architecture-independent optimization is performed after converting GIMPLE tree into SSA (Static Single Assignment) form. After that, it creates RTL named as Register Transfer Language, which is an intermediate form between high-level language and assembly language.</u>
+Back-end에서는 RTL optimizer에 의해 아키텍처 비종속적인 최적화 및 아키텍처 종속적인 최적화가 함께 이루어진다. 모든 최적화를 마치게 되면 code generator에 의해 어셈블리 언어로 구성된 <code class="language-text">.s</code> 파일이 만들어진다.
+<u>In the Back-end part, architecture-independent optimization and architecture-dependent optimization are performed together by the RTL optimizer. When all optimizations are completed, <code class="language-text">.s</code> file composed of assembly lanugage is created by the code generator.</u></p>
+</blockquote>
+<ul>
+<li>LLVM은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>LLVM은 modular, 재사용 가능한 컴파일러, 툴체인 기술의 집합체이다.
+<u>LLVM is a collection of modular, reusable compiler and toolchain technologies.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- LLVM IR은 무엇인가?</code></pre></div>
+<blockquote>
+<p>LLVM IR은 아키텍처 비종속 언어로써, LLVM의 컴파일 과정을 Front-end와 Back-end로 나누는 기준이다.
+<u>LLVM IR(Intermediate Representation)is an architecture-independent language, and is a standard for dividing the compilation process of LLM into front-end and back-end.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- LLVM의 컴파일 단계에 대해 설명하라</code></pre></div>
+<blockquote>
+<p>크게 Front-end와 Back-end로 컴파일 단계가 나뉜다. Front-end는 clang, rustc와 같은 컴파일러를 통해 프로그래밍 언어에서 아키텍처 비종속 언어인 LLVM-IR로 변환하는 과정이며, Back-end는 LLVM compiler를 통해 LLVM-IR에서 아키텍처에 맞는 기계어로 변환한다.
+<u>The compilation step is largely divided into front-end and back-end. Front-end is the process of converting from a programming language to LLVM-IR, an architecture-independent language, with compilers such as clang and rustc. Back-end converts LLVM-IR into machine language suitable for the architecture with LLVM compiler.</u></p>
+</blockquote>
+<ul>
+<li>Clang은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>LLVM IR 기반 컴파일러 중 하나로, C C++ 등의 다양한 언어들을 LLVM IR로 컴파일한다.
+<u>As one of the LLVM IR-based compilers, various languages such as C, C++ are compiled to LLVM IR with Clang.</u></p>
+</blockquote>
+<ul>
+<li>GCC와 LLVM의 차이점은 무엇인가?</li>
+</ul>
+<blockquote>
+<p>두 가지 모두 고급 언어를 실행 파일로 바꿔주는 컴파일러이지만, GCC의 경우 각 과정들이 모놀리하게 설계되어 있어, 유지보수가 어려운 반면, LLVM은 GCC의 이러한 문제를 개선하고자 컴파일의 각 과정을 모듈로 제공하기 때문에 유지보수가 쉽다는 장점이 있다.
+<u>Both are compilers, However, in the case of GCC, each compilation process is monolithically designed, making maintenance difficult, whereas LLVM provides each process of compilation as a module to improve GCC’s problem, so it is easy to maintain.</u></p>
+</blockquote>
+<ul>
+<li>컴파일 단계에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>일반적으로, 소스 코드가 실행 파일이 되기 위해서는 pre-processor를 통한 전처리 단계, compiler를 통한 컴파일 단계, Assembler를 통한 어셈블 단계, Linker를 통한 링킹 단계를 거친다.
+<u>In general, in order for a source code to become an executable file, it goes through a preprocessing stage with a pre-processor, a compilation stage with a compiler, an assembly stage with an assembler, and a linking stage with a linker.</u>
+전처리 단계에서는 전처리기 지시자를 처리한다. 그 결과 <code class="language-text">.i</code> 확장자 파일이 생성된다.
+<u>In the pre-processing stage, pre-precessor directives are processed. As a result, file with the extension <code class="language-text">.i</code> is created.</u>
+컴파일 단계에서는 어셈블리어로 변환한다. 그 결과 <code class="language-text">.s</code> 확장자 파일이 생성된다.
+<u>In the compilation stage, it is converted into assembly. As a result, file with the extension <code class="language-text">.s</code> is created.</u>
+어셈블 단계에서는 기계어로 된 오브젝트 파일로 변환한다. 그 결과 <code class="language-text">.o</code> 확장자 파일이 생성된다.
+<u>In the assembly stage, it is converted into an object file in machine language. As a result, file with the extension <code class="language-text">.o</code> are created.</u>
+링킹 단계에서는 작성한 프로그램이 사용하는 다른 프로그램이나 라이브러리를 가져와서 연결함으로써, 하나의 실행 가능한 파일을 생성한다.
+<u>In the linking stage, single executable file is created by importing and linking other programs or libraries used by the written program.</u></p>
+</blockquote>
+<ul>
+<li>컴파일러 실행 단계에 대해 설명하라</li>
+</ul>
+<blockquote>
+<p>컴파일러는 3단계로, 구문 분석, 최적화, 코드 생성 단계가 있다. 구문 분석 단계에서는 소스 코드 파일을 읽어 추상 구문 트리를 생성하고, 문법을 검사한다. 최적화 단계에서는 추상 구문 트리를 분석하여 최적화한다. 코드 생성 단계에서는 목적 코드를 생성한다.
+<u>A compiler has three stages: syntax analysis, optimizing, and code generation. In the syntax analysis step, the syntax tree is created from the source code file, and the syntax is checked. In the optimization steop, the abstract syntax tree is analyzed and optimized. In the code generation step, object code is generated.</u></p>
+</blockquote>
+<ul>
+<li>
+<p>ftrace는 무엇인가?</p>
+<ul>
+<li>이외 다른 트레이싱 도구는 무엇이 있는가?</li>
+<li>ftrace가 다른 트레이싱 도구들에 비해 가지는 장점이 있는가?</li>
+</ul>
+</li>
+<li>
+<p>동적 분석은 무엇인가</p>
+<ul>
+<li>동적 분석 기법을 아는대로 말해보라</li>
+</ul>
+</li>
+<li>
+<p>정적 분석은 무엇인가</p>
+<ul>
+<li>정적 분석 기법을 아는대로 말해보라</li>
+</ul>
+</li>
+<li>
+<p>동적 분석과 정적 분석의 차이점은 무엇인가?</p>
+</li>
+<li>
+<p>라이브러리란 무엇인가?</p>
+</li>
+<li>
+<p>API란 무엇인가?</p>
+</li>
+<li>
+<p>라이브러리 함수란 무엇인가?</p>
+</li>
+</ul>
+<h3 id="4-linux-kernel" style="position:relative;"><a href="#4-linux-kernel" aria-label="4 linux kernel permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. Linux Kernel</h3>
+<ul>
+<li>Kernel이란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>커널은 컴퓨터를 시작할 때 <strong>가장 첫 번째로 로드되는 프로그램</strong>으로써, CPU 하드웨어를 제어하고, 메모리를 할당하고, 데이터에 액세스하고, 프로세스를 스케쥴링하고, 애플리케이션을 실행시키고, 서로 다른 애플리케이션의 실행을 보호하는 역할을 수행하는 운영체제의 매우 특수한 부분을 일컬음
+하드웨어 및 소프트웨어 프로세스를 관리하는 커널 외에도 Linux distribution에는 하드웨어 액세스 및 제어를 위한 device driver, shared libraies, 애플리케이션, 백그라운드에서 실행하면서 네트워크 요청에 응답하는 시스템 데몬과 같은 리눅스 소프트웨어 집합이 포함된다.
+<u>The kernel is the first program loaded on the computer when the computer starts up, and it is the special piece of the operating system that controls the CPU harware, allocates memory, access data, schedules processes, runts the applications, and protects them from each other.</u>
+<u>Linux distributions include collection of Linnux sortware, such as device drivers for accessing and controlling hardware, shared libraries, applications, and system daemons, which run in the background and respond to network requests.</u></p>
+</blockquote>
+<ul>
+<li>Linux Distribution이란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Distribution은 리눅스 커널의 특정 버전과 함께 해당 커널 버전과 호환되고 상호 운영성 테스트를 거친 다양한 라이브러리, 시스템 데몬, 개발 도구, 애플리케이션, 패키징 및 life-cycle 관리 도구의 조합을 일컫는다.
+Linux Distribution의 예로는 Ubuntu, Debian, Fedora, openSUSE, Cumulus Linux가 있다.
+<u>A distribution is the combination of specific versions of the Linux Kernel with other libraries, system daemons, development tools, applications, packaging, and life-cycle management tools that are compatible with each other and tested for interoperability.</u>
+<u>Exmaples of Linux distributions are Ubuntu, Debian, Fedora, openSUSE, and Cumulus Linux</u></p>
+</blockquote>
+<ul>
+<li>Kernel Space와 User Space의 차이는 무엇인가?</li>
+</ul>
+<blockquote>
+<p>커널 공간과 사용자 공간의 분리는 가능한 한 안정적으로 안전한 운영 체제임을 보장하기 위해 만들어졌다.
+운영 체제는 커널로부터 시스템이 종료되거나 시스템이 충돌나는 것을 방지하기 위해 보호되고 제한된 메모리에서 커널을 실행하는데, 이 공간을 커널 공간이라고 한다.
+사용자가 애플리케이션이나 툴을 실행할때, 이러한 애플리케이션이나 도구가 실행되는 공간을 유저 공간이라고 한다.
+<u>In short, the separation beween user space and kernel space is made to ensure that Linux is as reliable and secure an operating system as possible</u>
+<u>Operating systems executes their kernel in protected and restricted memory that is called kernel space to prevent the kernel from terminating and crashing the system.</u>
+<u>When a user runs an application or tool, that application or tool executes in what is called user space.</u></p>
+</blockquote>
+<ul>
+<li>시스템콜이란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>커널 영역의 기능을 사용자 모드가 사용 가능하게, 즉 프로세스를 대신하여 하드웨어에 접근해서 필요한 기능을 프로세스가 사용할 수 있도록 해주는 인터페이스이다.
+<u>It is an interface that enables the user mode to use the funtions of the kernel space, that is, to access the HW on behalf of the process so that the process in user space can use the necessary functions in kernel space.</u></p>
+</blockquote>
+<h3 id="5-research---security" style="position:relative;"><a href="#5-research---security" aria-label="5 research   security permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. Research - Security</h3>
+<ul>
+<li>Malware란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Malware is Malicious Software. There are warm, Trojan Horse, Smishing, Ransomware.</p>
+</blockquote>
+<ul>
+<li>Exploit이란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>Exploit is a type of Malware and it is an attack which uses the software vulnerability to perform malicious behavior like privilege esaclation, DoS.</p>
+</blockquote>
+<ul>
+<li>Malware와 Exploit의 차이점은?</li>
+</ul>
+<blockquote>
+<p>Malware가 Exploit을 포함하는 개념이다. 즉, Malware는 악성 행위를 포함하는 모든 소프트웨어를 일컫고, Exploit은 Malware의 한 종류로써 SW의 취약점을 이용해서 악성 행위를 하는 공격이다.
+<u>Malware is a concept that includes exploits. In other words, Malware refers to all software including malicious behavior, and Exploit is a type of Malware and it is an attack which uses hte vulnerability of Software to perform malicious behavior.</u></p>
+</blockquote>
+<ul>
+<li>Vulnerability란 무엇인가?</li>
+</ul>
+<blockquote>
+<p>시스템에 손실, 손상의 원인을 줄 수 있는 보안 상의 약점
+<u> A security weakness that could cause loss or damage to the system.</u></p>
+</blockquote>
+<ul>
+<li>
+<p>CVE란 무엇인가?</p>
+</li>
+<li>
+<p>Seccomp란 무엇인가?</p>
+<ul>
+<li>Seccomp와 Seccomp-BPF의 차이점은 무엇인가?</li>
+</ul>
+</li>
+<li>
+<p>Container Escape/Break-Out이 무엇인가?</p>
+</li>
+<li>
+<p>Container 환경에서 Threat Model은 무엇이 있는가?</p>
+</li>
+<li>
+<p>BPF-LSM이란 무엇인가?</p>
+<ul>
+<li>KRSI와 BPF-LSM의 차이점은 무엇인가?</li>
+</ul>
+</li>
+<li>
+<p>LSM이란 무엇인가?</p>
+<ul>
+<li>
+<p>AppArmor와 SELinux의 차이점은 무엇인가?</p>
+</li>
+<li>
+<p>LSM Hook이란 무엇인가?</p>
+</li>
+</ul>
+</li>
+<li>
+<p>MAC과 DAC의 차이점은 무엇인가?</p>
+</li>
+<li>
+<p>eBPF란 무엇인가?</p>
+</li>
+<li>
+<p>Security Policy란 무엇인가?</p>
+</li>
+<li>
+<p>Libbpfgo란 무엇인가?</p>
+</li>
+<li>
+<p>BTF란 무엇인가?</p>
+</li>
+<li>
+<p>CO-RE란 무엇인가?</p>
+</li>
+<li>
+<p>BPF Map이란 무엇인가?</p>
+</li>
+<li>
+<p>bpfbox에 대해 설명해달라</p>
+</li>
+<li>
+<p>bpfcontian에 대해 설명해달라</p>
+</li>
+<li>
+<p>bpfbox와 bpfcontain의 차이점은 무엇인가?</p>
+</li>
+<li>
+<p>KubeArmor에 대해 설명해달라</p>
+</li>
+<li>
+<p>bpfbox, bpfcontainer과 KubeArmor의 차이점은 무엇인가?</p>
+</li>
+</ul>
+<h3 id="6-research---data-analysis" style="position:relative;"><a href="#6-research---data-analysis" aria-label="6 research   data analysis permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. Research - Data Analysis</h3>
+<ul>
+<li>
+<p>N-gram이란 무엇인가</p>
+</li>
+<li>
+<p>Word Embedding이란 무엇인가</p>
+<ul>
+<li>Word embedding 기법을 아는대로 말해보라</li>
+</ul>
+</li>
+<li>
+<p>GSP 알고리즘을 설명하라</p>
+</li>
+</ul>
+<blockquote>
+<p>Sequence Data에 대한 패턴 매칭 알고리즘이다.
+이 알고리즘은 주어진 시퀀스 데이터에서 일정 길이의 패턴 후보를 생성하고, 각 패턴 후보의 빈도를 구하여, 일정 빈도 이상이 될 경우, 패턴으로 인식하는 알고리즘이다. 2부터 1씩 길이를 늘려가며 패턴을 매칭하는데, 이 때 후보는 이전 패턴의 조합을 통해 생성된다.
+<u>It is a pattern matching algorithm for sequence data. This algorithm generates pattern candidates of a certain length from given sequence data, finds the frequency of each pattern candidate. If the frequency exceeds a certain frequency, this algorithm recognizes it as a pattern. Patterns are matched by increasing the length by 1 from 2, and at this time, a candidate is created through a combination of previous patterns.</u></p>
+</blockquote>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">- GSP 알고리즘 이외에 패턴 매칭(mining) 알고리즘을 말해보라</code></pre></div>
+<blockquote>
+<p>Sequence Pattern Matching 알고리즘은 크게 String mining과 itemset mining으로 나눌 수 있다. Itemset Minig에는 GSP와 Apriori 알고리즘이 있다. …</p>
+</blockquote>
+<ul>
+<li>TF-IDF란 무엇인가
+<ul>
+<li>다른 IR 기법은 무엇이 있는가?</li>
+</ul>
+</li>
+</ul>
+<h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
+<ul>
+<li><a href="https://www.interviewbit.com/cloud-computing-interview-questions/">https://www.interviewbit.com/cloud-computing-interview-questions/</a></li>
+<li><a href="https://velog.io/@jeon3029/%EC%BB%B4%ED%93%A8%ED%84%B0-%EA%B3%B5%ED%95%99-CS-%EA%B3%B5%EB%B6%80%EB%A5%BC-%EC%9C%84%ED%95%9C-%EC%9C%A0%EC%9A%A9%ED%95%9C-%EB%A7%81%ED%81%AC%EB%8B%A8%EC%88%9C-%EB%A7%81%ED%81%AC-%EB%AA%A8%EC%9D%8C">https://velog.io/@jeon3029/컴퓨터-공학-CS-공부를-위한-유용한-링크단순-링크-모음</a></li>
+<li><a href="https://www.actualtechmedia.com/wp-content/uploads/2017/12/CUMULUS-NETWORKS-Linux101.pdf">https://www.actualtechmedia.com/wp-content/uploads/2017/12/CUMULUS-NETWORKS-Linux101.pdf</a></li>
+<li><a href="https://cloud.google.com/learn/what-are-containers">https://cloud.google.com/learn/what-are-containers</a></li>
+</ul>
+<script src="https://utteranc.es/client.js"
+        repo="sominsong/sominsong.github.io"
+        issue-term="pathname"
+        label="Comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+<div class="table-of-contents">
+<ul>
+<li>
+<p><a href="#0-%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0-%EC%A0%84%EC%97%90">0. 들어가기 전에</a></p>
+</li>
+<li>
+<p><a href="#common-cs-interview">Common CS Interview</a></p>
+<ul>
+<li><a href="#1-os">1. OS</a></li>
+<li><a href="#2-network">2. Network</a></li>
+<li><a href="#3-dsa-data-structure--algorithm">3. DSA (Data Structure &#x26; Algorithm)</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#research-interview">Research Interview</a></p>
+<ul>
+<li><a href="#1-cloud-computing">1. Cloud Computing</a></li>
+<li><a href="#2-container">2. Container</a></li>
+<li><a href="#3-program-analysis">3. Program Analysis</a></li>
+<li><a href="#4-linux-kernel">4. Linux Kernel</a></li>
+<li><a href="#5-research---security">5. Research - Security</a></li>
+<li><a href="#6-research---data-analysis">6. Research - Data Analysis</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#reference">Reference</a></p>
+</li>
+</ul>
+</div></div></div><div class="post-navigator"><div class="post-navigator-card-wrapper"><a class="post-card prev" href="/Algorithm/Shortest_Path/"><div class="direction">이전 글</div><div class="title">Shortest Path 알고리즘 정리</div></a></div><div class="post-navigator-card-wrapper"><a class="post-card next" href="/TIL/Virtualization/"><div class="direction">다음 글</div><div class="title">TIL - Virtualization</div></a></div></div><div class="utterances"></div></main><footer class="page-footer-wrapper"><p class="page-footer">© <!-- -->2022<!-- --> <a href="https://github.com/sominsong">송소민</a> powered by<a href="https://github.com/zoomKoding/zoomkoding-gatsby-blog"> zoomkoding-gatsby-blog</a></p></footer><div class="dark-mode-button-wrapper"><button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium dark-mode-button css-1yxmbwk" tabindex="0" type="button"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeLarge dark-mode-icon css-6flbmm" focusable="false" viewBox="0 0 24 24" aria-hidden="true" data-testid="DarkModeIcon"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg></button></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/Interview/CS_Interview/";window.___webpackCompilationHash="b506844c5448546b5b51";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-9b356b5dc44213e24f34.js"],"app":["/app-2a3abbc7799f752aeec3.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-ffdb1e83dd2925d16ce3.js"],"component---src-pages-404-js":["/component---src-pages-404-js-bc51420b294b9123f97d.js"],"component---src-pages-about-js":["/component---src-pages-about-js-39e57401fb032eafb2fb.js"],"component---src-pages-index-js":["/component---src-pages-index-js-0a6bbda26eb501968935.js"],"component---src-templates-blog-template-js":["/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a0af7e239c6cf28d9bb9.js"]};/*]]>*/</script><script src="/polyfill-9b356b5dc44213e24f34.js" nomodule=""></script><script src="/component---src-templates-blog-template-js-dc3d26b2be7d8f1b7ec9.js" async=""></script><script src="/f9d3028dbef90a6e9b8db85387d63dd9f4edf538-064f8125dbb44e660b41.js" async=""></script><script src="/app-2a3abbc7799f752aeec3.js" async=""></script><script src="/framework-043f1197be387cb18d15.js" async=""></script><script src="/webpack-runtime-11fab238ab053aae2627.js" async=""></script></body></html>
