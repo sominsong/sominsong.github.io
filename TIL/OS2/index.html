@@ -512,6 +512,82 @@ int main()
     return 0;
 }</code></pre></div>
 <h3 id="message-passing-pipes" style="position:relative;"><a href="#message-passing-pipes" aria-label="message passing pipes permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Message Passing: Pipes</h3>
+<ul>
+<li>
+<p>Pipe</p>
+<ul>
+<li>초기 UNIX 시스템에서 IPC 메커니즘을 구현하기 위해 사용되었음</li>
+<li>두 프로세스가 commnunicate하기 위한 conduit(통로)로써 역할을 함</li>
+</ul>
+</li>
+<li>
+<p>Pipe 구현 시 4가지 이슈</p>
+<ol>
+<li>unidirectional / bidirectional</li>
+<li>half-duplex / full-duplex</li>
+<li>프로세스 간의 relationship</li>
+<li>network에서 사용할 수 있는가? -> Network에서는 Socket이 사용됨</li>
+</ol>
+</li>
+<li>
+<p>Pipe의 두 가지 Types</p>
+<ul>
+<li>Ordinary Pipes: 외부에서 생성 불가능. parent가 child 프로세스를 만들 때, parent-child 사이에 생성됨</li>
+<li>Named pipe: parent-child 관계 이외의 프로세스에서 사용 가능</li>
+</ul>
+</li>
+<li>
+<p>Ordianry Pipes</p>
+<ul>
+<li><code class="language-text">pipe(int fd[])</code>로 파이프 생성</li>
+<li>방향이 서로 다른 두 개의 파이프(fd[1],fd[0]) 사용</li>
+<li>producer: pipe의 한 쪽 끝에서 write (write end, <code class="language-text">fd[1]</code>)</li>
+<li>Consumer: pipe이 한 쪽 끝에서 read (read end, <code class="language-text">fd[0]</code>)</li>
+</ul>
+<p>-one-way communication이 가능한 unidirectional pipe를 이용해서 two-way communication을 하려면, 2개의 파이프 사용</p>
+</li>
+</ul>
+<div class="gatsby-highlight" data-language="ctitle="ipc communication with ordinary pipe""><pre class="language-ctitle="ipc communication with ordinary pipe""><code class="language-ctitle="ipc communication with ordinary pipe"">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+
+#define BUFFER_SIZE 25
+#define READ_END 0
+#define WRTIE_END 1
+
+int main()
+{
+    char write_msg[BUFFER_SIZE] = &quot;Greetings&quot;;
+    char read_msg[BUFFER_SIZE];
+    int fd[2];  // read end + write end
+    pid_t pid;
+
+    /* create the pipe */
+    pipe(fd);
+
+    pid = fork();   // fork a neew process
+
+    if(pid &gt; 0){    // parent process
+        close(fd[READ_END]);
+        /* write to the pipe */
+        write(fd[WRITE_END], write_msg, strlen(write_msg)+1);
+        close(fd[WRITE_END);
+    }
+    else if (pid == 0){ // child process
+        close(fd[WRITE_END]);
+        /* read to the pipe */
+        read(fd[READ_END], read_msg, BUFFER_SIZE);
+        printf(&quot;read %s\n&quot;, read_msg);
+        close(fd[READ_END]);
+    }
+
+    return 0;
+}</code></pre></div>
+<h2 id="8-communication-in-client-server-systems" style="position:relative;"><a href="#8-communication-in-client-server-systems" aria-label="8 communication in client server systems permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>8. Communication in Client-Server Systems</h2>
+<ul>
+<li>Client-Server 시스템에서의 두 가지 strategies</li>
+</ul>
 <h2 id="reference" style="position:relative;"><a href="#reference" aria-label="reference permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reference</h2>
 <ul>
 <li>Silberschatz et al. “Operating Systems Concepts, 10th Ed.”</li>
@@ -551,6 +627,9 @@ int main()
 <li><a href="#shared-memory-posix-shared-memory">Shared Memory: POSIX Shared Memory</a></li>
 <li><a href="#message-passing-pipes">Message Passing: Pipes</a></li>
 </ul>
+</li>
+<li>
+<p><a href="#8-communication-in-client-server-systems">8. Communication in Client-Server Systems</a></p>
 </li>
 <li>
 <p><a href="#reference">Reference</a></p>
