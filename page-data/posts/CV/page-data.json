@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-js",
     "path": "/posts/CV",
-    "result": {"pageContext":{"currentCategory":"CV","categories":["All","TIL","Linux","Engilsh","English","Interview","Algorithm","PhD","Security","Error","Mac","CV"],"edges":[{"node":{"id":"8782669c-fbf9-5ac9-8855-07b817890160","excerpt":"ESORICS2022.pdf\nESORICS2022-citation.bib\nKSC2022.pdf\nUCWIT2022.pdf\nSTAAR_Workshop2022_Presentation.pdf\nESORICS2022_Presentation.pdf\nKSC2022_Presentation","fields":{"slug":"/CV/"},"frontmatter":{"categories":"CV","title":"CV Asset","date":"December 14, 1999"}},"next":null,"previous":{"fields":{"slug":"/Interview/AWS-interview/"}}}]}},
+    "result": {"pageContext":{"currentCategory":"CV","categories":["All","TIL","Linux","English","Interview","Algorithm","PhD","Security","Error","Mac","CV"],"edges":[{"node":{"id":"8782669c-fbf9-5ac9-8855-07b817890160","excerpt":"ESORICS2022.pdf\nESORICS2022-citation.bib\nKSC2022.pdf\nUCWIT2022.pdf\nSTAAR_Workshop2022_Presentation.pdf\nESORICS2022_Presentation.pdf\nKSC2022_Presentation","fields":{"slug":"/CV/"},"frontmatter":{"categories":"CV","title":"CV Asset","date":"December 14, 1999"}},"next":null,"previous":{"fields":{"slug":"/Interview/AWS-interview/"}}}]}},
     "staticQueryHashes": ["1073350324","1956554647","2938748437"]}
